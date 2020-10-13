@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT errors (error*)>
+<!ELEMENT error (message+)>
+<!ATTLIST error
+	id	CDATA #REQUIRED
+	value CDATA #REQUIRED
+>
+<!ELEMENT message EMPTY>
+<!ATTLIST message
+	lang (zh_cn|en_us) #REQUIRED
+	text CDATA #REQUIRED
+>
+

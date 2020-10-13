@@ -1,0 +1,160 @@
+记录集：1/1
+        第1/1条记录：
+        【整数】          entrust_no =                              118945
+        【整数】           init_date =                            20160129
+        【整数】            batch_no =                              118945
+        【整数】           report_no =                              118945
+        【字串】             seat_no =                              222222
+        【整数】        entrust_time =                              142759
+        【数值】       entrust_price =                           10.000000
+        【数值】      entrust_amount =                          100.000000
+        【字串】          stock_code =                              000001
+        【字符】          entrust_bs =                                   1
+        【字符】        entrust_type =                                   0
+        【字符】      entrust_status =                                   1
+        【字串】        fund_account =                            70000172
+        【整数】            error_no =                                   0
+        【字串】          error_info =
+
+
+记录集：1/1
+        第1/1条记录：
+        【数值】     business_amount =                            0.000000
+        【数值】      business_price =                            0.000000
+        【数值】       entrust_price =                           10.000000
+        【数值】      entrust_amount =                          100.000000
+        【字串】          stock_code =                              000001
+        【字符】          entrust_bs =                                   1
+        【整数】          entrust_no =                              118945
+        【整数】           report_no =                              118945
+        【整数】            batch_no =                              118945
+        【字符】        entrust_type =                                   0
+        【字符】      entrust_status =                                   2
+        【字串】        fund_account =                            70000172
+        【整数】           branch_no =                                  22
+
+
+记录集：1/1
+        第1/1条记录：
+        【整数】           init_date =                            20160129
+        【整数】           branch_no =                                  22
+        【字串】           client_id =                            70000172
+        【字串】        fund_account =                            70000172
+        【字符】           real_type =                                   0
+        【字符】         real_status =                                   0
+        【字串】       exchange_type =                                   2
+        【字串】         report_seat =                              222222
+        【整数】           report_no =                              118945
+        【字串】      report_account =                          0070000172
+        【字串】       stock_account =                          0070000172
+        【字串】          stock_code =                              000001
+        【字串】          stock_type =                                   0
+        【整数】           record_no =                                   8
+        【字符】           report_bs =                                   1
+        【字符】          entrust_bs =                                   1
+        【字符】      entrust_status =                                   7
+        【整数】          entrust_no =                              118945
+        【字串】         opp_account =
+        【整数】         business_no =                                   7
+        【数值】     business_amount =                           80.000000
+        【数值】      business_price =                           10.000000
+        【整数】       business_time =                              142326
+        【整数】         report_time =                           142759808
+        【数值】      entrust_amount =                          100.000000
+        【整数】            batch_no =                              118945
+        【数值】       entrust_price =                           10.000000
+        【字符】        entrust_type =                                   0
+        
+        
+
+
+
+
+        
+
+记录集：1/1
+        第1/1条记录：
+        【整数】          entrust_no =                              118946
+        【字串】       exchange_type =                                   2
+        【整数】      entrust_no_old =                              118945
+        【整数】       report_no_old =                              118945
+        【字符】  entrust_status_old =                                   4
+        【字串】             seat_no =                              222222
+        【字串】       stock_account =                          0070000172
+        【字串】          stock_code =                              000001
+        【字串】          money_type =                                   0
+        【数值】     business_amount =                            0.000000
+        【数值】      business_price =                            0.000000
+        【数值】       entrust_price =                           10.000000
+        【数值】      entrust_amount =                          100.000000
+        【字符】          entrust_bs =                                   1
+        【整数】           report_no =                              118945
+        【整数】            batch_no =                                   0
+        【字符】      entrust_status =
+        【字串】        fund_account =                            70000172
+        【字符】        entrust_type =                                   2
+        【整数】            error_no =                                   0
+        【字串】          error_info =
+
+
+记录集：1/1
+        第1/1条记录：
+        【数值】     business_amount =                            0.000000
+        【数值】      business_price =                            0.000000
+        【数值】       entrust_price =                           10.000000
+        【数值】      entrust_amount =                          100.000000
+        【字串】          stock_code =                              000001
+        【字符】          entrust_bs =                                   1
+        【整数】          entrust_no =                              118946
+        【整数】           report_no =                              118945
+        【整数】            batch_no =                              118946
+        【字符】        entrust_type =                                   2
+        【字符】      entrust_status =                                   2
+        【字串】        fund_account =                            70000172
+        【整数】           branch_no =                                  22
+
+
+记录集：1/1
+        第1/1条记录：
+        【整数】           init_date =                            20160129
+        【整数】           branch_no =                                  22
+        【字串】           client_id =                            70000172
+        【字串】        fund_account =                            70000172
+        【字符】           real_type =                                   2
+        【字符】         real_status =                                   0
+        【字串】       exchange_type =                                   2
+        【字串】         report_seat =                              222222
+        【整数】           report_no =                              118945
+        【字串】      report_account =                          0070000172
+        【字串】       stock_account =                          0070000172
+        【字串】          stock_code =                              000001
+        【字串】          stock_type =                                   0
+        【整数】           record_no =                                   0
+        【字符】           report_bs =                                   1
+        【字符】          entrust_bs =                                   1
+        【字符】      entrust_status =                                   5
+        【整数】          entrust_no =                              118945
+        【字串】         opp_account =
+        【整数】         business_no =                                   8
+        【数值】     business_amount =                          -20.000000
+        【数值】      business_price =                            0.000000
+        【整数】       business_time =                              142414
+        【整数】         report_time =                           142759808
+        【字串】         extern_code =
+        【数值】      entrust_amount =                          100.000000
+        【整数】            batch_no =                              118945
+        【数值】       entrust_price =                           10.000000
+        【字符】        entrust_type =                                   0
+        【字串】      error_pathinfo = F270023() -> F1270016() -> F1270019()
+        
+        
+        
+记录集：1/1
+        第1/1条记录：
+        【字串】          money_type =                                   0
+        【数值】     current_balance =                    900000000.000000
+        【数值】      enable_balance =                    896027833.150000
+        【数值】       fetch_balance =                    896027833.150000
+        【数值】      frozen_balance =                            0.000000
+        【数值】    unfrozen_balance =                            0.000000
+        【数值】        fund_balance =                    899455422.800000

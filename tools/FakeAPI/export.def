@@ -1,0 +1,4 @@
+LIBRARY
+EXPORTS
+	Stock_Init
+	Stock_Quit

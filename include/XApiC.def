@@ -1,0 +1,28 @@
+;LIBRARY XApiC
+EXPORTS 
+	X_LoadLib @1
+	X_GetLastError @2
+	X_GetFunction @3
+	X_FreeLib @4
+	
+	X_GetApiTypes @5
+	X_GetApiVersion @6
+	X_GetApiName @7
+	
+	X_Create @8
+	X_Register @9
+	X_Connect @10
+	X_Disconnect @11
+	
+    X_Subscribe @12
+	X_Unsubscribe @13
+	
+	X_SubscribeQuote @14
+	X_UnsubscribeQuote @15
+	
+    X_ReqQuery @16
+	
+	X_SendOrder @17
+	X_CancelOrder @18
+	X_SendQuote @19
+	X_CancelQuote @20

@@ -1,0 +1,85 @@
+-- phpMyAdmin SQL Dump
+-- version 2.10.3
+-- http://www.phpmyadmin.net
+-- 
+-- Host: localhost
+-- Generation Time: Jan 22, 2016 at 09:55 AM
+-- Server version: 5.0.51
+-- PHP Version: 5.2.6
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+-- 
+-- Database: `test`
+-- 
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `licenceinfo`
+-- 
+
+CREATE TABLE `LicenceInfo` (
+  `ID` int(10) unsigned NOT NULL auto_increment,
+  `User1` varchar(20) NOT NULL,
+  `Time1` datetime NOT NULL,
+  `Content1` varchar(1024) NOT NULL,
+  `User2` varchar(20) default NULL,
+  `Time2` datetime default NULL,
+  `Content2` varchar(1024) default NULL,
+  `Product` varchar(64) NOT NULL,
+  `Status` varchar(32) NOT NULL,
+  `Remark` varchar(256) default NULL,
+  PRIMARY KEY  (`ID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='授权信息表';
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `productinfo`
+-- 
+
+CREATE TABLE `ProductInfo` (
+  `ID` int(11) NOT NULL auto_increment,
+  `Name` varchar(20) NOT NULL,
+  `Url` varchar(260) NOT NULL,
+  PRIMARY KEY  (`ID`),
+  UNIQUE KEY `Name` (`Name`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='产品信息表';
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `product_user2`
+-- 
+
+CREATE TABLE `Product_User2` (
+  `ID` int(11) NOT NULL auto_increment,
+  `Product` varchar(64) NOT NULL,
+  `User2` varchar(20) NOT NULL,
+  PRIMARY KEY  (`ID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='授权关系表';
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `userinfo`
+-- 
+
+CREATE TABLE `UserInfo` (
+  `ID` int(10) unsigned NOT NULL auto_increment,
+  `UserID` varchar(20) NOT NULL,
+  `Password` varchar(40) NOT NULL,
+  `Name` varchar(16) NOT NULL,
+  `Phone` varchar(16) default NULL,
+  `Email` varchar(40) default NULL,
+  `IM` varchar(64) default NULL,
+  `RegisterTime` datetime NOT NULL,
+  `IP` varchar(40) NOT NULL,
+  `Status` varchar(20) NOT NULL,
+  `Right` tinyint(4) NOT NULL,
+  `SessionID` varchar(40) default NULL,
+  `Remark` varchar(1024) default NULL,
+  PRIMARY KEY  (`ID`),
+  UNIQUE KEY `UserID` (`UserID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='用户信息表';

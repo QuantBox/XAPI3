@@ -1,0 +1,65 @@
+<html>
+	<head>
+		<title>XAPI COM版的JS示例</title>
+		<object id="XApi" name="XApi" classid="clsid:825E3182-8444-4580-8A8C-965485FBF451"></object>
+		<script language="javascript" type="text/javascript">
+		    function Login() {
+                XApi.SetLibPath("C:\\Program Files\\SmartQuant Ltd\\OpenQuant 2014\\XAPI\\x86\\CTP\\CTP_Trade_x86.dll");
+                XApi.SetServerInfo("Address","tcp://180.168.146.187:10000");
+                XApi.SetServerInfo("BrokerID","9999");
+                XApi.SetUserInfo("UserID","037505");
+                XApi.SetUserInfo("Password","123456");
+                XApi.Connect();
+		    }
+            
+            function SendOrder() {
+                XApi.NewOrder();
+                XApi.SetOrder("InstrumentID","IF1601");
+                XApi.SetOrder("ExchangeID","CFFEX");
+                XApi.SetOrder("Qty","1");
+                XApi.SetOrder("Type","Limit");
+                XApi.SetOrder("Side","Buy");
+                XApi.SendOrder();
+		    }
+		    
+		    function setText(txt) {
+		        myTextBox.value = txt;
+		    }
+		    
+		    function appendText(txt) {
+		        myTextBox.value = myTextBox.value + txt;
+		    }
+		</script>
+	</head>
+	<body >
+	    <h1>XAPI COM版的JS示例</h1>
+	    <table>
+	        <tr>
+	            <td>
+	                <button id="myButton" onclick="Login();">登录</button>
+                    <button id="myButton" onclick="SendOrder();">下单</button>
+	                <label>Args</label>
+	                <textarea id="myArgs" rows="1" cols="16">Hello World!</textarea>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td>
+	                <textarea id="myTextBox" rows="10" cols="80"></textarea>
+	            </td>
+	        </tr>
+	    </table>
+        <script for="XApi" event="OnConnectionStatus(sender,status,status_String,userLogin,size1)" language="javascript">
+        function XApi::OnConnectionStatus(sender,status,status_String,userLogin,size1) {
+            appendText(status);
+            appendText("\r\n");
+            if(size1>0)
+                appendText(userLogin.Text);
+        }
+        </script>
+        <script for="XApi" event="OnRtnOrder(sender,order)" language="javascript">
+        function XApi::OnRtnOrder(sender,order) {
+            appendText(order.Text);
+        }
+        </script>
+	</body>
+</html>

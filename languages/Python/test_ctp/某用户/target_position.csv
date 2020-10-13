@@ -1,0 +1,5 @@
+Symbol,InstrumentID,HedgeFlag,Side,Position,InstrumentName
+i1709.,i1709,0,1,5.0,
+i1709.,i1709,0,-1,0.0,
+rb1710.,rb1710,0,1,0.0,
+rb1710.,rb1710,0,-1,6.0,

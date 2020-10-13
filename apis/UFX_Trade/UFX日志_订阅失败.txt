@@ -1,0 +1,9 @@
+﻿开始订阅
+记录行数：           1
+列行数：                         5
+error_no:                       [-1]
+ErrorCode:                      [-1]
+ErrorMsg:                       [-1]
+MsgDetail:                      [订阅投顾与登录投顾不符]
+DataCount:                      [0]
+SubscribeTopic info:[-123] 业务权限校验失败

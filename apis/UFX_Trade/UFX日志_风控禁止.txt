@@ -1,0 +1,56 @@
+﻿记录集：2/2
+        第1/1条记录：
+        【字串】        account_code =                              080910
+        【字串】            asset_no =                                3053
+        【数值】occupy_deposit_balance =                       715757.500000
+        【数值】enable_deposit_balance =                      4171714.680000
+        【数值】futu_deposit_balance =                      4951834.480000
+        【数值】futu_temp_occupy_deposit =                        36812.300000
+
+
+记录集：1/3
+        第1/1条记录：
+        【整数】           ErrorCode =                                3001
+        【字串】            ErrorMsg =                            触犯风控
+        【字串】           MsgDetail =
+        【整数】           DataCount =                                   1
+
+
+记录集：2/3
+        第1/1条记录：
+        【整数】            batch_no =                                   0
+        【整数】          entrust_no =                                   0
+        【整数】        extsystem_id =                             6084601
+        【整数】   entrust_fail_code =                                   1
+        【字串】          fail_cause =                            触犯风控
+        【整数】      risk_serial_no =                              298692
+
+
+记录集：3/3
+        第1/2条记录：
+        【整数】      risk_serial_no =                              298692
+        【字串】           market_no =                                   9
+        【字串】          stock_code =                               c1805
+        【字串】   entrust_direction =                                   1
+        【字串】   futures_direction =                                   1
+        【整数】             risk_no =                                 312
+        【字串】           risk_type =                                   H
+        【字串】        risk_summary = 通用_异常交易——股指期货、商品期货应在交易日收盘前5分钟停止下达新指令
+        【字串】      risk_operation =                                   2
+        【字串】        remark_short = 当前指令/交易的价格=1750.00000000,数量=1.00,风控中计算的分子=1750.00000000,分母=1.00000000
+        【数值】risk_threshold_value =                            0.000000
+        【数值】          risk_value =                         1750.000000
+
+        第2/2条记录：
+        【整数】      risk_serial_no =                              298692
+        【字串】           market_no =                                   9
+        【字串】          stock_code =                               c1805
+        【字串】   entrust_direction =                                   1
+        【字串】   futures_direction =                                   1
+        【整数】             risk_no =                                 613
+        【字串】           risk_type =                                   C
+        【字串】        risk_summary = 专户_量化1号_单位净值低于0.94时，持有股票衍生品比例以市价计算不高于总资产50％
+        【字串】      risk_operation =                                   1
+        【字串】        remark_short = 当前指令/交易的价格=1750.0000,数量=1.00,风控中计算的分子=7591625.00,分母=16385426.48
+        【数值】risk_threshold_value =                            0.450000
+        【数值】          risk_value =                            0.463300

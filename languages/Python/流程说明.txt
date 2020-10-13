@@ -1,0 +1,20 @@
+11: target_position <= p1+p2+p3
+12: target_position <= memory_position
+13: target_position <= target_position + incremental
+
+1: load target_position
+2: memory_position <= real_position
+
+11：内部对冲
+13：不对冲
+
+13不小心做了多次，重复累加了怎么办，其实我只想做一次？
+2->12从实盘中取 或 11从几个组合中合并都可以，然后再做一次13
+
+如果几个p1+p2+p3其实记录的是我的加仓信息，我想在实盘持仓上加上这些加仓怎么办？
+11写入到target_position，将target_position打开保存到incremental,2->12保存一下实盘，13将实盘与加仓进行混合
+
+
+11 - 12 - 13
+      |
+1     2

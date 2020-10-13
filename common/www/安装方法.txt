@@ -1,0 +1,14 @@
+1.安装pear,	php go-pear.php
+2.安装pear install MDB2
+3.安装pear install MDB2#mysql
+4.复制项目到网页服务器下
+5.复制keys目标到非网页目录下。注意，此目录不能让外界访问，因为此目录有私钥
+6.注意keys中的目录名就是数据库的产品名
+7.修改config.php中的授权生成器key的目录和License.exe的路径，它用来生成签名
+8.修改config.php中的数据库信息
+9.先注册一个用户admin，然后到数据库中UserInfo将此用户的Right改成99，99为管理员
+10.ProductInfo表中添加一个Product和Url。如Product=CTP_Trader_86，Url=/products/TdxApi/index.html
+11.再注册一个用户xyz，将Right改成2，2为审核员,然后在Product_User2表中添加一个Product=CTP_Trader_86,User2=xyz,这样这个审核员就有CTP_Trader_86的审核权限了
+12.测试一下生成授权文件的功能是否能成功下载，下载后的文件是否能正常使用。
+因为网页全是UTF-8编码，但授权文件得是ASCII编码，所有用到一个vbs将UTF-8转成ASCII，这个要设置好
+13.Signin_admin.php是管理员登录页面，管理员只有通过它登录才是管理员，所以这个文件一定要定期改名，不让外人知道

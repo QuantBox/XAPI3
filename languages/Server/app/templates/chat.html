@@ -1,0 +1,183 @@
+<html>
+<head>
+    <title>Flask-SocketIO-Chat: {{ room }}</title>
+    <meta charset="utf-8"/>
+    <script type="text/javascript" src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket;
+        $(document).ready(function () {
+            //socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+            socket = io('http://' + document.domain + ':' + location.port + '/chat', {transports: ['websocket', 'polling']}).connect();
+            socket.on('connect', function () {
+                socket.emit('joined', {});
+            });
+            socket.on('status', function (data) {
+                $('#chat').val($('#chat').val() + '<' + data.msg + '>\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+            socket.on('message', function (data) {
+                $('#chat').val($('#chat').val() + data.msg + '\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+            $('#text').keypress(function (e) {
+                var code = e.keyCode || e.which;
+                if (code == 13) {
+                    text = $('#text').val();
+                    $('#text').val('');
+                    socket.emit('text', {msg: text});
+                }
+            });
+        });
+
+        function leave_room() {
+            socket.emit('left', {}, function () {
+                socket.disconnect();
+
+                // go back to the login page
+                window.location.href = "{{ url_for('main.index') }}";
+            });
+        }
+    </script>
+    <script type="text/javascript" charset="utf-8">
+        var socket;
+
+        function connect_md() {
+            socket = io('http://' + document.domain + ':' + location.port + '/api').connect();
+            socket.on('connection_status', function (data) {
+                $('#chat').val($('#chat').val() + '<' + data.status + '>,<' + JSON.stringify(data.data) + '>\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+            socket.on('rtn_market_data', function (data) {
+                $('#chat').val('<' + JSON.stringify(data.data) + '>\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+            socket.on('rtn_order', function (data) {
+                $('#chat').val('<' + JSON.stringify(data.data) + '>\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+            socket.on('rtn_trade', function (data) {
+                $('#chat').val('<' + JSON.stringify(data.data) + '>\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+            socket.on('rsp_qry_trading_account', function (data) {
+                $('#chat').val($('#chat').val() + '<' + JSON.stringify(data.data) + '>\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+            socket.on('rsp_qry_investor_position', function (data) {
+                $('#chat').val($('#chat').val() + '<' + JSON.stringify(data.data) + '>\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+            socket.on('rsp_qry_instrument', function (data) {
+                $('#chat').val($('#chat').val() + '<' + JSON.stringify(data.data) + '>\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+            socket.on('rsp_qry_settlement_info', function (data) {
+                $('#chat').val($('#chat').val() + '<' + JSON.stringify(data.data) + '>\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+            socket.on('is_connected', function (data) {
+                $('#chat').val($('#chat').val() + '<' + JSON.stringify(data.data) + '>\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+            socket.on('rsp_qry_history_data', function (data) {
+                $('#chat').val($('#chat').val() + '<' + JSON.stringify(data.data) + '>\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+            socket.on('rsp_qry_order', function (data) {
+                $('#chat').val($('#chat').val() + '<' + JSON.stringify(data.data) + '>\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+        }
+
+        function sub_quote() {
+            var txt = $('#quote_value').val();
+            var json = $.parseJSON(txt);
+            socket.emit('sub_quote', {"args": json});
+        }
+
+        function unsub_quote() {
+            var txt = $('#quote_value').val();
+            var json = $.parseJSON(txt);
+            socket.emit('unsub_quote', {"args": json});
+        }
+
+        function send_order() {
+            var txt = $('#order_value').val();
+            var json = $.parseJSON(txt);
+            socket.emit('send_order', {"args": json});
+        }
+
+        function cancel_order() {
+            var txt = $('#cancel_order_value').val();
+            var json = $.parseJSON(txt);
+            socket.emit('cancel_order', {"args": json});
+        }
+
+        function query_account() {
+            socket.emit('query_account', {"args": {}});
+        }
+
+        function query_positions() {
+            socket.emit('query_positions', {"args": {}});
+        }
+
+        function query_order() {
+            socket.emit('query_order', {"args": {}});
+        }
+
+        function query_instrument() {
+            var txt = $('#exchange_id').val();
+            var json = $.parseJSON(txt);
+            socket.emit('query_instrument', {"args": json});
+        }
+
+        function query_settlement_info() {
+            var txt = $('#settlement_date').val();
+            var json = $.parseJSON(txt);
+            socket.emit('query_settlement_info', {"args": json});
+        }
+        function query_history_data() {
+            socket.emit('query_history_data', {"args": {}});
+        }
+    </script>
+</head>
+<body>
+<h1>Flask-SocketIO-Chat: {{ room }}</h1>
+<textarea id="chat" cols="200" rows="20"></textarea><br><br>
+<input id="text" size="80" placeholder="Enter your message here"><br><br>
+<a href="#" onclick="leave_room();">Leave this room</a>
+<div>
+    <h1>行情连接测试</h1>
+    <button onclick="connect_md();">连接服务器</button>
+    <br><br>
+    <input id="quote_value" size="80" placeholder="请输入要订阅的合约"
+           value='{"instruments": ["ag1906", "ag1912"],"exchange": ""}'>
+    <button onclick="sub_quote();">订阅</button>
+    <button onclick="unsub_quote();">取消订阅</button>
+    <br><br>
+    <input id="order_value" size="120" placeholder="定单字典"
+           value=' {"InstrumentID": "ag1906","Type": "Limit","Side": "Buy","Qty": 1,"Price": 3500,"OpenClose": "Open","HedgeFlag": "Speculation", "LocalID": "11111111111111"}'>
+    <button onclick="send_order();">下单</button>
+    <br><br>
+    <input id="cancel_order_value" size="80" placeholder="撤单"
+           value='{"ID": "123"}'>
+    <button onclick="cancel_order();">撤单</button>
+    <br><br>
+    <button onclick="query_account();">查资金</button>
+    <button onclick="query_positions();">查持仓</button>
+    <button onclick="query_history_data();">查历史</button>
+    <br><br>
+    <input id="exchange_id" size="80" placeholder="交易所"
+           value='{"ExchangeID": "SSE"}'>
+    <button onclick="query_instrument();">查合约</button>
+    <br><br>
+    <button onclick="query_order();">查委托</button>
+    <br><br>
+    <input id="settlement_date" size="80" placeholder="结算日"
+           value='{"TradingDay": 20190422}'>
+    <button onclick="query_settlement_info();">查结算单</button>
+</div>
+
+</body>
+</html>

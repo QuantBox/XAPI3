@@ -1,0 +1,77 @@
+<html>
+	<head>
+		<title>My Com Component</title>
+		<object id="XApi" name="XApi" classid="clsid:825E3182-8444-4580-8A8C-965485FBF451"></object>
+		<script language="VBS">
+		    Function myButton_md_click()
+                XApi.SetLibPath("C:\\Program Files\\SmartQuant Ltd\\OpenQuant 2014\\XAPI\\x86\\CTP_SE\\CTP_SE_Quote_x86.dll")
+                XApi.SetServerInfo "Address","tcp://180.168.146.187:13040"
+                XApi.SetServerInfo "BrokerID","9999"
+                XApi.SetUserInfo "UserID","140786"
+                XApi.SetUserInfo "Password","123abc"
+                XApi.Connect
+		    End Function
+			
+			Function myButton_td_click()
+                XApi.SetLibPath("C:\\Program Files\\SmartQuant Ltd\\OpenQuant 2014\\XAPI\\x86\\CTP_SE\\CTP_SE_Trade_x86.dll")
+                XApi.SetServerInfo "Address","tcp://180.168.146.187:13030"
+                XApi.SetServerInfo "BrokerID","9999"
+				XApi.SetServerInfo "AppID","8500342533"
+				XApi.SetServerInfo "AuthCode","0000000000000000"
+                XApi.SetUserInfo "UserID","140786"
+                XApi.SetUserInfo "Password","123abc"
+                XApi.Connect
+		    End Function
+			
+			Function myButton_order_click()
+                XApi.NewOrder
+				XApi.SetOrder "InstrumentID","ag1906"
+				XApi.SetOrder "ExchangeID",""
+				XApi.SetOrder "Type","Limit"
+				XApi.SetOrder "Side","Buy"
+				XApi.SetOrder "Qty",1
+				XApi.SetOrder "Price",3000
+				XApi.SetOrder "OpenClose","Open"
+				XApi.SetOrder "HedgeFlag","Speculation"
+
+				OrderRef = XApi.SendOrder
+		    End Function
+		    
+		    Function setText(txt)
+		        myTextBox.value = txt
+		    End Function
+		    
+		    Function appendText(txt)
+		        myTextBox.value = myTextBox.value & txt
+		    End Function
+		</script>
+	</head>
+	<body >
+	    <h1>My Com Component</h1>
+	    <table>
+	        <tr>
+	            <td>
+	                <button id="myButton" onclick="myButton_md_click()">MD connect</button>
+					<button id="myButton" onclick="myButton_td_click()">TD connect</button>
+					<button id="myButton" onclick="myButton_order_click()">order</button>
+	                <label>Args</label>
+	                <textarea id="myArgs" rows="1" cols="16">Hello World!</textarea>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td>
+	                <textarea id="myTextBox" rows="10" cols="80"></textarea>
+	            </td>
+	        </tr>
+	    </table>
+        <script language="VBS">
+        Function XApi_OnConnectionStatus(sender,status,status_String,userLogin,size1)
+            appendText(status)
+            appendText(status_String)
+            IF size1>0 Then
+                appendText(userLogin.Text)
+            End IF
+        End Function
+        </script>
+	</body>
+</html>

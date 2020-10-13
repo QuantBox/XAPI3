@@ -1,0 +1,7 @@
+﻿1.将reg目录下x64 x86 clear_InprocServer32.reg clear_InprocServer32.reg RegCOM_exe.bat 复制到与XAPI_CSharp.exe同目录
+2.以管理员方式运行RegCOM_exe.bat即可
+3.本项目支持进程内和进程外，如果想64位程序下加载32位只能进程外
+4.部分平台可能出现优先使用进程内
+5.根据自己的需求看是否要运行clear_InprocServer32.reg
+6.在Excel中开发工具->Visual Basic->工具->引用->XAPI_CSharp。
+7.如何使用，可以参考TEST_Tdx.xlsm

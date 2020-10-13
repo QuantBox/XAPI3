@@ -1,0 +1,16 @@
+﻿记录集：1/2
+        第1/1条记录：
+        【整数】           ErrorCode =                                3000
+        【字串】            ErrorMsg = 证券内码[600000SS]证券变动方向=1:委托数量必须为买卖单位100的整数倍
+        【字串】           MsgDetail =
+        【整数】           DataCount =                                   1
+
+
+记录集：2/2
+        第1/1条记录：
+        【整数】            batch_no =                                   0
+        【整数】          entrust_no =                                   0
+        【整数】        extsystem_id =                             2133004
+        【整数】   entrust_fail_code =                                  99
+        【字串】          fail_cause = 证券内码[600000SS]证券变动方向=1:委托数量必须为买卖单位100的整数倍
+        【整数】      risk_serial_no =                              299069

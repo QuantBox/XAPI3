@@ -1,0 +1,697 @@
+<?xml version="1.0" encoding="gb2312"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by wangzhaodong (ORiON) -->
+<!DOCTYPE errors SYSTEM "error.dtd">
+<errors>
+	<!-- NOT Error -->
+	<error id="NONE" value="0x0000">
+		<message lang="zh_cn" text="综合交易平台: 正确"/>
+		<message lang="en_us" text="CTP: OK"/>
+	</error>
+	
+	<error id="SYSTEM_ERROR" value="0x0001">
+		<message lang="zh_cn" text="综合交易平台: 系统内部错误"/>
+	</error>
+
+	<error id="INVALID_REQ" value="0x0002">
+		<message lang="zh_cn" text="综合交易平台: 不合法的请求"/>
+		<message lang="en_us" text="CTP: Invalid Request"/>
+	</error>
+
+	<!-- 入口级别错误 -->
+	<error id="INSERT_ORDER_FAILED" value="0xf010">
+		<message lang="zh_cn" text="综合交易平台: 报单失败"/>
+	</error>
+	<error id="CANCEL_ORDER_FAILED" value="0xf020">
+		<message lang="zh_cn" text="综合交易平台: 撤单失败"/>
+	</error>
+	<error id="FORCE_CANCEL_ORDER_FAILED" value="0xf030">
+		<message lang="zh_cn" text="综合交易平台: 强制撤单失败"/>
+	</error>
+	<error id="EXCH_INSERT_ORDER_FAILED" value="0xf040">
+		<message lang="zh_cn" text="综合交易平台: 交易所报单回报失败"/>
+	</error>
+	<error id="EXCH_CANCEL_ORDER_FAILED" value="0xf050">
+		<message lang="zh_cn" text="综合交易平台: 交易所撤单回报失败"/>
+	</error>
+	<error id="EXCH_TRADE_FAILED" value="0xf060">
+		<message lang="zh_cn" text="综合交易平台: 交易所成交失败"/>
+	</error>
+	<error id="CUSTODY_TRANSFER_FAILED" value="0xf070">
+		<message lang="zh_cn" text="综合交易平台: 转托管请求失败"/>
+	</error>
+
+	<!-- something not found -->
+	<error id="TRADINGDAY_NOT_FOUND" value="0x1010">
+		<message lang="zh_cn" text="综合交易平台: 找不到交易日"/>
+	</error>
+	<error id="USER_NOT_FOUND" value="0x1020">
+		<message lang="zh_cn" text="综合交易平台: 找不到用户"/>
+	</error>
+	<error id="INVESTOR_NOT_FOUND" value="0x1030">
+		<message lang="zh_cn" text="综合交易平台: 找不到投资者"/>
+	</error>
+	<error id="INVESTOR_TRADE_ACCOUNT_NOT_FOUND" value="0x1040">
+		<message lang="zh_cn" text="综合交易平台: 找不到投资者交易账户"/>
+	</error>
+	<error id="DEFAULT_INVEST_UNIT_NOT_FOUND" value="0x1050">
+		<message lang="zh_cn" text="综合交易平台: 找不到默认投资单元"/>
+	</error>
+	<error id="PBU_NOT_FOUND" value="0x1060">
+		<message lang="zh_cn" text="综合交易平台: 找不到交易单元"/>
+	</error>
+	<error id="SECURITY_NOT_FOUND" value="0x1070">
+		<message lang="zh_cn" text="综合交易平台: 找不到证券信息"/>
+	</error>
+	<error id="INSTRUMENT_NOT_FOUND" value="0x1071">
+		<message lang="zh_cn" text="综合交易平台: 找不到合约信息"/>
+	</error>
+	<error id="ORDER_NOT_FOUND" value="0x1080">
+		<message lang="zh_cn" text="综合交易平台: 找不到报单"/>
+	</error>
+	<error id="CANCEL_ORDER_NOT_FOUND" value="0x1081">
+		<message lang="zh_cn" text="综合交易平台: 找不到撤单"/>
+	</error>
+	<error id="PARAM_NOT_FOUND" value="0x1090">
+		<message lang="zh_cn" text="综合交易平台: 找不到对应参数"/>
+	</error>
+	<error id="MARKET_DATA_NOT_FOUND" value="0x10a0">
+		<message lang="zh_cn" text="综合交易平台: 找不到市场行情信息"/>
+	</error>
+<error id="RATIONAL_INFO_NOT_FOUND" value="0x10a1">
+		<message lang="zh_cn" text="综合交易平台: 找不到配股配债信息"/>
+	</error>
+	<error id="FUND_ACCOUNT_NOT_FOUND" value="0x10b0">
+		<message lang="zh_cn" text="综合交易平台: 找不到资金账户"/>
+	</error>
+	<error id="POSITION_NOT_FOUND" value="0x10c0">
+		<message lang="zh_cn" text="综合交易平台: 找不到持仓信息"/>
+	</error>
+	<error id="ORDER_FUND_DETAIL_NOT_FOUND" value="0x10d0">
+		<message lang="zh_cn" text="综合交易平台: 找不到报单明细资金"/>
+	</error>
+	<error id="ETFFILE_NOT_FOUND" value="0x10e0">
+		<message lang="zh_cn" text="综合交易平台: 找不到该ETF清单文件信息"/>
+	</error>
+	<error id="BASKET_SECURITY_NOT_FOUND" value="0x10f0">
+		<message lang="zh_cn" text="综合交易平台: 找不到ETF的成分证券列表信息"/>
+	</error>
+	<error id="ETFSECURITY_NOT_FOUND" value="0x1100">
+		<message lang="zh_cn" text="综合交易平台: 找不到ETF证券信息"/>
+	</error>
+	<error id="EXCHANGE_NOT_FOUND" value="0x1110">
+		<message lang="zh_cn" text="综合交易平台: 找不到交易所"/>
+	</error>
+	<error id="PLEDGE_POS_NOT_FOUND" value="0x1120">
+		<message lang="zh_cn" text="综合交易平台: 找不到质押持仓信息"/>
+	</error>
+	<error id="PLEDGE_POS_FROZEN_NOT_FOUND" value="0x1130">
+		<message lang="zh_cn" text="综合交易平台: 找不到质押持仓冻结明细信息"/>
+	</error>
+	<error id="STANDARD_SECURITY_NOT_FOUND" value="0x1140">
+		<message lang="zh_cn" text="综合交易平台: 找不到标准券信息"/>
+	</error>
+	<error id="PLEDGE_ORDER_INFO_NOT_FOUND" value="0x1150">
+		<message lang="zh_cn" text="综合交易平台: 找不到质押申报代码信息"/>
+	</error>
+	<error id="PLEDGE_PARAM_NOT_FOUND" value="0x1160">
+		<message lang="zh_cn" text="综合交易平台: 找不到质押参数"/>
+	</error>
+	<error id="FUND_ACCOUNT_DETAIL_NOT_FOUND" value="0x1170">
+		<message lang="zh_cn" text="综合交易平台: 找不到资金账户分交易所明细"/>
+	</error>
+	<error id="POSITION_FROZEN_NOT_FOUND" value="0x1180">
+		<message lang="zh_cn" text="综合交易平台: 找不到报单对应的持仓冻结明细"/>
+	</error>
+	<error id="POSITION_TRADING_PARAM_NOT_FOUND" value="0x1190">
+		<message lang="zh_cn" text="综合交易平台: 找不到持仓交易属性"/>
+	</error>
+	<error id="INVESTOR_INSTRUMENT_POS_NOT_FOUND" value="0x11a0">
+		<message lang="zh_cn" text="综合交易平台: 找不到投资者持仓信息"/>
+	</error>
+	<error id="INVESTOR_INSTRUMENT_POS_EXTEND_NOT_FOUND" value="0x11b0">
+		<message lang="zh_cn" text="综合交易平台: 找不到投资者持仓扩展信息"/>
+	</error>
+	<error id="FUND_EXTEND_NOT_FOUND" value="0x11c0">
+		<message lang="zh_cn" text="综合交易平台: 找不到投资基金扩展信息"/>
+	</error>
+	
+	<error id="CANNOT_FIND_APP_USER" value="0x11d0">
+		<message lang="zh_cn" text="综合交易平台: 找不到组件用户信息"/>
+	</error>
+	
+	<error id="CANNOT_FIND_APP_INFO" value="0x11e0">
+		<message lang="zh_cn" text="综合交易平台: 找不到组件信息"/>
+	</error>
+	
+	<error id="CANNOT_FIND_APP_RUNNING_INFO" value="0x11f0">
+		<message lang="zh_cn" text="综合交易平台: 找不到组件运行信息"/>
+	</error>
+	
+	<error id="CANNOT_FIND_TRADER_OFFER" value="0x1200">
+		<message lang="zh_cn" text="综合交易平台: 找不到交易单元连接信息"/>
+	</error>
+
+	<error id="CANNOT_FIND_DBMT_INFO" value="0x1210">
+		<message lang="zh_cn" text="综合交易平台: 找不到DBMT信息"/>
+	</error>
+    
+    <error id="RECORD_NOT_FOUND" value="0x1220">
+        <message lang="zh_cn" text="综合交易平台: 记录找不到"/>
+	</error>
+    
+    <error id="CANNOT_FIND_DBWRITER_INFO" value="0x1230">
+		<message lang="zh_cn" text="综合交易平台: 找不到DbWriter信息"/>
+	</error>
+    
+    <error id="CANNOT_FIND_MD_SERVER_INFO" value="0x1240">
+		<message lang="zh_cn" text="综合交易平台: 找不到行情报盘信息"/>
+	</error>
+	
+    <error id="CANNOT_FIND_MARGIN_INFO" value="0x1250">
+		<message lang="zh_cn" text="综合交易平台: 找不到保证金信息"/>
+	</error>	
+	
+	<error id="CANNOT_FIND_SECURITY_OFFER" value="0x1260">
+		<message lang="zh_cn" text="综合交易平台：找不到证券报盘信息"/>
+	</error>
+	<error id="CANNOT_FIND_SECURITY_TRANSFER" value="0x1270">
+		<message lang="zh_cn" text="综合交易平台：找不到证券转移"/>
+	</error>
+	
+	<!-- something failed -->
+	<error id="ORDER_LOCAL_ID_GENERATE_FAILED" value="0x2010">
+		<message lang="zh_cn" text="综合交易平台: 生成本地报单编号失败"/>
+	</error>
+    <error id="ORDER_SYS_ID_GENERATE_FAILED" value="0x2011">
+		<message lang="zh_cn" text="综合交易平台: 生成系统报单编号失败"/>
+	</error>
+	<error id="FREEZE_FUNDS_FAILED" value="0x2020">
+		<message lang="zh_cn" text="综合交易平台: 资金冻结失败"/>
+	</error>
+	<error id="TRADE_PROCESS_FUNDS_FAILED" value="0x2030">
+		<message lang="zh_cn" text="综合交易平台: 资金成交处理失败"/>
+	</error>
+	<error id="FREEZE_POSITION_FAILED" value="0x2040">
+		<message lang="zh_cn" text="综合交易平台: 持仓冻结失败"/>
+	</error>
+	<error id="TRADE_UNFREEZE_DECREASE_POS_FAILED" value="0x2050">
+		<message lang="zh_cn" text="综合交易平台: 持仓成交解冻并记减失败"/>
+	</error>
+	<error id="TRADE_INCREASE_POSITION_FAILED" value="0x2060">
+		<message lang="zh_cn" text="综合交易平台: 持仓成交记增失败"/>
+	</error>
+	<error id="UNFREEZE_POSITION_FAILED" value="0x2070">
+		<message lang="zh_cn" text="综合交易平台: 持仓解冻失败"/>
+	</error>
+	<error id="UNFREEZE_ALL_POSITION_FAILED" value="0x2080">
+		<message lang="zh_cn" text="综合交易平台: 持仓全部解冻失败"/>
+	</error>
+	<error id="FREEZE_PLEDGE_POS_FAILED" value="0x2090">
+		<message lang="zh_cn" text="综合交易平台: 质押持仓冻结失败"/>
+	</error>
+	<error id="TRADE_UNFREEZE_DECREASE_PLEDGE_POS_FAILED" value="0x20a0">
+		<message lang="zh_cn" text="综合交易平台: 质押持仓成交解冻并记减失败"/>
+	</error>
+	<error id="TRADE_INCREASE_PLEDGE_POS_FAILED" value="0x20b0">
+		<message lang="zh_cn" text="综合交易平台: 质押持仓成交记增失败"/>
+	</error>
+	<error id="UNFREEZE_ALL_PLEDGE_POSITION_FAILED" value="0x20c0">
+		<message lang="zh_cn" text="综合交易平台: 质押持仓全部解冻失败"/>
+	</error>
+	<error id="CHECK_REPO_RATIO_FAILED" value="0x20d0">
+		<message lang="zh_cn" text="综合交易平台: 标准券使用率校验失败"/>
+	</error>
+	<error id="INVALID_REPO_RATIO" value="0x20d1">
+		<message lang="zh_cn" text="综合交易平台: 标准券使用率超出系统设置"/>
+	</error>
+	<error id="CHECK_REPO_TIMES_FAILED" value="0x20e0">
+		<message lang="zh_cn" text="综合交易平台: 回购放大倍数校验失败"/>
+	</error>
+	<error id="INVALID_REPO_TIMES" value="0x20e1">
+		<message lang="zh_cn" text="综合交易平台: 回购放大倍数超出系统设置"/>
+	</error>
+	<error id="GET_POSITION_TRADING_PARAM_FAILED" value="0x20f0">
+		<message lang="zh_cn" text="综合交易平台: 获取持仓交易属性失败"/>
+	</error>
+	<error id="CHECK_POSITION_LIMIT_FAILED" value="0x2100">
+		<message lang="zh_cn" text="综合交易平台: 投资者限仓检查失败"/>
+	</error>
+	<error id="CHECK_RISK_BUYING_LIMIT_FAILED" value="0x2110">
+		<message lang="zh_cn" text="综合交易平台: 风险警示板股票买入数量超过限制"/>
+	</error>
+	<error id="CHECK_NEW_SHARES_LIMIT_FAILED" value="0x2120">
+		<message lang="zh_cn" text="综合交易平台: 上市新股买入数量超过限制"/>
+	</error>
+	<error id="PWD_TRANS_FAILED" value="0x2130">
+		<message lang="zh_cn" text="综合交易平台: 密码转换失败"/>
+	</error>
+	<error id="INVESTOR_INSTRUMENT_POS_EXTEND_FAILED" value="0x2140">
+		<message lang="zh_cn" text="综合交易平台: 获取投资者持仓扩展信息失败"/>
+	</error>
+	<error id="UPDATE_OFFER_SEQ_FAILED" value="0x2150">
+		<message lang="zh_cn" text="综合交易平台: 更新报盘报文序号失败"/>
+	</error>
+	<error id="RECEIVE_SMALL_OFFER_SEQ" value="0x2160">
+		<message lang="zh_cn" text="综合交易平台: 收到的报单报文的序号比当前序号小"/>
+	</error>
+	<error id="RECEIVE_LARGE_OFFER_SEQ" value="0x2170">
+		<message lang="zh_cn" text="综合交易平台: 收到的报单报文的序号跳号了"/>
+	</error>
+	<error id="APP_STATUS_FAILED" value="0x2180">
+		<message lang="zh_cn" text="综合交易平台: 组件状态错误"/>
+	</error>
+    <error id="SYS_ORDER_GET_INVEST_UNIT_ACCOUNT_FAILED" value="0x2190">
+		<message lang="zh_cn" text="综合交易平台: 重建报单时获取投资单元、资金账户失败"/>
+	</error>
+	<error id="AUTH_FAILED" value="0x21a0">
+		<message lang="zh_cn" text="综合交易平台: 客户端认证失败"/>
+		<message lang="en_us" text="CTP: Client Authentication failed"/>
+	</error>
+
+	<!-- something invalid -->
+	<!-- means doesn't match or out of range -->
+	<error id="INVALID_INVEST_UNIT" value="0x3010">
+		<message lang="zh_cn" text="综合交易平台: 无效的投资单元"/>
+	</error>
+	<error id="INVALID_ORDER_PRICE_TYPE" value="0x3020">
+		<message lang="zh_cn" text="综合交易平台: 无效的报单价格类型"/>
+	</error>
+	<error id="INVALID_PRODUCT_ID" value="0x3030">
+		<message lang="zh_cn" text="综合交易平台: 无效的产品编号"/>
+	</error>
+	<error id="INVALID_HEDGE_FLAG" value="0x3031">
+		<message lang="zh_cn" text="综合交易平台: 无效的套保标志"/>
+	</error>
+	<error id="INVALID_POSI_DIRECTION" value="0x3032">
+		<message lang="zh_cn" text="综合交易平台: 无效的持仓方向"/>
+	</error>
+	<error id="INVALID_DIRECTION" value="0x3040">
+		<message lang="zh_cn" text="综合交易平台: 无效的报单类别"/>
+	</error>
+	<error id="INVALID_ORDER_STATUS" value="0x3050">
+		<message lang="zh_cn" text="综合交易平台: 报单状态异常"/>
+	</error>
+	<error id="INVALID_ORDER_OWNER" value="0x3060">
+		<message lang="zh_cn" text="综合交易平台: 报单非法拥有者"/>
+	</error>
+	<error id="INVALID_PWD" value="0x3070">
+		<message lang="zh_cn" text="综合交易平台: 密码不正确"/>
+	</error>
+	<error id="INVALID_SUBSCRIBING_SHARES_LIMIT_FLAG" value="0x3080">
+		<message lang="zh_cn" text="综合交易平台: 无效新股申购额度限制标志"/>
+	</error>
+	<error id="INVALID_SECURITY_STATUS" value="0x3090">
+		<message lang="zh_cn" text="综合交易平台: 无效证券状态"/>
+	</error>
+	<error id="INVALID_SECURITY_STATUS_LONG_SUS" value="0x3091">
+		<message lang="zh_cn" text="综合交易平台: 证券状态为长期停牌"/>
+	</error>
+	<error id="INVALID_SECURITY_STATUS_DEL_TRANSFER" value="0x3092">
+		<message lang="zh_cn" text="综合交易平台: 证券状态为退市转让"/>
+	</error>
+	<error id="INVALID_SECURITY_STATUS_PAUSE_BOND" value="0x3093">
+		<message lang="zh_cn" text="综合交易平台: 证券状态为暂停上市转让债券"/>
+	</error>
+	<error id="INVALID_INSTRUMENT_STATUS_C_SUS" value="0x3094">
+		<message lang="zh_cn" text="综合交易平台: 合约状态为连续停牌"/>
+	</error>
+	<error id="INVALID_ORDER_PRICE" value="0x30a0">
+		<message lang="zh_cn" text="综合交易平台: 无效申报价格"/>
+	</error>
+	<error id="INVALID_ORDER_PRICE_RATIO" value="0x30a1">
+		<message lang="zh_cn" text="综合交易平台: 申报价格必须是价格最小单位的整数倍"/>
+	</error>
+	<error id="INVALID_ORDER_PRICE_NEGATIVE" value="0x30a2">
+		<message lang="zh_cn" text="综合交易平台: 申报价格不能为负"/>
+	</error>
+	<error id="INVALID_ORDER_AMOUNT" value="0x30a3">
+		<message lang="zh_cn" text="综合交易平台: 无效申报金额"/>
+	</error>	
+	<error id="INVALID_ORDER_VOLUME" value="0x30b0">
+		<message lang="zh_cn" text="综合交易平台: 无效申报数量"/>
+	</error>
+	<error id="INVALID_ORDER_VOLUME_RATIO" value="0x30b1">
+		<message lang="zh_cn" text="综合交易平台: 申报数量不为交易单位的整数倍"/>
+	</error>
+	<error id="INVALID_ORDER_VOLUME_LIMIT" value="0x30b2">
+		<message lang="zh_cn" text="综合交易平台: 申报数量超出单笔申报的最大或最小数量限制"/>
+	</error>
+	<error id="INVALID_ORDER_VOLUME_CREREDUNIT" value="0x30b3">
+		<message lang="zh_cn" text="综合交易平台: 申报数量不为最小申赎单位的整数倍"/>
+	</error>
+	<error id="INVALID_CASH_RATIO" value="0x30c0">
+		<message lang="zh_cn" text="综合交易平台: 缺失证券的现金替代比例超出了ETF的最大现金替代比例"/>
+	</error>
+	<error id="INVALID_STANDARD_REPO_TIMES" value="0x30d0">
+		<message lang="zh_cn" text="综合交易平台: 无效的证券折算率"/>
+	</error>
+	<error id="INVALID_UNFREEZE_POSITION" value="0x30e0">
+		<message lang="zh_cn" text="综合交易平台: 无效的解冻持仓数量"/>
+	</error>
+	<error id="INVALID_PLEDGE_STANDARD_VOLUME" value="0x30f0">
+		<message lang="zh_cn" text="综合交易平台: 质押券对应的标准券数量无效"/>
+	</error>
+	<error id="INVALID_ACCOUNT_NET_ASSETS" value="0x3100">
+		<message lang="zh_cn" text="综合交易平台: 无效的账户净资产"/>
+	</error>
+	<error id="INVALID_FUND_ACCOUNT" value="0x3110">
+		<message lang="zh_cn" text="综合交易平台: 无效的资金账户"/>
+	</error>
+	<error id="GET_DEFAULT_FUND_ACCOUNT_FAILED" value="0x3111">
+		<message lang="zh_cn" text="综合交易平台: 获取默认资金账户失败"/>
+	</error>
+	<error id="INVEST_UNIT_AND_ACCOUNT_NOT_MATCH" value="0x3112">
+		<message lang="zh_cn" text="综合交易平台: 投资单元与交易资金账户不匹配"/>
+	</error>
+	<error id="INVALID_PBU" value="0x3120">
+		<message lang="zh_cn" text="综合交易平台: 无效的交易单元"/>
+	</error>
+	<error id="INVALID_CUSTODY_TRANS_TYPE" value="0x3130">
+		<message lang="zh_cn" text="综合交易平台: 无效的转托管类型"/>
+	</error>
+	<error id="INVALID_RATIO_BASE" value="0x3140">
+		<message lang="zh_cn" text="综合交易平台: 无效的持股比例基准类型"/>
+	</error>
+	<error id="INVALID_USER_TYPE" value="0x3150">
+		<message lang="zh_cn" text="综合交易平台: 无效的用户类型"/>
+	</error>
+	<error id="INVALID_TRADINGDAY" value="0x3160">
+		<message lang="zh_cn" text="综合交易平台: 无效的交易日"/>
+	</error>
+	<error id="INVALID_LOGIN_IPADDRESS" value="0x3170">
+		<message lang="zh_cn" text="综合交易平台: 无效的IP地址"/>
+	</error>
+    <error id="INVALID_ACTION_FLAG" value="0x3180">
+		<message lang="zh_cn" text="综合交易平台: 无效的操作标志"/>
+	</error>
+	
+	<error id="INVALID_APP_TYPE" value="0x3190">
+		<message lang="zh_cn" text="综合交易平台: 不支持的组件类型"/>
+	</error>
+	
+	<error id="INVALID_TRADER_CONNECT_STATUS" value="0x31a0">
+		<message lang="zh_cn" text="综合交易平台: 无效的交易单元连接状态"/>
+	</error>
+    
+    <error id="INVALID_MD_SERVER_CONNECT_STATUS" value="0x31a1">
+		<message lang="zh_cn" text="综合交易平台: 无效的行情报盘连接状态"/>
+	</error>
+    
+    <error id="INVALID_DBMT_CONNECT_STATUS" value="0x31a2">
+		<message lang="zh_cn" text="综合交易平台: 无效的DBMT连接状态"/>
+	</error>
+    
+    <error id="INVALID_DBWRITER_CONNECT_STATUS" value="0x31a3">
+		<message lang="zh_cn" text="综合交易平台: 无效的DbWriter连接状态"/>
+	</error>
+	
+	<error id="INVALID_QUERY_BROKER" value="0x31b0">
+		<message lang="zh_cn" text="综合交易平台查询: 无效的经纪公司代码"/>
+	</error>
+	
+	<error id="INVALID_QUERY_INVESTOR" value="0x31c0">
+		<message lang="zh_cn" text="综合交易平台查询: 无效的投资者代码"/>
+	</error>	
+	
+	<error id="INVALID_QUERY_PARAMETER" value="0x31d0">
+		<message lang="zh_cn" text="综合交易平台查询: 无效的查询参数"/>
+	</error>
+	
+	<error id="INVALID_OPTIONS_TYPE" value="0x31e0">
+		<message lang="zh_cn" text="综合交易平台: 无效的合约类型"/>
+	</error>	
+    
+    <error id="INVALID_LOCK_TYPE" value="0x31f0">
+		<message lang="zh_cn" text="综合交易平台: 无效的锁定类型"/>
+	</error>
+	
+	<error id="INVALID_SECURITY_OFFER_CONNECT_STATUS" value="0x31f1">
+		<message lang="zh_cn" text="综合交易平台：无效的证券报盘连接状态"/>
+	</error>
+	
+	<error id="INVALID_INSTRUMENT_STATUS" value="0x3200">
+		<message lang="zh_cn" text="综合交易平台: 无效合约状态"/>
+	</error>
+	
+	<error id="INVALID_SECURITY_TRANSFER_STATUS" value="0x3210">
+		<message lang="zh_cn" text="综合交易平台：无效的证券转移状态"/>
+	</error>
+		
+	<!-- grant or previlige -->
+	<error id="UNSUPPORTED_FUNCTION" value="0x4010">
+		<message lang="zh_cn" text="综合交易平台: 功能不支持"/>
+	</error>
+	<error id="NOT_LOGIN" value="0x4020">
+		<message lang="zh_cn" text="综合交易平台: 用户未登录"/>
+	</error>
+	<error id="NOT_LOGIN_YET" value="0x4021">
+		<message lang="zh_cn" text="综合交易平台: 用户未登录过"/>
+	</error>	
+	<error id="BROKER_EXCHANGE_NOT_ACTIVE" value="0x4030">
+		<message lang="zh_cn" text="综合交易平台: 交易所不活跃"/>
+	</error>
+	<error id="USER_NOT_ENABLED" value="0x4040">
+		<message lang="zh_cn" text="综合交易平台: 用户处于未启用状态"/>
+	</error>
+	<error id="INVEST_UNIT_NO_OPERATE_PREVILIGE" value="0x4050">
+		<message lang="zh_cn" text="综合交易平台: 投资单元没有操作权限"/>
+	</error>
+	<error id="USER_NO_OPERATE_PREVILIGE" value="0x4051">
+		<message lang="zh_cn" text="综合交易平台: 当前用户没有操作权限"/>
+	</error>
+	<error id="NO_TRADE_PREVILIGE" value="0x4060">
+		<message lang="zh_cn" text="综合交易平台: 没有交易权限"/>
+	</error>
+	<error id="NO_BIZ_GRANT" value="0x4070">
+		<message lang="zh_cn" text="综合交易平台: 投资者没有业务权限"/>
+	</error>
+	<error id="UNSUPPORTED_CANCEL_ORDER" value="0x4080">
+		<message lang="zh_cn" text="综合交易平台: 不支持撤单"/>
+	</error>
+	<error id="UNSUPPORTED_CREATION" value="0x4090">
+		<message lang="zh_cn" text="综合交易平台: 该证券不支持申购"/>
+	</error>
+	<error id="UNSUPPORTED_CREATION_IN_SYSTEM" value="0x40a0">
+		<message lang="zh_cn" text="综合交易平台: 该证券不能在竞价交易平台申赎"/>
+	</error>
+	<error id="UNKNOWN_ETF_CURRENCE_REPLACES_TATUS" value="0x40b0">
+		<message lang="zh_cn" text="综合交易平台: 未知的ETF现金替代标志"/>
+	</error>
+	<error id="UNSUPPORTED_REDEMPTION" value="0x40c0">
+		<message lang="zh_cn" text="综合交易平台: 该证券不支持赎回"/>
+	</error>
+	<error id="UNKNOWN_ETF_TRADE_CODE" value="0x40d0">
+		<message lang="zh_cn" text="综合交易平台: 未知的ETF成交回报证券代码"/>
+	</error>
+	<error id="UNKNOWN_EXCHANGE" value="0x40e0">
+		<message lang="zh_cn" text="综合交易平台: 未知的交易所代码"/>
+	</error>
+	<error id="UNSUPPORTED_PLEDGE_IN" value="0x40f0">
+		<message lang="zh_cn" text="综合交易平台: 该证券不支持质押入库"/>
+	</error>
+	<error id="UNSUPPORTED_PLEDGE_OUT" value="0x4100">
+		<message lang="zh_cn" text="综合交易平台: 该证券不支持质押出库"/>
+	</error>
+	<error id="UNKNOWN_PLEDGE_TRADE_CODE" value="0x4110">
+		<message lang="zh_cn" text="综合交易平台: 未知的质押成交回报证券代码"/>
+	</error>
+	<error id="UNSUPPORTED_CUSTODY_TRANSFER" value="0x4120">
+		<message lang="zh_cn" text="综合交易平台: 该证券不支持转托管"/>
+	</error>
+	<error id="NO_MARKET_OPERATE_PREVILIGE" value="0x4130">
+		<message lang="zh_cn" text="综合交易平台: 没有该市场证券的操作权限"/>
+	</error>
+	<error id="UNSUPPORTED_CUSTODIAN_TRADE" value="0x4140">
+		<message lang="zh_cn" text="综合交易平台: 该证券不支持交易"/>
+	</error>
+	<error id="NOT_MODIFY_LOGINUSERPWD" value="0x4141">
+		<message lang="zh_cn" text="综合交易平台: 不能修改登录用户的密码"/>
+	</error>
+	<error id="NOT_ACTIVATE_STARTING_USER" value="0x4142">
+		<message lang="zh_cn" text="综合交易平台: 不能激活已启用的用户"/>
+	</error>
+	<error id="NOT_INVESTOR_CANCEL_DIRECTION" value="0x4143">
+		<message lang="zh_cn" text="综合交易平台: 投资者用户不能撤销此类报单"/>
+	</error>
+	<error id="NOT_HAVE_API_GRANT" value="0x4144">
+		<message lang="zh_cn" text="综合交易平台: 用户没有操作这个API的权限"/>
+	</error>
+	<error id="SINGLEUSERSESSION_EXCEED_LIMIT" value="0x4145">
+		<message lang="zh_cn" text="综合交易平台: 用户登录数量超限"/>
+	</error>
+	<error id="NOT_AUTHENT" value="0x4146">
+		<message lang="zh_cn" text="综合交易平台: 客户端未认证"/>
+	</error>
+	<error id="NOT_HAVE_BROKER_GRANT" value="0x4147">
+		<message lang="zh_cn" text="综合交易平台：用户没有操作该经纪公司的权限"/>
+	</error>
+	<error id="UNSUPPORTED_NULL_PARAMETER" value="0x4148">
+		<message lang="zh_cn" text="综合交易平台: 不支持为空的修改参数"/>
+	</error>	
+	<error id="UNSUPPORTED_DUP_LOGIN" value="0x4149">
+		<message lang="zh_cn" text="综合交易平台: 该会话已有其他用户登录"/>
+	</error>
+
+	<!-- something not enough -->
+	<error id="NOT_ENOUGH_MONEY" value="0x5010">
+		<message lang="zh_cn" text="综合交易平台: 资金不足"/>
+	</error>
+	<error id="NOT_ENOUGH_VOLUME" value="0x5020">
+		<message lang="zh_cn" text="综合交易平台: 数量不足"/>
+	</error>
+	<error id="NOT_ENOUGH_VOLUME_BASKET" value="0x5030">
+		<message lang="zh_cn" text="综合交易平台: 成分证券的数量不足"/>
+	</error>
+	<error id="NOT_ENOUGH_LIMIT_POSI" value="0x5040">
+		<message lang="zh_cn" text="综合交易平台: 投资者限仓额度不足"/>
+	</error>
+	<error id="NOT_ENOUGH_LIMIT_AMOUNT" value="0x5050">
+		<message lang="zh_cn" text="综合交易平台: 投资者买入金额额度不足"/>
+	</error>	
+	<error id="NOT_ENOUGH_UNDERLYING_VOLUME" value="0x5060">
+		<message lang="zh_cn" text="综合交易平台：标的数量不足"/>
+	</error>
+	<!-- something duplicated -->
+	<error id="DUPLICATED_ORDER" value="0x6010">
+		<message lang="zh_cn" text="综合交易平台: 重复报单"/>
+	</error>
+	<error id="DUPLICATED_TRADE" value="0x6020">
+		<message lang="zh_cn" text="综合交易平台: 重复成交"/>
+	</error>
+	<error id="DUPLICATED_CANCEL" value="0x6030">
+		<message lang="zh_cn" text="综合交易平台: 重复撤单"/>
+	</error>
+	<error id="DUPLICATED_APP_LOGIN" value="0x6040">
+		<message lang="zh_cn" text="综合交易平台: 组件用户重复登录"/>
+	</error>
+    <error id="DUPLICATED_ORDER_REF" value="0x6050">
+		<message lang="zh_cn" text="综合交易平台: 重复报单引用"/>
+	</error>
+	
+	<!-- 钱券同步 -->
+	<error id="INVESTOR_ACCOUNT_NOT_MATCH" value="0x7000">
+		<message lang="zh_cn" text="综合交易平台：投资者代码与资金账户不一致"/>
+	</error>
+	<error id="GENERATE_FUND_SERIAL_FAILED" value="0x7001">
+		<message lang="zh_cn" text="综合交易平台：生成资金转移流水号失败"/>
+	</error>
+	<error id="GENERATE_POSITION_SERIAL_FAILED" value="0x7002">
+		<message lang="zh_cn" text="综合交易平台：生成仓位转移流水号失败"/>
+	</error>
+	<error id="INVALID_TRANSFER_DIRECTION" value="0x7003">
+		<message lang="zh_cn" text="综合交易平台：非法的转账方向"/>
+	</error>
+	<error id="CANNOT_FIND_OLD_SERIAL" value="0x7004">
+		<message lang="zh_cn" text="综合交易平台：找不到原操作流水"/>
+	</error>
+	<error id="REPEAL_INFO_NOT_MATCH" value="0x7005">
+		<message lang="zh_cn" text="综合交易平台：冲正信息与原操作信息不一致"/>
+	</error>
+	<error id="INVALID_POSITION_TYPE" value="0x7006">
+		<message lang="zh_cn" text="综合交易平台：非法的仓位类型"/>
+	</error>
+	<error id="INVALID_MONEY" value="0x7007">
+		<message lang="zh_cn" text="综合交易平台：非法的资金"/>
+	</error>
+	<error id="INVALID_TRANSFER_VOLUME" value="0x7008">
+		<message lang="zh_cn" text="综合交易平台：非法的转移数量"/>
+	</error>
+	 <error id="POSITION_TRANSFER_FAILED" value="0x7009">
+		<message lang="zh_cn" text="综合交易平台：仓位转移失败"/>
+	 </error>
+	 <error id="REPEAL_POSITION_FAILED" value="0x700A">
+		<message lang="zh_cn" text="综合交易平台：冲正仓位转移失败"/>
+	 </error>
+	 <error id="FUND_TRANSFER_FAILED" value="0x700B">
+		<message lang="zh_cn" text="综合交易平台：资金转移失败"/>
+	 </error>
+	 <error id="REPEAL_FUND_FAILED" value="0x700C">
+		<message lang="zh_cn" text="综合交易平台：冲正资金转移失败"/>
+	 </error>
+	 <error id="NOT_SUPPORT_SECURITY_CLASS" value="0x700D">
+		<message lang="zh_cn" text="综合交易平台：不支持的证券类别"/>
+     </error>		
+	 <error id="DUPLICATE_APPLY_SERIAL" value="0x700E">
+		<message lang="zh_cn" text="综合交易平台：重复的请求流水号"/>
+	 </error>
+	 <error id="SERIAL_AREADY_REPEALED" value="0x700F">
+		<message lang="zh_cn" text="综合交易平台：原流水已被冲正"/>
+	 </error>
+	 <error id="UPDATE_FUND_FAILED" value="0x7010">
+		<message lang="zh_cn" text="综合交易平台：更新资金失败"/>
+	 </error>
+	 <error id="INVEST_UNIT_AND_TRADING_CODE_NOT_MATCH" value="0x7011">
+		<message lang="zh_cn" text="综合交易平台：投资单元与客户编码不匹配"/>
+	 </error>
+	 <error id="EXCHANGE_ID_AND_TRADING_CODE_NOT_MATCH" value="0x7012">
+		<message lang="zh_cn" text="综合交易平台：交易所代码与客户编码不匹配"/>
+	 </error>
+	 <error id="GENERATE_SECURITY_TRANSFER_SERIAL_FAILED" value="0x7013">
+		<message lang="zh_cn" text="综合交易平台：生成证券转移流水号失败"/>
+	</error>
+	<error id="SECURITY_TRANSFER_FAILED" value="0x7014">
+		<message lang="zh_cn" text="综合交易平台：证券转移失败"/>
+	</error>
+	<error id="USER_NO_SECURITY_INVESTOR_PREVILIGE" value="0x7015">
+		<message lang="zh_cn" text="综合交易平台：用户没有操作证券投资者的权限"/>
+	</error>
+	<!--报盘错误-->
+	<error id="OFFER_INNER_ERROR" value="0x8000">
+		<message lang="zh_cn" text="综合交易平台：报盘内部错误"/>
+	</error>
+	<error id="OFFER_INVALID_PRICE" value="0x8100">
+		<message lang="zh_cn" text="综合交易平台：报盘非法价格"/>
+	</error>	
+	<error id="OFFER_INVALID_ORDERLOCALID" value="0x8110">
+		<message lang="zh_cn" text="综合交易平台：报盘非法报单编号"/>
+	</error>		
+	<error id="OFFER_INVALID_VOLUME" value="0x8120">
+		<message lang="zh_cn" text="综合交易平台：报盘非法数量"/>
+	</error>	
+	
+	<!--个股期权-->
+	<error id="NOT_STRIKE_DAY" value="0x8200">
+		<message lang="zh_cn" text="综合交易平台：不是行权日"/>
+	</error>
+	<error id="NOT_SUPPORT_ACTION_TYPE" value="0x8201">
+		<message lang="zh_cn" text="综合交易平台：不支持的执行类型"/>
+	</error>
+	<error id="INSERT_EXECORDER_FAILED" value="0x8202">
+		<message lang="zh_cn" text="综合交易平台：行权报单失败"/>
+	</error>
+	<error id="CANCEL_EXECORDER_FAILED" value="0x8203">
+		<message lang="zh_cn" text="综合交易平台：行权撤单失败"/>
+	</error>
+	<error id="EXCH_INSERT_EXECORDER_FAILED" value="0x8204">
+		<message lang="zh_cn" text="综合交易平台：交易所行权报单回报失败"/>
+	</error>
+	<error id="EXCH_CANCEL_EXECORDER_FAILED" value="0x8205">
+		<message lang="zh_cn" text="综合交易平台：交易所行权撤单回报失败"/>
+	</error>
+    <error id="INSERT_LOCKORDER_FAILED" value="0x8206">
+		<message lang="zh_cn" text="综合交易平台：锁定解锁报单失败"/>
+	</error>
+    <error id="CANCEL_LOCKORDER_FAILED" value="0x8207">
+		<message lang="zh_cn" text="综合交易平台：锁定解锁撤单失败"/>
+	</error>
+	<error id="EXCH_INSERT_LOCKORDER_FAILED" value="0x8208">
+		<message lang="zh_cn" text="综合交易平台：交易所锁定解锁报单回报失败"/>
+	</error>
+    
+	<!-- misc -->
+	<error id="CURRENCY_NOT_MATCH" value="0x9010">
+		<message lang="zh_cn" text="综合交易平台: 资金账户币种与证券币种不一致"/>
+	</error>
+    <error id="INVESTOR_TRADING_CODE_NOT_MATCH" value="0x9011">
+		<message lang="zh_cn" text="综合交易平台：投资者代码与交易账户不一致"/>
+	</error>
+	<error id="TRADE_VOLUME_LARGER" value="0x9020">
+		<message lang="zh_cn" text="综合交易平台: 成交数量异常"/>
+	</error>
+	<error id="CANCEL_VOLUME_LARGER" value="0x9030">
+		<message lang="zh_cn" text="综合交易平台: 撤单数量异常"/>
+	</error>
+	<error id="CANCEL_VOLUME_ERROR" value="0x9040">
+		<message lang="zh_cn" text="综合交易平台: 撤单数量错误"/>
+	</error>
+</errors>
