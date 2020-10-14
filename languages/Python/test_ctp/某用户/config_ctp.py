@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys
 
-sys.path.append(r'D:\Users\Kan\Documents\GitHub\XAPI2\languages\Python')
+sys.path.append(r'D:\Users\Kan\Documents\GitHub\XAPI3\languages\Python')
 
 # 解决Python 3.6的pandas不支持中文路径的问题
 print(sys.getfilesystemencoding())  # 查看修改前的
@@ -15,18 +15,20 @@ except:
 from test_ctp_api import main
 
 configs = {
-    'root_dir': r'd:' + '\\test_ctp\\某用户',
+    'root_dir': r'D:\Users\Kan\Documents\GitHub\XAPI3\languages\Python\test_ctp\某用户',
     'api': {
-        'Address': br'tcp://218.202.237.33:10012',
+        'Address': br'tcp://180.168.146.187:10110',
         'BrokerID': b'9999',
         'UserID': b'654321',
         'Password': b'123456',
     },
     'td': {
-        'Address': br'tcp://180.168.146.187:10000',
+        'Address': br'tcp://180.168.146.187:10100',
         'BrokerID': b'9999',
-        'UserID': b'654321',
-        'Password': b'123456',
+        'AppID': b'8500342533',
+        'AuthCode': b'0000000000000000',
+        'UserID': b'14078611',
+        'Password': b'zaq1xsw2',
     },
 }
 

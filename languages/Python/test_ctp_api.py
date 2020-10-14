@@ -7,25 +7,26 @@ import getopt
 from MyXSpi import MyXSpi
 from xapi import *
 
+
 # 从当前config类中加载配置文件
 # import config
 
 def init(config):
     # 交易连接
-    td = XApi(r'C:\Program Files\SmartQuant Ltd\OpenQuant 2014\XAPI\x86\XAPI_CPP_x86.dll')
+    td = XApi(r'C:\Program Files\SmartQuant Ltd\OpenQuant 2014\XAPI\x64\XAPI_CPP_x64.dll')
     td.ServerInfo.Address = config['td']['Address']
     td.ServerInfo.BrokerID = config['td']['BrokerID']
     td.UserInfo.UserID = config['td']['UserID']
     td.UserInfo.Password = config['td']['Password']
 
     # 行情连接
-    md = XApi(r'C:\Program Files\SmartQuant Ltd\OpenQuant 2014\XAPI\x86\XAPI_CPP_x86.dll')
+    md = XApi(r'C:\Program Files\SmartQuant Ltd\OpenQuant 2014\XAPI\x64\XAPI_CPP_x64.dll')
     md.ServerInfo.Address = config['api']['Address']
     md.ServerInfo.BrokerID = config['api']['BrokerID']
     md.UserInfo.UserID = config['api']['UserID']
     md.UserInfo.Password = config['api']['Password']
 
-    ret = td.init(br'C:\Program Files\SmartQuant Ltd\OpenQuant 2014\XAPI\x86\CTP\CTP_Trade_x86.dll')
+    ret = td.init(br'C:\Program Files\SmartQuant Ltd\OpenQuant 2014\XAPI\x64\CTP_SE\CTP_SE_Trade_x64.dll')
     if not ret:
         print(td.get_last_error())
         exit(-1)
@@ -33,7 +34,7 @@ def init(config):
     print(td.get_api_name())
     print(td.get_api_version())
 
-    ret = md.init(br'C:\Program Files\SmartQuant Ltd\OpenQuant 2014\XAPI\x86\CTP\CTP_Quote_x86.dll')
+    ret = md.init(br'C:\Program Files\SmartQuant Ltd\OpenQuant 2014\XAPI\x64\CTP_SE\CTP_SE_Quote_x64.dll')
     if not ret:
         print(md.get_last_error())
         exit(-1)
@@ -47,8 +48,8 @@ def init(config):
 
 def main(configs):
     print(sys.stdin.encoding)
-    td, md = init(config.configs)
-    spi = MyXSpi(root_dir=config.configs['root_dir'],
+    td, md = init(configs)
+    spi = MyXSpi(root_dir=configs['root_dir'],
                  portfolios=['portfolio_1.csv', 'portfolio_2.csv', 'portfolio_3.csv'],
                  td=td, md=md, is_stock=False)
     spi.connect()

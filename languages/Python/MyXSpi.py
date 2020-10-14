@@ -89,14 +89,14 @@ class MyXSpi(XSpi):
         # 由于TDX接口的日志太多，屏蔽一下，对于其它软件可能需要打开
         pass
 
-    def OnConnectionStatus(self, status, pUserLogin, size1):
-        super(MyXSpi, self).OnConnectionStatus(status, pUserLogin, size1)
+    def OnConnectionStatus(self, api, status, pUserLogin, size1):
+        super(MyXSpi, self).OnConnectionStatus(api, status, pUserLogin, size1)
         if ConnectionStatus[status] == 'Done':
             # 行情和交易都得收到，所以至少要加到2
             self.done_cnt += 1
         pass
 
-    def OnRspQryInstrument(self, pInstrument, size1, bIsLast):
+    def OnRspQryInstrument(self, api, pInstrument, size1, bIsLast):
         if size1 <= 0:
             return
 
@@ -126,13 +126,13 @@ class MyXSpi(XSpi):
             self.instrument_dict3[tmp.get_instrument_id()] = tmp
             self.instrument_dict3[tmp.get_product_id()] = tmp
 
-    def OnRspQryTradingAccount(self, pAccount, size1, bIsLast):
+    def OnRspQryTradingAccount(self, api, pAccount, size1, bIsLast):
         if size1 <= 0:
             return
         self.wait_lock = False
         print(pAccount)
 
-    def OnRspQryInvestorPosition(self, pPosition, size1, bIsLast):
+    def OnRspQryInvestorPosition(self, api, pPosition, size1, bIsLast):
         if size1 <= 0:
             return
 
@@ -158,11 +158,11 @@ class MyXSpi(XSpi):
         f.close()
         self.update_symbols()
 
-    def OnRtnOrder(self, pOrder):
+    def OnRtnOrder(self, api, pOrder):
         self.order_dict[pOrder.get_id()] = copy.copy(pOrder)
         print(pOrder)
 
-    def OnRtnDepthMarketData(self, ptr1, size1):
+    def OnRtnDepthMarketData(self, api, ptr1, size1):
         obj = cast(ptr1, POINTER(DepthMarketDataNField)).contents
         # 打印行情，一般情况下都是关闭，因为内容太多了
         if self.print_quote:
@@ -319,16 +319,14 @@ class MyXSpi(XSpi):
 
     def sub_quote(self):
         self.update_symbols()
+        if len(self.symbols) == 0:
+            return
 
-        symbols_ = pd.Series(self.symbols).str.encode('gbk')
-        for i in range(len(symbols_)):
-            self.md.subscribe(symbols_[i], b'')
+        self.md.subscribe(self.symbols, '')
         print('订阅行情')
 
     def unsub_quote(self):
-        symbols_ = pd.Series(self.symbols).str.encode('gbk')
-        for i in range(len(symbols_)):
-            self.md.unsubscribe(symbols_[i], b'')
+        self.md.unsubscribe(self.symbols, '')
         print('取消认阅')
 
     def hide_quote(self):
@@ -389,31 +387,27 @@ class MyXSpi(XSpi):
             print('交易清单为空，不下单')
             return
 
-        # 提供一个临时变量用于下单
-        order = (OrderField * 1)()
-        orderid = (OrderIDTypeField * 1)()
-        orderid[0].OrderIDType = b''
+        # 默认数据，如果输入的参数不够全，使用默认参数
+        _d0 = {
+            "InstrumentID": "c1909",
+            "Type": OrderType.Limit,
+            "Side": OrderSide.Buy,
+            "Qty": 1,
+            "Price": 100.0,
+            "OpenClose": OpenCloseType.Open,
+            "HedgeFlag": HedgeFlagType.Speculation,
+        }
 
-        # 将str转成b用于下单
-        self.target_orders['InstrumentID_'] = encode_dataframe(self.target_orders[['InstrumentID']].copy())
-        # 如果一开始没有持仓等信息，有可能持仓是空的，这个地方会出错
-        self.target_orders['ExchangeID_'] = encode_dataframe(self.target_orders[['ExchangeID']].copy())
         for i in range(len(self.target_orders)):
             row = self.target_orders.iloc[i, :]
-            order[0].InstrumentID = row['InstrumentID_']
-            try:
-                # 数字0的转换问题，最好能解决掉
-                order[0].ExchangeID = row['ExchangeID_']
-            except:
-                pass
-            order[0].Type = OrderType.Limit
-            order[0].Side = OrderSide.Buy if row['Buy_Amount'] > 0 else OrderSide.Sell
-            order[0].Qty = abs(row['Buy_Amount'])
-            order[0].OpenClose = OpenCloseType.Open
+
+            _d0['InstrumentID'] = row['InstrumentID']
+            _d0['Side'] = OrderSide.Buy if row['Buy_Amount'] > 0 else OrderSide.Sell
+            _d0['Qty'] = abs(row['Buy_Amount'])
             if row['Open_Amount'] < 0:
-                order[0].OpenClose = OpenCloseType.Close
+                _d0['OpenClose'] = OpenCloseType.Close
                 if row['CloseToday_Flag'] == 1:
-                    order[0].OpenClose = OpenCloseType.CloseToday
+                    _d0['OpenClose'] = OpenCloseType.CloseToday
 
             # 这里必需要先查一次合约列表
             _symbol = row['InstrumentID']
@@ -442,19 +436,19 @@ class MyXSpi(XSpi):
             price = min(price, marketdata.UpperLimitPrice)
             price = max(price, marketdata.LowerLimitPrice)
 
-            order[0].Price = price
+            _d0['Price'] = price
             # 下单
             if self.test_send_order:
                 print(
-                    '代码:%s\t价格:%f\t买卖:%d\t数量:%d' % (order[0].InstrumentID, order[0].Price, order[0].Side, order[0].Qty))
+                    '代码:%s\t价格:%f\t买卖:%d\t数量:%d' % (_d0['InstrumentID'], _d0['Price'], _d0['Side'], _d0['Qty']))
             else:
-                if order[0].Price == 0:
+                if _d0['Price'] == 0:
                     print(
                         '代码:%s\t价格:%f\t买卖:%d\t数量:%d' % (
-                            order[0].InstrumentID, order[0].Price, order[0].Side, order[0].Qty))
+                            _d0['InstrumentID'], _d0['Price'], _d0['Side'], _d0['Qty']))
                     print('价格为0，可能停牌，不下单')
                     continue
-                ret = self.td.send_order(order[0], orderid[0], 1)
+                ret = self.td.send_order(_d0)
                 # 这里无所谓，全打印
                 print('LocalID:%s' % ret)
 
@@ -466,9 +460,6 @@ class MyXSpi(XSpi):
         :return:
         """
         cnt = 0
-        orderid = (OrderIDTypeField * 2)()
-        orderid[0].OrderIDType = b''
-        orderid[1].OrderIDType = b''
 
         for k, v in self.order_dict.items():
             # 只要有挂单就可以撤
@@ -476,8 +467,8 @@ class MyXSpi(XSpi):
             left_qty = v.Qty - v.CumQty - v.LeavesQty
             # 只能通过集合来进行撤单了
             if v.Status not in {OrderStatus.Rejected, OrderStatus.Cancelled, OrderStatus.Filled}:
-                orderid[0].OrderIDType = v.ID
-                self.td.cancel_order(orderid[0], orderid[1], 1)
+                # orderid[0].OrderIDType = v.ID
+                self.td.cancel_order(k)
                 cnt += 1
         print('撤单过程执行完毕，有可能非交易时间，已经成交等各种情况导致撤单失败')
         return cnt

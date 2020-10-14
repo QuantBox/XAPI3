@@ -256,7 +256,10 @@ class XApi(object):
         instruments_str = ';'.join(instruments)
         func(self._fun, self._api, c_char_p(instruments_str.encode('gbk')), c_char_p(exchange.encode('gbk')))
         for k in instruments:
-            self.subscribed.pop(k)
+            try:
+                self.subscribed.pop(k)
+            except KeyError as e:
+                pass
 
     def _on_response(self, response_type, p_api1, p_api2, double1, double2, ptr1, size1, ptr2, size2, ptr3, size3):
         # 解决在回调函数中断点不生效的问题，把这行代码放在要断的地方的前面
