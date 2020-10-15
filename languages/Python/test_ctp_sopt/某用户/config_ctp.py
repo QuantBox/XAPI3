@@ -12,22 +12,22 @@ try:
 except:
     pass
 
-from test_ctp_api import main
+from test_ctp_sopt_api import main
 
 configs = {
-    'root_dir': r'D:\Users\Kan\Documents\GitHub\XAPI3\languages\Python\test_ctp\某用户',
+    'root_dir': r'D:\Users\Kan\Documents\GitHub\XAPI3\languages\Python\test_ctp_sopt\某用户',
     'md': {
-        'Address': br'tcp://180.168.146.187:10110',
-        'BrokerID': b'9999',
-        'UserID': b'654321',
+        'Address': br'tcp://124.74.247.142:18213',
+        'BrokerID': b'2001',
+        'UserID': b'00000020781',
         'Password': b'123456',
     },
     'td': {
-        'Address': br'tcp://180.168.146.187:10100',
-        'BrokerID': b'9999',
-        'AppID': b'8500342533',
-        'AuthCode': b'0000000000000000',
-        'UserID': b'14078611',
+        'Address': br'tcp://124.74.247.142:18205',
+        'BrokerID': b'2001',
+        'AppID': b'1.3.0',
+        'AuthCode': b'EG9FWWGUYV2U292T',
+        'UserID': b'00000020781',
         'Password': b'123456',
     },
 }

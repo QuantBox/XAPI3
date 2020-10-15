@@ -16,8 +16,8 @@ def init(config):
     td = XApi(r'C:\Program Files\SmartQuant Ltd\OpenQuant 2014\XAPI\x64\XAPI_CPP_x64.dll')
     td.ServerInfo.Address = config['td']['Address']
     td.ServerInfo.BrokerID = config['td']['BrokerID']
-    # td.ServerInfo.AppID = config['td']['AppID']
-    # td.ServerInfo.AuthCode = config['td']['AuthCode']
+    td.ServerInfo.AppID = config['td']['AppID']
+    td.ServerInfo.AuthCode = config['td']['AuthCode']
     td.UserInfo.UserID = config['td']['UserID']
     td.UserInfo.Password = config['td']['Password']
 
@@ -28,7 +28,7 @@ def init(config):
     md.UserInfo.UserID = config['md']['UserID']
     md.UserInfo.Password = config['md']['Password']
 
-    ret = td.init(br'C:\Program Files\SmartQuant Ltd\OpenQuant 2014\XAPI\x64\CTP_SE\CTP_SE_Trade_x64.dll')
+    ret = td.init(br'C:\Program Files\SmartQuant Ltd\OpenQuant 2014\XAPI\x64\CTP_SOPT_SE\CTP_SOPT_SE_Trade_x64.dll')
     if not ret:
         print(td.get_last_error())
         exit(-1)
@@ -36,7 +36,7 @@ def init(config):
     print(td.get_api_name())
     print(td.get_api_version())
 
-    ret = md.init(br'C:\Program Files\SmartQuant Ltd\OpenQuant 2014\XAPI\x64\CTP_SE\CTP_SE_Quote_x64.dll')
+    ret = md.init(br'C:\Program Files\SmartQuant Ltd\OpenQuant 2014\XAPI\x64\CTP_SOPT_SE\CTP_SOPT_SE_Quote_x64.dll')
     if not ret:
         print(md.get_last_error())
         exit(-1)
