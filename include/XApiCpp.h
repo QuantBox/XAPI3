@@ -55,7 +55,7 @@ public:
 
 	virtual void RegisterSpi(CXSpi *pSpi) = 0;
 
-	virtual void Connect(const char* szPath, ServerInfoField* pServerInfo, UserInfoField* pUserInfo, int count) = 0;
+	virtual void Connect(const char* szServerPath, const char* szUserPath, const char* szPath) = 0;
 	virtual void Disconnect() = 0;
 
 	virtual void Subscribe(const char* szInstrument, const char* szExchange) = 0;

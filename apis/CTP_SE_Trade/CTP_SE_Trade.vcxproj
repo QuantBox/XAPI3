@@ -28,7 +28,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug64|x64'" Label="Configuration">
@@ -40,14 +40,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release64|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -167,6 +167,8 @@
     <ClInclude Include="..\..\common\License\License.h" />
     <ClInclude Include="..\..\include\inirw.h" />
     <ClInclude Include="..\..\include\toolkit.h" />
+    <ClInclude Include="..\CTP\CServerConfig.h" />
+    <ClInclude Include="..\CTP\CUserConfig.h" />
     <ClInclude Include="..\CTP\Trade\TraderApi.h" />
     <ClInclude Include="..\CTP\TypeConvert.h" />
     <ClInclude Include="Include.h" />
@@ -177,6 +179,8 @@
     <ClCompile Include="..\..\common\License\License.cpp" />
     <ClCompile Include="..\..\include\inirw.cpp" />
     <ClCompile Include="..\..\include\toolkit.cpp" />
+    <ClCompile Include="..\CTP\CServerConfig.cpp" />
+    <ClCompile Include="..\CTP\CUserConfig.cpp" />
     <ClCompile Include="..\CTP\dllmain.cpp" />
     <ClCompile Include="..\CTP\Trade\main.cpp" />
     <ClCompile Include="..\CTP\Trade\TraderApi.cpp" />

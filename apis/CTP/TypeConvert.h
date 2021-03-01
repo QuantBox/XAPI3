@@ -44,3 +44,5 @@ OrderStatus CThostFtdcQuoteField_2_OrderStatus(CThostFtdcQuoteField* pIn);
 ExecType CThostFtdcQuoteField_2_ExecType(CThostFtdcQuoteField* pIn);
 #endif // HAS_Quote
 
+ResumeType str_2_ResumeType(const char* In);
+

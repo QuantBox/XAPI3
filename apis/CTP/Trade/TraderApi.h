@@ -4,9 +4,8 @@
 #include "../../include/QueueEnum.h"
 // 由于这个Include.h需要使用每个项目自己的文件，所以需要在VC++ Directories->Include Directories中添加一个"./"
 #include "Include.h"
-
-
-
+#include "../CUserConfig.h"
+#include "../CServerConfig.h"
 
 #include <set>
 #include <list>
@@ -20,11 +19,6 @@
 using namespace std;
 
 class CMsgQueue;
-
-#ifdef ENABLE_LICENSE
-class CLicense;
-#endif
-
 
 class CTraderApi :
 	public CThostFtdcTraderSpi
@@ -67,10 +61,10 @@ public:
 
 	void Register(void* pCallback,void* pClass);
 
-	void Connect(const string& szPath,
-		ServerInfoField* pServerInfo,
-		UserInfoField* pUserInfo,
-		int count);
+	void Connect(
+		const char* szServerPath,
+		const char* szUserPath,
+		const char* szPath);
 	void Disconnect();
 
 	char* ReqOrderInsert(
@@ -257,9 +251,12 @@ private:
 
 	CThostFtdcTraderApi*		m_pApi;					//交易API
 	
-	string						m_szPath;				//生成配置文件的路径
-	ServerInfoField				m_ServerInfo;
-	UserInfoField				m_UserInfo;
+	string						m_szPath;				//输出文件路径
+	string						m_szServerPath;			//服务器配置路径
+	string						m_szUserPath;			//账号配置路径
+
+	ServerItem					m_ServerItem;
+	UserItem					m_UserItem;
 	int							m_nSleep;
 	
 	unordered_map<string, OrderField*>				m_id_platform_order;
@@ -278,9 +275,6 @@ private:
 	CMsgQueue*					m_msgQueue;				//消息队列指针
 	CMsgQueue*					m_msgQueue_Query;
 	void*						m_pClass;
-
-#ifdef ENABLE_LICENSE
-	CLicense*					m_pLicense;
-#endif					
+				
 };
 

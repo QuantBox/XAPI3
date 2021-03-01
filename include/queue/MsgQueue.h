@@ -125,7 +125,7 @@ public:
 		if (pItem == nullptr)
 			return;
 
-		int rc = fwrite(pItem, sizeof(ResponeItem), 1, outfile);
+		size_t rc = fwrite(pItem, sizeof(ResponeItem), 1, outfile);
 		// 文件没有写进去
 		if (rc == 0)
 			return;
@@ -151,7 +151,7 @@ public:
 			return nullptr;
 
 		ResponeItem* pItem = new ResponeItem();
-		int rc = fread(pItem, sizeof(ResponeItem), 1, infile);
+		size_t rc = fread(pItem, sizeof(ResponeItem), 1, infile);
 		// 到文件结尾了
 		if (rc == 0)
 			return nullptr;

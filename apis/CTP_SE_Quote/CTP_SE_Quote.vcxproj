@@ -175,6 +175,8 @@
     <ClInclude Include="..\..\include\synthetic\CSyntheticManager.h" />
     <ClInclude Include="..\..\include\synthetic\CSyntheticMarketData.h" />
     <ClInclude Include="..\..\include\toolkit.h" />
+    <ClInclude Include="..\CTP\CServerConfig.h" />
+    <ClInclude Include="..\CTP\CUserConfig.h" />
     <ClInclude Include="..\CTP\Quote\MdUserApi.h" />
     <ClInclude Include="..\CTP\TypeConvert.h" />
     <ClInclude Include="Include.h" />
@@ -191,6 +193,8 @@
     <ClCompile Include="..\..\include\synthetic\CSyntheticManager.cpp" />
     <ClCompile Include="..\..\include\synthetic\CSyntheticMarketData.cpp" />
     <ClCompile Include="..\..\include\toolkit.cpp" />
+    <ClCompile Include="..\CTP\CServerConfig.cpp" />
+    <ClCompile Include="..\CTP\CUserConfig.cpp" />
     <ClCompile Include="..\CTP\dllmain.cpp" />
     <ClCompile Include="..\CTP\Quote\main.cpp" />
     <ClCompile Include="..\CTP\Quote\MdUserApi.cpp" />

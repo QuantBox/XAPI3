@@ -74,7 +74,7 @@ ApiType X_GetApiTypes(void* pFun)
 	if (pFun == nullptr)
 		return ApiType::ApiType_None;
 
-    void* p = ((fnOnResponse)pFun)(RequestType::RequestType_GetApiTypes, nullptr, nullptr, 0, 0, nullptr, 0, nullptr, 0, nullptr, 0);
+    void* p = ((fnOnResponse)pFun)((char)RequestType::RequestType_GetApiTypes, nullptr, nullptr, 0, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 
 	return (ApiType)(char)(long long)(p);
 }
@@ -84,7 +84,7 @@ const char* X_GetApiVersion(void* pFun)
 	if (pFun == nullptr)
 		return nullptr;
 
-	return (const char*)((fnOnResponse)pFun)(RequestType::RequestType_GetApiVersion, nullptr, nullptr, 0, 0, nullptr, 0, nullptr, 0, nullptr, 0);
+	return (const char*)((fnOnResponse)pFun)((char)RequestType::RequestType_GetApiVersion, nullptr, nullptr, 0, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 }
 
 const char* X_GetApiName(void* pFun)
@@ -92,7 +92,7 @@ const char* X_GetApiName(void* pFun)
 	if (pFun == nullptr)
 		return nullptr;
 
-	return (const char*)((fnOnResponse)pFun)(RequestType::RequestType_GetApiName, nullptr, nullptr, 0, 0, nullptr, 0, nullptr, 0, nullptr, 0);
+	return (const char*)((fnOnResponse)pFun)((char)RequestType::RequestType_GetApiName, nullptr, nullptr, 0, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 }
 
 void* X_Create(void* pFun)
@@ -100,7 +100,7 @@ void* X_Create(void* pFun)
 	if (pFun == nullptr)
 		return nullptr;
 
-	return ((fnOnResponse)pFun)(RequestType::RequestType_Create, nullptr, nullptr, 0, 0, nullptr, 0, nullptr, 0, nullptr, 0);
+	return ((fnOnResponse)pFun)((char)RequestType::RequestType_Create, nullptr, nullptr, 0, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 }
 
 void X_Register(void* pFun, void* pApi, fnOnResponse pCallback, void* pClass)
@@ -108,15 +108,15 @@ void X_Register(void* pFun, void* pApi, fnOnResponse pCallback, void* pClass)
 	if (pFun == nullptr || pApi == nullptr)
 		return;
 
-	((fnOnResponse)pFun)(RequestType::RequestType_Register, pApi, nullptr, 0, 0, (void*)pCallback, 0, pClass, 0, nullptr, 0);
+	((fnOnResponse)pFun)((char)RequestType::RequestType_Register, pApi, nullptr, 0, 0, (void*)pCallback, 0, pClass, 0, nullptr, 0);
 }
 
-void X_Connect(void* pFun, void* pApi, const char* szPath, ServerInfoField* pServerInfo, UserInfoField* pUserInfo, int count)
+void X_Connect(void* pFun, void* pApi, const char* szServerPath, const char* szUserPath, const char* szPath)
 {
 	if (pFun == nullptr || pApi == nullptr)
 		return;
 
-	((fnOnResponse)pFun)(RequestType::RequestType_Connect, pApi, nullptr, 0, 0, pServerInfo, 0, pUserInfo, count, (void*)szPath, 0);
+	((fnOnResponse)pFun)((char)RequestType::RequestType_Connect, pApi, nullptr, 0, 0, (void*)szServerPath, 0, (void*)szUserPath, 0, (void*)szPath, 0);
 }
 
 void X_Disconnect(void* pFun, void* pApi)
@@ -124,7 +124,7 @@ void X_Disconnect(void* pFun, void* pApi)
 	if (pFun == nullptr || pApi == nullptr)
 		return;
 
-	((fnOnResponse)pFun)(RequestType::RequestType_Disconnect, pApi, nullptr, 0, 0, nullptr, 0, nullptr, 0, nullptr, 0);
+	((fnOnResponse)pFun)((char)RequestType::RequestType_Disconnect, pApi, nullptr, 0, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 }
 
 void X_Subscribe(void* pFun, void* pApi, const char* szInstrument, const char* szExchange)
@@ -132,7 +132,7 @@ void X_Subscribe(void* pFun, void* pApi, const char* szInstrument, const char* s
 	if (pFun == nullptr || pApi == nullptr)
 		return;
 
-	((fnOnResponse)pFun)(RequestType::RequestType_Subscribe, pApi, nullptr, 0, 0, (void*)szInstrument, 0, (void*)szExchange, 0, nullptr, 0);
+	((fnOnResponse)pFun)((char)RequestType::RequestType_Subscribe, pApi, nullptr, 0, 0, (void*)szInstrument, 0, (void*)szExchange, 0, nullptr, 0);
 }
 
 void X_Unsubscribe(void* pFun, void* pApi, const char* szInstrument, const char* szExchange)
@@ -140,7 +140,7 @@ void X_Unsubscribe(void* pFun, void* pApi, const char* szInstrument, const char*
 	if (pFun == nullptr || pApi == nullptr)
 		return;
 
-	((fnOnResponse)pFun)(RequestType::RequestType_Unsubscribe, pApi, nullptr, 0, 0, (void*)szInstrument, 0, (void*)szExchange, 0, nullptr, 0);
+	((fnOnResponse)pFun)((char)RequestType::RequestType_Unsubscribe, pApi, nullptr, 0, 0, (void*)szInstrument, 0, (void*)szExchange, 0, nullptr, 0);
 }
 
 void X_SubscribeQuote(void* pFun, void* pApi, const char* szInstrument, const char* szExchange)
@@ -148,7 +148,7 @@ void X_SubscribeQuote(void* pFun, void* pApi, const char* szInstrument, const ch
 	if (pFun == nullptr || pApi == nullptr)
 		return;
 
-	((fnOnResponse)pFun)(RequestType::RequestType_SubscribeQuote, pApi, nullptr, 0, 0, (void*)szInstrument, 0, (void*)szExchange, 0, nullptr, 0);
+	((fnOnResponse)pFun)((char)RequestType::RequestType_SubscribeQuote, pApi, nullptr, 0, 0, (void*)szInstrument, 0, (void*)szExchange, 0, nullptr, 0);
 }
 
 void X_UnsubscribeQuote(void* pFun, void* pApi, const char* szInstrument, const char* szExchange)
@@ -156,7 +156,7 @@ void X_UnsubscribeQuote(void* pFun, void* pApi, const char* szInstrument, const 
 	if (pFun == nullptr || pApi == nullptr)
 		return;
 
-	((fnOnResponse)pFun)(RequestType::RequestType_UnsubscribeQuote, pApi, nullptr, 0, 0, (void*)szInstrument, 0, (void*)szExchange, 0, nullptr, 0);
+	((fnOnResponse)pFun)((char)RequestType::RequestType_UnsubscribeQuote, pApi, nullptr, 0, 0, (void*)szInstrument, 0, (void*)szExchange, 0, nullptr, 0);
 }
 
 void X_ReqQuery(void* pFun, void* pApi, QueryType type, ReqQueryField* query)
@@ -172,7 +172,7 @@ const char* X_SendOrder(void* pFun, void* pApi, OrderField* pOrder, int count, c
 	if (pFun == nullptr || pApi == nullptr)
 		return nullptr;
 
-	return (const char*)((fnOnResponse)pFun)(RequestType::RequestType_ReqOrderInsert, pApi, nullptr, 0, 0, pOrder, count, pOut, 0, nullptr, 0);
+	return (const char*)((fnOnResponse)pFun)((char)RequestType::RequestType_ReqOrderInsert, pApi, nullptr, 0, 0, pOrder, count, pOut, 0, nullptr, 0);
 }
 
 const char* X_CancelOrder(void* pFun, void* pApi, OrderIDType* pIn, int count, char* pOut)
@@ -180,7 +180,7 @@ const char* X_CancelOrder(void* pFun, void* pApi, OrderIDType* pIn, int count, c
 	if (pFun == nullptr || pApi == nullptr)
 		return nullptr;
 
-	return (const char*)((fnOnResponse)pFun)(RequestType::RequestType_ReqOrderAction, pApi, nullptr, 0, 0, pIn, count, pOut, 0, nullptr, 0);
+	return (const char*)((fnOnResponse)pFun)((char)RequestType::RequestType_ReqOrderAction, pApi, nullptr, 0, 0, pIn, count, pOut, 0, nullptr, 0);
 }
 
 const char* X_SendQuote(void* pFun, void* pApi, QuoteField* pQuote, int count, char* pOut)
@@ -188,7 +188,7 @@ const char* X_SendQuote(void* pFun, void* pApi, QuoteField* pQuote, int count, c
 	if (pFun == nullptr || pApi == nullptr)
 		return nullptr;
 
-	return (const char*)((fnOnResponse)pFun)(RequestType::RequestType_ReqQuoteInsert, pApi, nullptr, 0, 0, pQuote, count, pOut, 0, nullptr, 0);
+	return (const char*)((fnOnResponse)pFun)((char)RequestType::RequestType_ReqQuoteInsert, pApi, nullptr, 0, 0, pQuote, count, pOut, 0, nullptr, 0);
 }
 
 const char* X_CancelQuote(void* pFun, void* pApi, OrderIDType* pIn, int count, char* pOut)
@@ -196,5 +196,5 @@ const char* X_CancelQuote(void* pFun, void* pApi, OrderIDType* pIn, int count, c
 	if (pFun == nullptr || pApi == nullptr)
 		return nullptr;
 
-	return (const char*)((fnOnResponse)pFun)(RequestType::RequestType_ReqQuoteAction, pApi, nullptr, 0, 0, pIn, count, pOut, 0, nullptr, 0);
+	return (const char*)((fnOnResponse)pFun)((char)RequestType::RequestType_ReqQuoteAction, pApi, nullptr, 0, 0, pIn, count, pOut, 0, nullptr, 0);
 }

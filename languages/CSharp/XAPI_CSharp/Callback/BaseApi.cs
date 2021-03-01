@@ -18,14 +18,14 @@ namespace XAPI.Callback
         protected Proxy proxy;
         protected IntPtr Handle = IntPtr.Zero;
         public string LibPath;
+        private string m_szServerPath;
+        private string m_szUserPath;
+        private string m_szPath;
 
         [CLSCompliant(false)]
         protected XCall _XRespone;
 
         public RspUserLoginField UserLogin { get; set; }
-        public ServerInfoField Server { get; set; }
-        public UserInfoField User { get; set; }
-        public List<UserInfoField> UserList = new List<UserInfoField>();
 
         public DelegateOnConnectionStatus OnConnectionStatus
         {
@@ -87,8 +87,8 @@ namespace XAPI.Callback
             : this()
         {
             LibPath = path;
-            Server = new ServerInfoField();
-            User = new UserInfoField();
+            //Server = new ServerInfoField();
+            //User = new UserInfoField();
             UserLogin = new RspUserLoginField();
         }
 
@@ -102,7 +102,7 @@ namespace XAPI.Callback
                 if (!IsConnected)
                 {
                     Disconnect();
-                    Connect();
+                    _Connect();
                 }
             }
 
@@ -140,9 +140,7 @@ namespace XAPI.Callback
             //base.Dispose(disposing);
         }
 
-
-
-        public virtual void Connect()
+        private void _Connect()
         {
             lock (locker)
             {
@@ -156,36 +154,26 @@ namespace XAPI.Callback
 
                 RegisterAndStart(Marshal.GetFunctionPointerForDelegate(_XRespone));
 
-                IntPtr ServerIntPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ServerInfoField)));
-                Marshal.StructureToPtr(Server, ServerIntPtr, false);
-
-                IntPtr UserListIntPtr = IntPtr.Zero;
-                int count = UserList.Count;
-
-                if (UserList.Count > 0)
-                {
-                    UserListIntPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(UserInfoField)) * count);
-
-                    for (int i = 0; i < UserList.Count; ++i)
-                    {
-                        Marshal.StructureToPtr(UserList[i], new IntPtr(UserListIntPtr.ToInt64() + i * Marshal.SizeOf(typeof(UserInfoField))), false);
-                    }
-                }
-                else
-                {
-                    count = 1;
-                    UserListIntPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(UserInfoField)));
-                    Marshal.StructureToPtr(User, UserListIntPtr, false);
-                }
+                IntPtr szServerPathPtr = Marshal.StringToHGlobalAnsi(m_szServerPath);
+                IntPtr szUserPathPtr = Marshal.StringToHGlobalAnsi(m_szUserPath);
+                IntPtr szPathPtr = Marshal.StringToHGlobalAnsi(m_szPath);
 
                 // 进行连接
-                proxy.XRequest((byte)RequestType.Connect, Handle, IntPtr.Zero, 0, 0, ServerIntPtr, 0, UserListIntPtr, count, Marshal.StringToHGlobalAnsi(Path.GetTempPath()), 0);
+                proxy.XRequest((byte)RequestType.Connect, Handle, IntPtr.Zero, 0, 0, szServerPathPtr, 0, szUserPathPtr, 0, szPathPtr, 0);
 
-                Marshal.FreeHGlobal(ServerIntPtr);
-                Marshal.FreeHGlobal(UserListIntPtr);
+                Marshal.FreeHGlobal(szServerPathPtr);
+                Marshal.FreeHGlobal(szUserPathPtr);
+                Marshal.FreeHGlobal(szPathPtr);
             }
+        }
 
+        public virtual void Connect(string szServerPath, string szUserPath, string szPath)
+        {
+            m_szServerPath = szServerPath;
+            m_szUserPath = szUserPath;
+            m_szPath = szPath;
 
+            _Connect();
         }
 
         public virtual void Disconnect()

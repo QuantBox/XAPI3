@@ -214,7 +214,7 @@ enum IdCardType:char
 /// 上交所有SH(国内网站)/SS(Yahoo)/SSE(LTS)/SHA(Google)
 /// 深交所有SZ(国内网站)/SZE(LTS)/SZSE(官网)
 /// 港交所有HK(国内网站)/HKEx(官网)
-enum ExchangeType :char
+enum class ExchangeType :char
 {
 	ExchangeType_Undefined = 0,	/// 未定义
 	ExchangeType_SHFE,			/// 上期所

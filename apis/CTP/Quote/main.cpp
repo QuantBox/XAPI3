@@ -16,13 +16,13 @@ void* __stdcall XRequest(char type, void* pApi1, void* pApi2, double double1, do
 	RequestType rt = (RequestType)type;
 	switch (rt)
 	{
-	case RequestType_GetApiTypes:
+	case RequestType::RequestType_GetApiTypes:
 		return (void*)(ApiType::ApiType_MarketData | ApiType::ApiType_QuoteRequest);
-	case RequestType_GetApiVersion:
+	case RequestType::RequestType_GetApiVersion:
 		return (void*)API_VERSION;
-	case RequestType_GetApiName:
+	case RequestType::RequestType_GetApiName:
 		return (void*)API_NAME;
-	case RequestType_Create:
+	case RequestType::RequestType_Create:
 		return new CMdUserApi();
 	default:
 		break;
@@ -37,32 +37,32 @@ void* __stdcall XRequest(char type, void* pApi1, void* pApi2, double double1, do
 
 	switch (rt)
 	{
-	case RequestType_Release:
+	case RequestType::RequestType_Release:
 		delete pApi;
 		return 0;
-	case RequestType_Register:
+	case RequestType::RequestType_Register:
 		pApi->Register(ptr1,ptr2);
 		break;
-	case RequestType_Config:
-		return (void*)pApi->Config((ConfigInfoField*)ptr1);
-	case RequestType_Connect:
-		pApi->Connect((const char*)ptr3, (ServerInfoField*)ptr1, (UserInfoField*)ptr2,size2);
+	//case RequestType::RequestType_Config:
+	//	return (void*)pApi->Config((ConfigInfoField*)ptr1);
+	case RequestType::RequestType_Connect:
+		pApi->Connect((const char*)ptr1, (const char*)ptr2, (const char*)ptr3);
 		break;
-	case RequestType_Disconnect:
+	case RequestType::RequestType_Disconnect:
 		pApi->Disconnect();
 		break;
-	case RequestType_Subscribe:
+	case RequestType::RequestType_Subscribe:
 		pApi->Subscribe((const char*)ptr1, (const char*)ptr2);
 		break;
-	case RequestType_Unsubscribe:
+	case RequestType::RequestType_Unsubscribe:
 		pApi->Unsubscribe((const char*)ptr1, (const char*)ptr2);
 		break;
 
 #if HAS_Quote
-	case RequestType_SubscribeQuote:
+	case RequestType::RequestType_SubscribeQuote:
 		pApi->SubscribeQuote((const char*)ptr1, (const char*)ptr2);
 		break;
-	case RequestType_UnsubscribeQuote:
+	case RequestType::RequestType_UnsubscribeQuote:
 		pApi->UnsubscribeQuote((const char*)ptr1, (const char*)ptr2);
 		break;
 #endif // HAS_Quote

@@ -62,8 +62,6 @@ namespace XAPI.COM
         private readonly ConcurrentQueue<QueueData> MessageQueue;
 
         private readonly XApi api;
-        private ServerInfoField _Server = new ServerInfoField();
-        private UserInfoField _User = new UserInfoField();
         private OrderField _Order;
         private ReqQueryField _Query;
 
@@ -185,49 +183,9 @@ namespace XAPI.COM
             api.LibPath = LibPath;
         }
 
-        public void SetServerInfo(string key, object value)
+        public void Connect(string szServerPath, string szUserPath, string szPath = "")
         {
-            Type type = typeof(ServerInfoField);
-            FieldInfo field = type.GetField(key,BindingFlags.Public | BindingFlags.Instance);
-            if (field == null)
-            {
-                throw new ArgumentException(key +" is not exist!", key);
-            }
-            try
-            {
-                object obj = Helper.ChangeType(value, field.FieldType);
-                field.SetValue(_Server, obj);
-            }
-            catch(Exception ex)
-            {
-                throw new InvalidCastException(ex.Message);
-            }
-        }
-
-        public void SetUserInfo(string key, object value)
-        {
-            Type type = typeof(UserInfoField);
-            FieldInfo field = type.GetField(key, BindingFlags.Public | BindingFlags.Instance);
-            if (field == null)
-            {
-                throw new ArgumentException(key + " is not exist!", key);
-            }
-            try
-            {
-                object obj = Helper.ChangeType(value, field.FieldType);
-                field.SetValue(_User, obj);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidCastException(ex.Message);
-            }
-        }
-
-        public void Connect()
-        {
-            api.Server = _Server;
-            api.User = _User;
-            api.Connect();
+            api.Connect(szServerPath, szUserPath, szPath);
         }
 
         public void Disconnect()

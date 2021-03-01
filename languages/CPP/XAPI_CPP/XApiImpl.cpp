@@ -148,11 +148,11 @@ const char* CXApiImpl::GetLastError()
 	return X_GetLastError();
 }
 
-void CXApiImpl::Connect(const char* szPath, ServerInfoField* pServerInfo, UserInfoField* pUserInfo, int count)
+void CXApiImpl::Connect(const char* szServerPath, const char* szUserPath, const char* szPath)
 {
 	m_pApi = X_Create(m_pFun);
 	X_Register(m_pFun, m_pApi, (fnOnResponse)OnResponse, this);
-	X_Connect(m_pFun, m_pApi, szPath, pServerInfo, pUserInfo, count);
+	X_Connect(m_pFun, m_pApi, szServerPath, szUserPath, szPath);
 }
 
 void CXApiImpl::Disconnect()

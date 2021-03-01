@@ -59,27 +59,27 @@ char* ExchangeType_2_String(ExchangeType exchange)
 {
 	switch (exchange)
 	{
-	case ExchangeType_SHFE:
+	case ExchangeType::ExchangeType_SHFE:
 		return "SHFE";
-	case ExchangeType_DCE:
+	case ExchangeType::ExchangeType_DCE:
 		return "DCE";
-	case ExchangeType_CZCE:
+	case ExchangeType::ExchangeType_CZCE:
 		return "CZCE";
-	case ExchangeType_CFFEX:
+	case ExchangeType::ExchangeType_CFFEX:
 		return "CFFEX";
-	case ExchangeType_INE:
+	case ExchangeType::ExchangeType_INE:
 		return "INE";
-	case ExchangeType_SSE:
+	case ExchangeType::ExchangeType_SSE:
 		return "SSE";
-	case ExchangeType_SZSE:
+	case ExchangeType::ExchangeType_SZSE:
 		return "SZSE";
-	case ExchangeType_SGE:
+	case ExchangeType::ExchangeType_SGE:
 		return "SGE";
-	case ExchangeType_NEEQ:
+	case ExchangeType::ExchangeType_NEEQ:
 		return "NEEQ";
-	case ExchangeType_HKEx:
+	case ExchangeType::ExchangeType_HKEx:
 		return "HKEx";
-	case ExchangeType_Undefined:
+	case ExchangeType::ExchangeType_Undefined:
 	default:
 		return "Undefined";
 	}

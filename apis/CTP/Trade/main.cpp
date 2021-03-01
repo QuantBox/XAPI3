@@ -13,13 +13,13 @@ void* __stdcall XRequest(char type, void* pApi1, void* pApi2, double double1, do
 	RequestType rt = (RequestType)type;
 	switch (rt)
 	{
-	case RequestType_GetApiTypes:
+	case RequestType::RequestType_GetApiTypes:
 		return (void*)(ApiType::ApiType_Trade | ApiType::ApiType_Instrument | ApiType::ApiType_Query);
-	case RequestType_GetApiVersion:
+	case RequestType::RequestType_GetApiVersion:
 		return (void*)API_VERSION;
-	case RequestType_GetApiName:
+	case RequestType::RequestType_GetApiName:
 		return (void*)API_NAME;
-	case RequestType_Create:
+	case RequestType::RequestType_Create:
 		return new CTraderApi();
 	default:
 		break;
@@ -34,16 +34,16 @@ void* __stdcall XRequest(char type, void* pApi1, void* pApi2, double double1, do
 
 	switch (rt)
 	{
-	case RequestType_Release:
+	case RequestType::RequestType_Release:
 		delete pApi;
 		return nullptr;
-	case RequestType_Register:
+	case RequestType::RequestType_Register:
 		pApi->Register(ptr1, ptr2);
 		break;
-	case RequestType_Connect:
-		pApi->Connect((const char*)ptr3, (ServerInfoField*)ptr1, (UserInfoField*)ptr2,size2);
+	case RequestType::RequestType_Connect:
+		pApi->Connect((const char*)ptr1, (const char*)ptr2, (const char*)ptr3);
 		break;
-	case RequestType_Disconnect:
+	case RequestType::RequestType_Disconnect:
 		pApi->Disconnect();
 		break;
 	case QueryType_ReqQryInstrument:
@@ -54,14 +54,14 @@ void* __stdcall XRequest(char type, void* pApi1, void* pApi2, double double1, do
 	case QueryType_ReqQryOrder:
 		pApi->ReqQuery((QueryType)type, (ReqQueryField*)ptr1);
 		break;
-	case RequestType_ReqOrderInsert:
+	case RequestType::RequestType_ReqOrderInsert:
 		return (void*)pApi->ReqOrderInsert((OrderField*)ptr1, size1, (char*)ptr2);
-	case RequestType_ReqOrderAction:
+	case RequestType::RequestType_ReqOrderAction:
 		return (void*)pApi->ReqOrderAction((OrderIDType*)ptr1, size1, (char*)ptr2);
 #ifdef HAS_Quote
-	case RequestType_ReqQuoteInsert:
+	case RequestType::RequestType_ReqQuoteInsert:
 		return pApi->ReqQuoteInsert((QuoteField*)ptr1, (OrderIDType*)ptr2, (OrderIDType*)ptr3);
-	case RequestType_ReqQuoteAction:
+	case RequestType::RequestType_ReqQuoteAction:
 		return (void*)pApi->ReqQuoteAction((const char*)ptr1, (OrderIDType*)ptr2);
 #endif // HAS_Quote
 

@@ -9,14 +9,10 @@ namespace XAPI.COM
     {
         [DispId(1)]
         void SetLibPath(string LibPath);
-        [DispId(2)]
-        void SetServerInfo(string key,object value);
-        [DispId(3)]
-        void SetUserInfo(string key, object value);
 
 
         [DispId(10)]
-        void Connect();
+        void Connect(string szServerPath, string szUserPath, string szPath);
         [DispId(11)]
         void Disconnect();
 

@@ -116,31 +116,6 @@ public:
 	virtual void OnRspQryHistoricalTicks(CXApi* pApi, TickField* pTicks, int size1, HistoricalDataRequestField* pRequest, int size2, bool bIsLast) {};
 	virtual void OnRspQryHistoricalBars(CXApi* pApi, BarField* pBars, int size1, HistoricalDataRequestField* pRequest, int size2, bool bIsLast) {};
 
-	virtual bool OnFilterSubscribe(CXApi* pApi, ExchangeType exchange, int instrument_part1, int instrument_part2, int instrument_part3, char* pInstrument)
-	{
-		// 当数字为0时，只判断交易所
-		// 当交易所为
-		if (instrument_part1 == 0)
-			// 只要上海与深圳，不处理三板
-			return exchange != ExchangeType::ExchangeType_NEEQ;
-
-		//type = ExchangeType::SZSE;
-		//double1 = 399300;
-
-		int prefix1 = instrument_part1 / 100000;
-		int prefix3 = instrument_part1 / 1000;
-		switch (exchange)
-		{
-		case ExchangeType::ExchangeType_SSE:
-			return (prefix1 == 6);
-		case ExchangeType::ExchangeType_SZSE:
-			return (prefix1 == 0) || (prefix3 == 300);
-		default:
-			break;
-		}
-
-		return true;
-	}
 public:
 	//CXApi* m_pApi;
 	int count;

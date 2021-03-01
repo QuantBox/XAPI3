@@ -18,7 +18,7 @@ public:
 	virtual const char* GetLastError();
 	virtual void RegisterSpi(CXSpi *pSpi);
 
-	virtual void Connect(const char* szPath, ServerInfoField* pServerInfo, UserInfoField* pUserInfo, int count);
+	virtual void Connect(const char* szServerPath, const char* szUserPath, const char* szPath);
 	virtual void Disconnect();
 
 	virtual void Subscribe(const char* szInstrument, const char* szExchange);

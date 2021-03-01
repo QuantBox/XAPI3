@@ -16,6 +16,9 @@
     <Filter Include="include">
       <UniqueIdentifier>{85e89cab-d667-4133-9504-c4becf5250d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{8865726a-7a91-42df-b4ba-41a1efaf378b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -45,6 +48,12 @@
     <ClInclude Include="..\..\common\License\License.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\CTP\CServerConfig.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CTP\CUserConfig.h">
+      <Filter>config</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -70,6 +79,12 @@
     </ClCompile>
     <ClCompile Include="..\..\common\License\License.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CTP\CServerConfig.cpp">
+      <Filter>config</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CTP\CUserConfig.cpp">
+      <Filter>config</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

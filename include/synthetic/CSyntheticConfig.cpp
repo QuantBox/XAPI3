@@ -1,16 +1,14 @@
 #include "stdafx.h"
 #include "CSyntheticConfig.h"
 
+#include "../rapidjson/rapidjson.h"
+#include "../rapidjson/document.h"
+#include "../rapidjson/prettywriter.h"
+#include "../rapidjson/istreamwrapper.h"
+#include "../rapidjson/ostreamwrapper.h"
 
-CSyntheticConfig::CSyntheticConfig()
-{
-}
-
-
-CSyntheticConfig::~CSyntheticConfig()
-{
-}
-
+using namespace std;
+using namespace rapidjson;
 
 map<string, ConfigItem> CSyntheticConfig::Read(const char* filename)
 {

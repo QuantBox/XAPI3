@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdarg.h>
+#include <fstream>
 
 #if defined _WIN32 || WIN32 || _WINDOWS
 #include <direct.h>
@@ -380,3 +381,9 @@ void GetNewPathInSameDirectory(const char* szPath, const char* szFname, const ch
 {}
 
 #endif
+
+bool isFileExists_ifstream(const char* filename)
+{
+	ifstream f(filename);
+	return f.good();
+}

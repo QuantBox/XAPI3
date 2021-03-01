@@ -15,7 +15,7 @@ namespace XAPI
         string GetApiVersion { get; }
 
         bool IsConnected { get; }
-        void Connect();
+        void Connect(string szServerPath, string szUserPath, string szPath);
         void Disconnect();
 
         void ReqQuery(QueryType type, ReqQueryField query);
@@ -31,8 +31,6 @@ namespace XAPI
         string SendQuote(QuoteField quote);
         string CancelQuote(string szId);
 
-        ServerInfoField Server { get; set; }
-        UserInfoField User { get; set; }
         RspUserLoginField UserLogin { get; set; }
 
         object Log { get; set; }

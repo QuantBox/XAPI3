@@ -29,7 +29,7 @@ const char* X_GetApiName(void* pFun);
 void* X_Create(void* pFun);
 void X_Register(void* pFun, void* pApi, fnOnResponse pCallback, void* pClass);
 
-void X_Connect(void* pFun, void* pApi, const char* szPath, ServerInfoField* pServerInfo, UserInfoField* pUserInfo, int count);
+void X_Connect(void* pFun, void* pApi, const char* szServerPath, const char* szUserPath, const char* szPath);
 void X_Disconnect(void* pFun, void* pApi);
 
 void X_Subscribe(void* pFun, void* pApi, const char* szInstrument, const char* szExchange);

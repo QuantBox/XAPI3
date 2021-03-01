@@ -32,7 +32,5 @@ namespace XAPI
         OnRspQryHistoricalBars,
         OnRspQryInvestor,
         OnRtnInstrumentStatus,
-
-        OnFilterSubscribe,
     }
 }

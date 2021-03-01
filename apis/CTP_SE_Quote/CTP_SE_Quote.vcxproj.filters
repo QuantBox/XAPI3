@@ -19,6 +19,9 @@
     <Filter Include="queue">
       <UniqueIdentifier>{267198b6-38cc-4319-8680-5fad03149361}</UniqueIdentifier>
     </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{6b57d678-13e6-474f-bcf9-66a1a32bfc6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -69,6 +72,12 @@
     <ClInclude Include="..\..\include\CSubscribeManager2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\CTP\CServerConfig.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CTP\CUserConfig.h">
+      <Filter>config</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -112,6 +121,12 @@
     </ClCompile>
     <ClCompile Include="..\..\include\CSubscribeManager2.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CTP\CServerConfig.cpp">
+      <Filter>config</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CTP\CUserConfig.cpp">
+      <Filter>config</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

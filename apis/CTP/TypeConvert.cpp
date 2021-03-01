@@ -378,3 +378,18 @@ ExecType CThostFtdcQuoteField_2_ExecType(CThostFtdcQuoteField* pIn)
 }
 #endif // HAS_Quote
 
+ResumeType str_2_ResumeType(const char* In)
+{
+	switch (In[3])
+	{
+	case 't':
+		return ResumeType::ResumeType_Restart;
+	case 'u':
+		return ResumeType::ResumeType_Resume;
+	case 'c':
+		return ResumeType::ResumeType_Quick;
+	case 'e':
+	default:
+		return ResumeType::ResumeType_Undefined;
+	}
+}

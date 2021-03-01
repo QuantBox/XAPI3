@@ -153,13 +153,5 @@ namespace XAPI.Callback
 
             OnRtnInstrumentStatus_(this, ref obj);
         }
-
-        private bool _OnFilterSubscribe(double double1, int size1, int size2, int size3, IntPtr ptr1)
-        {
-            if (OnFilterSubscribe_ == null)
-                return true;
-
-            return OnFilterSubscribe_(this, (ExchangeType)double1, size1, size2, size3, ptr1);
-        }
     }
 }

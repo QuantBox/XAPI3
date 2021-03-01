@@ -52,11 +52,6 @@ CMdUserApi::CMdUserApi(void)
 
 	m_msgQueue_Query->Register(Query);
 	m_msgQueue_Query->StartThread();
-
-	//m_msgQueue->m_bDirectOutput = true;
-
-
-	//m_delete = false;
 }
 
 CMdUserApi::~CMdUserApi(void)
@@ -126,11 +121,6 @@ void CMdUserApi::Register(void* pCallback, void* pClass)
 	}
 }
 
-ConfigInfoField* CMdUserApi::Config(ConfigInfoField* pConfigInfo)
-{
-	return nullptr;
-}
-
 bool CMdUserApi::IsErrorRspInfo(const char* szSource, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	bool bRet = ((pRspInfo) && (pRspInfo->ErrorID != 0));
@@ -154,10 +144,10 @@ bool CMdUserApi::IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo)
 	return bRet;
 }
 
-void CMdUserApi::Connect(const string& szPath,
-	ServerInfoField* pServerInfo,
-	UserInfoField* pUserInfo,
-	int count)
+void CMdUserApi::Connect(
+	const char* szServerPath,
+	const char* szUserPath,
+	const char* szPath)
 {
 #if _WIN32
 	char szExePath[MAX_PATH] = { 0 };
@@ -178,9 +168,28 @@ void CMdUserApi::Connect(const string& szPath,
 	}
 #endif
 
-	m_szPath = szPath;
-	memcpy(&m_ServerInfo, pServerInfo, sizeof(ServerInfoField));
-	memcpy(&m_UserInfo, pUserInfo, sizeof(UserInfoField));
+	m_szServerPath = szServerPath;
+	m_szUserPath = szUserPath;
+
+	CServerConfig serverConfig;
+	CUserConfig	userConfig;
+
+	if (!isFileExists_ifstream(szServerPath))
+	{
+		serverConfig.WriteMdDefault(szServerPath);
+	}
+	if (!isFileExists_ifstream(szUserPath))
+	{
+		userConfig.WriteDefault(szUserPath);
+	}
+	
+	m_ServerItem = serverConfig.ReadMd(szServerPath);
+	m_UserItem = userConfig.Read(szUserPath);
+
+	srand((unsigned int)time(NULL));
+	m_szPath = str_format(string("%s/%s/%s/Md/%d/"),
+		szPath, m_ServerItem.BrokerID.c_str(), m_UserItem.UserID.c_str(), rand());
+	makedirs(m_szPath.c_str());
 
 	m_msgQueue_Query->Input_NoCopy(RequestType::E_Init, m_msgQueue_Query, this, 0, 0,
 		nullptr, 0, nullptr, 0, nullptr, 0);
@@ -188,11 +197,6 @@ void CMdUserApi::Connect(const string& szPath,
 
 int CMdUserApi::_Init()
 {
-	char *pszPath = new char[m_szPath.length() + 1024];
-	srand((unsigned int)time(NULL));
-	sprintf(pszPath, "%s/%s/%s/Md/%d/", m_szPath.c_str(), m_ServerInfo.BrokerID, m_UserInfo.UserID, rand());
-	makedirs(pszPath);
-
 	// 本来想使用chdir的方法解决Kingstar的证书问题，测试多次发现还是读取的exe目录下
 	// 打算使用文件复制的方法来实现，
 	// 1.先检查证书是否存在，存在就跳过
@@ -235,32 +239,19 @@ int CMdUserApi::_Init()
 	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Initialized, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 
 #ifdef CreateFtdcMdApi_argc_3
-	m_pApi = CThostFtdcMdApi::CreateFtdcMdApi(pszPath, m_ServerInfo.IsUsingUdp, m_ServerInfo.IsMulticast);
+	m_pApi = CThostFtdcMdApi::CreateFtdcMdApi(m_szPath.c_str(), m_ServerItem.IsUsingUdp, m_ServerItem.IsMulticast);
 #else
-	m_pApi = CThostFtdcMdApi::CreateFtdcMdApi(pszPath, m_ServerInfo.IsUsingUdp);
+	m_pApi = CThostFtdcMdApi::CreateFtdcMdApi(m_szPath.c_str(), m_ServerInfo.IsUsingUdp);
 #endif // CreateFtdcMdApi_argc_3
-
-	delete[] pszPath;
 
 	if (m_pApi)
 	{
 		m_pApi->RegisterSpi(this);
 
-		//添加地址
-		size_t len = strlen(m_ServerInfo.Address) + 1;
-		char* buf = new char[len];
-		strncpy(buf, m_ServerInfo.Address, len);
-
-		char* token = strtok(buf, _QUANTBOX_SEPS_);
-		while (token)
+		for (auto iter = m_ServerItem.Address.begin(); iter != m_ServerItem.Address.end(); ++iter)
 		{
-			if (strlen(token) > 0)
-			{
-				m_pApi->RegisterFront(token);
-			}
-			token = strtok(NULL, _QUANTBOX_SEPS_);
+			m_pApi->RegisterFront((char*)iter->c_str());
 		}
-		delete[] buf;
 
 		//初始化连接
 		m_pApi->Init();
@@ -290,9 +281,9 @@ void CMdUserApi::ReqUserLogin()
 {
 	CThostFtdcReqUserLoginField* pBody = (CThostFtdcReqUserLoginField*)m_msgQueue_Query->new_block(sizeof(CThostFtdcReqUserLoginField));
 
-	strncpy(pBody->BrokerID, m_ServerInfo.BrokerID, sizeof(TThostFtdcBrokerIDType));
-	strncpy(pBody->UserID, m_UserInfo.UserID, sizeof(TThostFtdcInvestorIDType));
-	strncpy(pBody->Password, m_UserInfo.Password, sizeof(TThostFtdcPasswordType));
+	strncpy(pBody->BrokerID, m_ServerItem.BrokerID.c_str(), sizeof(TThostFtdcBrokerIDType));
+	strncpy(pBody->UserID, m_UserItem.UserID.c_str(), sizeof(TThostFtdcInvestorIDType));
+	strncpy(pBody->Password, m_UserItem.Password.c_str(), sizeof(TThostFtdcPasswordType));
 
 	m_msgQueue_Query->Input_NoCopy(RequestType::E_ReqUserLoginField, m_msgQueue_Query, this, 0, 0,
 		pBody, sizeof(CThostFtdcReqUserLoginField), nullptr, 0, nullptr, 0);
@@ -845,5 +836,3 @@ void CMdUserApi::OnRtnForQuoteRsp(CThostFtdcForQuoteRspField *pForQuoteRsp)
 	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnRtnQuoteRequest, m_msgQueue, m_pClass, 0, 0, pField, sizeof(QuoteRequestField), nullptr, 0, nullptr, 0);
 }
 #endif // HAS_Quote
-
-

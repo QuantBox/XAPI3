@@ -21,9 +21,7 @@
 #include <direct.h>
 #endif
 
-#ifdef ENABLE_LICENSE
-#include "../../common/License/License.h"
-#endif
+using namespace std;
 
 
 void* __stdcall Query(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3)
@@ -205,14 +203,33 @@ bool CTraderApi::IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo)
 	return bRet;
 }
 
-void CTraderApi::Connect(const string& szPath,
-	ServerInfoField* pServerInfo,
-	UserInfoField* pUserInfo,
-	int count)
+void CTraderApi::Connect(
+	const char* szServerPath,
+	const char* szUserPath,
+	const char* szPath)
 {
-	m_szPath = szPath;
-	memcpy(&m_ServerInfo, pServerInfo, sizeof(ServerInfoField));
-	memcpy(&m_UserInfo, pUserInfo, sizeof(UserInfoField));
+	m_szServerPath = szServerPath;
+	m_szUserPath = szUserPath;
+
+	CServerConfig serverConfig;
+	CUserConfig	userConfig;
+
+	if (!isFileExists_ifstream(szServerPath))
+	{
+		serverConfig.WriteTdDefault(szServerPath);
+	}
+	if (!isFileExists_ifstream(szUserPath))
+	{
+		userConfig.WriteDefault(szUserPath);
+	}
+
+	m_ServerItem = serverConfig.ReadTd(szServerPath);
+	m_UserItem = userConfig.Read(szUserPath);
+
+	srand((unsigned int)time(NULL));
+	m_szPath = str_format(string("%s/%s/%s/Td/%d/"),
+		szPath, m_ServerItem.BrokerID.c_str(), m_UserItem.UserID.c_str(), rand());
+	makedirs(m_szPath.c_str());
 
 	m_msgQueue_Query->Input_NoCopy(RequestType::E_Init, m_msgQueue_Query, this, 0, 0,
 		nullptr, 0, nullptr, 0, nullptr, 0);
@@ -220,62 +237,6 @@ void CTraderApi::Connect(const string& szPath,
 
 int CTraderApi::_Init()
 {
-#ifdef ENABLE_LICENSE
-	int err = m_pLicense->LoadIni();
-	if (err != 0)
-	{
-		// 没有授权文件
-		m_pLicense->CreateDefault();
-		m_pLicense->AddUser(m_UserInfo.UserID, "*");
-		err = m_pLicense->SaveIni();
-	}
-
-	if (err == 0)
-	{
-		err = m_pLicense->GetErrorCodeForMachineID();
-	}
-
-	if (err == 0)
-	{
-		err = m_pLicense->GetErrorCodeByAccount(m_UserInfo.UserID);
-	}
-
-	if (err == 0)
-	{
-		err = m_pLicense->GetErrorCodeForSign();
-	}
-
-	if (err == 0)
-	{
-		err = m_pLicense->GetErrorCodeForExpireDate();
-	}
-
-	if (err != 0)
-	{
-		RspUserLoginField* pField = (RspUserLoginField*)m_msgQueue->new_block(sizeof(RspUserLoginField));
-
-		pField->RawErrorID = err;
-		strncpy(pField->Text, m_pLicense->GetErrorInfo(), sizeof(Char256Type));
-
-		// >0的错误表示不严重，可以继续
-		if (err > 0)
-		{
-			m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Initialized, 0, pField, sizeof(RspUserLoginField), nullptr, 0, nullptr, 0);
-		}
-		else if (err < 0)
-		{
-			m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Disconnected, 0, pField, sizeof(RspUserLoginField), nullptr, 0, nullptr, 0);
-			return 0;
-		}
-	}
-#endif
-
-	char *pszPath = new char[m_szPath.length() + 1024];
-	srand((unsigned int)time(nullptr));
-	sprintf(pszPath, "%s/%s/%s/Td/%d/", m_szPath.c_str(), m_ServerInfo.BrokerID, m_UserInfo.UserID, rand());
-	makedirs(pszPath);
-
-
 	// 本来想使用chdir的方法解决Kingstar的证书问题，测试多次发现还是读取的exe目录下
 	// 打算使用文件复制的方法来实现，
 	// 1.先检查证书是否存在，存在就跳过
@@ -318,47 +279,28 @@ int CTraderApi::_Init()
 
 	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Initialized, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 
-	m_pApi = CThostFtdcTraderApi::CreateFtdcTraderApi(pszPath);
-	delete[] pszPath;
+	m_pApi = CThostFtdcTraderApi::CreateFtdcTraderApi(m_szPath.c_str());
 
 	if (m_pApi)
 	{
 		m_pApi->RegisterSpi(this);
 
 		//添加地址
-		size_t len = strlen(m_ServerInfo.Address) + 1;
-		char* buf = new char[len];
-		strncpy(buf, m_ServerInfo.Address, len);
-
-		char* token = strtok(buf, _QUANTBOX_SEPS_);
-		while (token)
+		for (auto iter = m_ServerItem.Address.begin(); iter != m_ServerItem.Address.end(); ++iter)
 		{
-			if (strlen(token) > 0)
-			{
-				m_pApi->RegisterFront(token);
-			}
-			token = strtok(nullptr, _QUANTBOX_SEPS_);
-		}
-		delete[] buf;
-
-		//如果空着，反而是从头开始接收了，所以这里要特别处理一下
-		if (m_ServerInfo.PublicTopicResumeType < ResumeType::ResumeType_Undefined)
-		{
-			m_pApi->SubscribePublicTopic((THOST_TE_RESUME_TYPE)m_ServerInfo.PublicTopicResumeType);
-		}
-		else
-		{
-			m_pApi->SubscribePublicTopic(THOST_TERT_QUICK);
+			m_pApi->RegisterFront((char*)iter->c_str());
 		}
 
-		if (m_ServerInfo.PrivateTopicResumeType < ResumeType::ResumeType_Undefined)
-		{
-			m_pApi->SubscribePrivateTopic((THOST_TE_RESUME_TYPE)m_ServerInfo.PrivateTopicResumeType);
-		}
-		else
-		{
-			m_pApi->SubscribePrivateTopic(THOST_TERT_QUICK);
-		}
+		ResumeType PublicTopic = str_2_ResumeType(m_ServerItem.ResumeType["PublicTopic"].c_str());
+		ResumeType PrivateTopic = str_2_ResumeType(m_ServerItem.ResumeType["PrivateTopic"].c_str());
+
+		if (PublicTopic >= ResumeType::ResumeType_Undefined)
+			PublicTopic = ResumeType::ResumeType_Quick;
+		if (PrivateTopic >= ResumeType::ResumeType_Undefined)
+			PrivateTopic = ResumeType::ResumeType_Quick;
+
+		m_pApi->SubscribePublicTopic((THOST_TE_RESUME_TYPE)PublicTopic);
+		m_pApi->SubscribePrivateTopic((THOST_TE_RESUME_TYPE)PrivateTopic);
 
 		//初始化连接
 		m_pApi->Init();
@@ -389,7 +331,7 @@ void CTraderApi::OnFrontConnected()
 	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Connected, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 
 	//连接成功后自动请求认证或登录
-	if (strlen(m_ServerInfo.AuthCode) > 0)
+	if (m_ServerItem.AuthCode.length() > 0)
 	{
 		//填了认证码就先认证
 		ReqAuthenticate();
@@ -418,14 +360,14 @@ void CTraderApi::ReqAuthenticate()
 {
 	CThostFtdcReqAuthenticateField* pBody = (CThostFtdcReqAuthenticateField*)m_msgQueue_Query->new_block(sizeof(CThostFtdcReqAuthenticateField));
 
-	strncpy(pBody->BrokerID, m_ServerInfo.BrokerID, sizeof(TThostFtdcBrokerIDType));
-	strncpy(pBody->UserID, m_UserInfo.UserID, sizeof(TThostFtdcInvestorIDType));
-	strncpy(pBody->UserProductInfo, m_ServerInfo.UserProductInfo, sizeof(TThostFtdcProductInfoType));
-	strncpy(pBody->AuthCode, m_ServerInfo.AuthCode, sizeof(TThostFtdcAuthCodeType));
+	strncpy(pBody->BrokerID, m_ServerItem.BrokerID.c_str(), sizeof(TThostFtdcBrokerIDType));
+	strncpy(pBody->UserID, m_UserItem.UserID.c_str(), sizeof(TThostFtdcInvestorIDType));
+	strncpy(pBody->UserProductInfo, m_ServerItem.UserProductInfo.c_str(), sizeof(TThostFtdcProductInfoType));
+	strncpy(pBody->AuthCode, m_ServerItem.AuthCode.c_str(), sizeof(TThostFtdcAuthCodeType));
 
 #ifdef USE_APP_ID
 	// CTP接口新加了穿透试认证
-	strncpy(pBody->AppID, m_ServerInfo.AppID, sizeof(TThostFtdcAppIDType));
+	strncpy(pBody->AppID, m_ServerItem.AppID.c_str(), sizeof(TThostFtdcAppIDType));
 #endif
 
 	m_msgQueue_Query->Input_NoCopy(RequestType::E_ReqAuthenticateField, m_msgQueue_Query, this, 0, 0,
@@ -462,10 +404,10 @@ void CTraderApi::ReqUserLogin()
 {
 	CThostFtdcReqUserLoginField* pBody = (CThostFtdcReqUserLoginField*)m_msgQueue_Query->new_block(sizeof(CThostFtdcReqUserLoginField));
 
-	strncpy(pBody->BrokerID, m_ServerInfo.BrokerID, sizeof(TThostFtdcBrokerIDType));
-	strncpy(pBody->UserID, m_UserInfo.UserID, sizeof(TThostFtdcInvestorIDType));
-	strncpy(pBody->Password, m_UserInfo.Password, sizeof(TThostFtdcPasswordType));
-	strncpy(pBody->UserProductInfo, m_ServerInfo.UserProductInfo, sizeof(TThostFtdcProductInfoType));
+	strncpy(pBody->BrokerID, m_ServerItem.BrokerID.c_str(), sizeof(TThostFtdcBrokerIDType));
+	strncpy(pBody->UserID, m_UserItem.UserID.c_str(), sizeof(TThostFtdcInvestorIDType));
+	strncpy(pBody->Password, m_UserItem.Password.c_str(), sizeof(TThostFtdcPasswordType));
+	strncpy(pBody->UserProductInfo, m_ServerItem.UserProductInfo.c_str(), sizeof(TThostFtdcProductInfoType));
 
 	m_msgQueue_Query->Input_NoCopy(RequestType::E_ReqUserLoginField, m_msgQueue_Query, this, 0, 0,
 		pBody, sizeof(CThostFtdcReqUserLoginField), nullptr, 0, nullptr, 0);
@@ -481,8 +423,8 @@ void CTraderApi::ReqUserLogout()
 {
 	CThostFtdcUserLogoutField* pBody = (CThostFtdcUserLogoutField*)m_msgQueue_Query->new_block(sizeof(CThostFtdcUserLogoutField));
 
-	strncpy(pBody->BrokerID, m_ServerInfo.BrokerID, sizeof(TThostFtdcBrokerIDType));
-	strncpy(pBody->UserID, m_UserInfo.UserID, sizeof(TThostFtdcInvestorIDType));
+	strncpy(pBody->BrokerID, m_ServerItem.BrokerID.c_str(), sizeof(TThostFtdcBrokerIDType));
+	strncpy(pBody->UserID, m_UserItem.UserID.c_str(), sizeof(TThostFtdcInvestorIDType));
 
 	if (m_msgQueue_Query)
 	{
@@ -590,8 +532,8 @@ void CTraderApi::ReqUserPasswordUpdate(char* szOldPassword, char* szNewPassword)
 {
 	CThostFtdcUserPasswordUpdateField* pBody = (CThostFtdcUserPasswordUpdateField*)m_msgQueue_Query->new_block(sizeof(CThostFtdcUserPasswordUpdateField));
 
-	strncpy(pBody->BrokerID, m_ServerInfo.BrokerID, sizeof(TThostFtdcBrokerIDType));
-	strncpy(pBody->UserID, m_UserInfo.UserID, sizeof(TThostFtdcUserIDType));
+	strncpy(pBody->BrokerID, m_ServerItem.BrokerID.c_str(), sizeof(TThostFtdcBrokerIDType));
+	strncpy(pBody->UserID, m_UserItem.UserID.c_str(), sizeof(TThostFtdcUserIDType));
 	strncpy(pBody->OldPassword, szOldPassword, sizeof(TThostFtdcPasswordType));
 	strncpy(pBody->NewPassword, szNewPassword, sizeof(TThostFtdcPasswordType));
 
@@ -617,9 +559,11 @@ void CTraderApi::OnRspUserPasswordUpdate(CThostFtdcUserPasswordUpdateField *pUse
 
 void CTraderApi::QueryOrderTrade(bool bForceQuery)
 {
+	ResumeType PrivateTopic = str_2_ResumeType(m_ServerItem.ResumeType["PrivateTopic"].c_str());
+
 	if (bForceQuery ||
-		(m_ServerInfo.PrivateTopicResumeType > ResumeType::ResumeType_Restart
-			&& (m_ServerInfo.PrivateTopicResumeType < ResumeType::ResumeType_Undefined)))
+		(PrivateTopic > ResumeType::ResumeType_Restart
+			&& (PrivateTopic < ResumeType::ResumeType_Undefined)))
 	{
 		ReqQueryField body = { 0 };
 		ReqQuery(QueryType::QueryType_ReqQryOrder, &body);
@@ -632,8 +576,8 @@ void CTraderApi::ReqSettlementInfoConfirm()
 {
 	CThostFtdcSettlementInfoConfirmField* pBody = (CThostFtdcSettlementInfoConfirmField*)m_msgQueue_Query->new_block(sizeof(CThostFtdcSettlementInfoConfirmField));
 
-	strncpy(pBody->BrokerID, m_ServerInfo.BrokerID, sizeof(TThostFtdcBrokerIDType));
-	strncpy(pBody->InvestorID, m_UserInfo.UserID, sizeof(TThostFtdcInvestorIDType));
+	strncpy(pBody->BrokerID, m_ServerItem.BrokerID.c_str(), sizeof(TThostFtdcBrokerIDType));
+	strncpy(pBody->InvestorID, m_UserItem.UserID.c_str(), sizeof(TThostFtdcInvestorIDType));
 
 	m_msgQueue_Query->Input_NoCopy(RequestType::E_SettlementInfoConfirmField, m_msgQueue_Query, this, 0, 0,
 		pBody, sizeof(CThostFtdcSettlementInfoConfirmField), nullptr, 0, nullptr, 0);

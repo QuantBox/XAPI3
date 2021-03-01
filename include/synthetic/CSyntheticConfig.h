@@ -5,16 +5,7 @@
 #include <fstream>
 #include <set>
 
-#include "../rapidjson/rapidjson.h"
-#include "../rapidjson/document.h"
-#include "../rapidjson/prettywriter.h"
-#include "../rapidjson/istreamwrapper.h"
-#include "../rapidjson/ostreamwrapper.h"
-
-// https://github.com/Tencent/rapidjson/blob/master/doc/stream.zh-cn.md
-
 using namespace std;
-using namespace rapidjson;
 
 struct ConfigItem
 {
@@ -28,8 +19,6 @@ struct ConfigItem
 class CSyntheticConfig
 {
 public:
-	CSyntheticConfig();
-	~CSyntheticConfig();
 
 	map<string, ConfigItem> Read(const char* filename);
 	void Write(const char* filename);

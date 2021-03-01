@@ -324,52 +324,52 @@ struct TradeField
 	BusinessType	Business;
 };
 
-///服务器信息
-struct ServerInfoField
-{
-	///是否UDP
-	BooleanType			IsUsingUdp;
-	///是否多播
-	BooleanType			IsMulticast;
-	///订阅ID
-	Int32Type			TopicId;
-	///端口号
-	Int32Type			Port;
-
-	ResumeType			MarketDataTopicResumeType;
-	ResumeType			PrivateTopicResumeType;
-	ResumeType			PublicTopicResumeType;
-	ResumeType			UserTopicResumeType;
-
-	///经纪商ID
-	BrokerIDType		BrokerID;
-	///产品信息
-	ProductInfoType		UserProductInfo;
-	///授权码
-	AuthCodeType		AuthCode;
-	///App代码
-	AppIDType			AppID;
-	///地址信息
-	AddressType			Address;
-	///配置文件路径
-	Char256Type			ConfigPath;
-	///扩展信息
-	Char128Type			ExtInfoChar128;
-};
-
-
-// 用户信息
-struct UserInfoField
-{
-	///用户代码
-	IDChar32Type	UserID;
-	///密码
-	PasswordType	Password;
-	///扩展信息，Tdx中用来做通讯密码
-	Char64Type		ExtInfoChar64;
-	///扩展信息，32位的数字
-	Int32Type		ExtInfoInt32;
-};
+/////服务器信息
+//struct ServerInfoField
+//{
+//	///是否UDP
+//	BooleanType			IsUsingUdp;
+//	///是否多播
+//	BooleanType			IsMulticast;
+//	///订阅ID
+//	Int32Type			TopicId;
+//	///端口号
+//	Int32Type			Port;
+//
+//	ResumeType			MarketDataTopicResumeType;
+//	ResumeType			PrivateTopicResumeType;
+//	ResumeType			PublicTopicResumeType;
+//	ResumeType			UserTopicResumeType;
+//
+//	///经纪商ID
+//	BrokerIDType		BrokerID;
+//	///产品信息
+//	ProductInfoType		UserProductInfo;
+//	///授权码
+//	AuthCodeType		AuthCode;
+//	///App代码
+//	AppIDType			AppID;
+//	///地址信息
+//	AddressType			Address;
+//	///配置文件路径
+//	Char256Type			ConfigPath;
+//	///扩展信息
+//	Char128Type			ExtInfoChar128;
+//};
+//
+//
+//// 用户信息
+//struct UserInfoField
+//{
+//	///用户代码
+//	IDChar32Type	UserID;
+//	///密码
+//	PasswordType	Password;
+//	///扩展信息，Tdx中用来做通讯密码
+//	Char64Type		ExtInfoChar64;
+//	///扩展信息，32位的数字
+//	Int32Type		ExtInfoInt32;
+//};
 
 
 // 错误信息
