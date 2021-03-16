@@ -84,9 +84,6 @@ void* CXApiImpl::_OnResponse(char type, void* pApi1, void* pApi2, double double1
 	case ResponseType_OnRtnInstrumentStatus:
 		m_pSpi->OnRtnInstrumentStatus(this, (InstrumentStatusField*)ptr1);
 		break;
-
-	case ResponseType_OnFilterSubscribe:
-		return (void*)m_pSpi->OnFilterSubscribe(this, (ExchangeType)(char)double1, (int)size1, (int)size1, (int)size3, (char*)ptr1);
 	default:
 		break;
 	}
