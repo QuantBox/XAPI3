@@ -80,9 +80,6 @@
     <ClCompile Include="..\..\include\toolkit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\ApiProcess.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="O32\O32Codec.cpp">
       <Filter>O32</Filter>
     </ClCompile>

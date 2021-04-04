@@ -101,7 +101,6 @@
     <ClInclude Include="TraderApi.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\include\ApiProcess.cpp" />
     <ClCompile Include="..\..\include\IDGenerator.cpp" />
     <ClCompile Include="..\..\include\toolkit.cpp" />
     <ClCompile Include="dllmain.cpp" />

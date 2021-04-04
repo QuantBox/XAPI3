@@ -42,12 +42,6 @@
     <ClInclude Include="..\..\include\toolkit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\inirw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\License\License.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\CTP\CServerConfig.h">
       <Filter>config</Filter>
     </ClInclude>
@@ -72,12 +66,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\include\toolkit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\include\inirw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\License\License.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\CTP\CServerConfig.cpp">

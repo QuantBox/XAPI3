@@ -71,9 +71,6 @@
     <ClCompile Include="..\..\include\toolkit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\ApiProcess.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\include\CSubscribeManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -81,18 +78,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\include\CSubscribeManager2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\include\CSyntheticCalculate_DepthMarketDataNField.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\include\synthetic\CSyntheticConfig.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\include\synthetic\CSyntheticManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\include\synthetic\CSyntheticMarketData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

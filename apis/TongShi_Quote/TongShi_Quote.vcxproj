@@ -110,7 +110,6 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\include\ApiProcess.cpp" />
     <ClCompile Include="..\..\include\ChinaStock.cpp" />
     <ClCompile Include="..\..\include\toolkit.cpp" />
     <ClCompile Include="..\..\languages\CPP\XAPI_CPP\XApiC.cpp" />

@@ -171,9 +171,6 @@
     <ClInclude Include="..\..\include\CSubscribeManager2.h" />
     <ClInclude Include="..\..\include\CSyntheticCalculate_DepthMarketDataNField.h" />
     <ClInclude Include="..\..\include\queue\MsgQueue.h" />
-    <ClInclude Include="..\..\include\synthetic\CSyntheticConfig.h" />
-    <ClInclude Include="..\..\include\synthetic\CSyntheticManager.h" />
-    <ClInclude Include="..\..\include\synthetic\CSyntheticMarketData.h" />
     <ClInclude Include="..\..\include\toolkit.h" />
     <ClInclude Include="..\CTP\CServerConfig.h" />
     <ClInclude Include="..\CTP\CUserConfig.h" />
@@ -184,14 +181,9 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\include\ApiProcess.cpp" />
     <ClCompile Include="..\..\include\CSubscribeManager.cpp" />
     <ClCompile Include="..\..\include\CSubscribeManager1.cpp" />
     <ClCompile Include="..\..\include\CSubscribeManager2.cpp" />
-    <ClCompile Include="..\..\include\CSyntheticCalculate_DepthMarketDataNField.cpp" />
-    <ClCompile Include="..\..\include\synthetic\CSyntheticConfig.cpp" />
-    <ClCompile Include="..\..\include\synthetic\CSyntheticManager.cpp" />
-    <ClCompile Include="..\..\include\synthetic\CSyntheticMarketData.cpp" />
     <ClCompile Include="..\..\include\toolkit.cpp" />
     <ClCompile Include="..\CTP\CServerConfig.cpp" />
     <ClCompile Include="..\CTP\CUserConfig.cpp" />

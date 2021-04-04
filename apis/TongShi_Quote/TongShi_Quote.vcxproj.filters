@@ -36,9 +36,6 @@
     <ClCompile Include="TongShi_Quote.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\ApiProcess.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\include\ChinaStock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

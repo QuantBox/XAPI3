@@ -164,8 +164,6 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\common\License\License.h" />
-    <ClInclude Include="..\..\include\inirw.h" />
     <ClInclude Include="..\..\include\toolkit.h" />
     <ClInclude Include="..\CTP\CServerConfig.h" />
     <ClInclude Include="..\CTP\CUserConfig.h" />
@@ -176,8 +174,6 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\common\License\License.cpp" />
-    <ClCompile Include="..\..\include\inirw.cpp" />
     <ClCompile Include="..\..\include\toolkit.cpp" />
     <ClCompile Include="..\CTP\CServerConfig.cpp" />
     <ClCompile Include="..\CTP\CUserConfig.cpp" />

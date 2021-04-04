@@ -171,15 +171,9 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\include\ApiProcess.cpp" />
     <ClCompile Include="..\..\include\CSubscribeManager.cpp" />
     <ClCompile Include="..\..\include\CSubscribeManager1.cpp" />
     <ClCompile Include="..\..\include\CSubscribeManager2.cpp" />
-    <ClCompile Include="..\..\include\CSyntheticCalculate_DepthMarketDataNField.cpp" />
-    <ClCompile Include="..\..\include\synthetic\CSyntheticConfig.cpp" />
-    <ClCompile Include="..\..\include\synthetic\CSyntheticInfos.cpp" />
-    <ClCompile Include="..\..\include\synthetic\CSyntheticManager.cpp" />
-    <ClCompile Include="..\..\include\synthetic\CSyntheticMarketData.cpp" />
     <ClCompile Include="..\..\include\toolkit.cpp" />
     <ClCompile Include="..\CTP\Quote\main.cpp" />
     <ClCompile Include="..\CTP\Quote\MdUserApi.cpp" />
