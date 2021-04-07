@@ -46,6 +46,8 @@ void* __stdcall XRequest(char type, void* pApi1, void* pApi2, double double1, do
 	case RequestType::RequestType_Disconnect:
 		pApi->Disconnect();
 		break;
+	case RequestType::RequestType_GetStatus:
+		return (void*)pApi->GetStatus();
 	case QueryType_ReqQryInstrument:
 	case QueryType_ReqQryInvestorPosition:
 	case QueryType_ReqQryTradingAccount:

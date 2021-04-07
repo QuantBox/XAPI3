@@ -7,14 +7,15 @@ enum RequestType :char
 	RequestType_GetApiTypes = 0,
 	RequestType_GetApiVersion,
 	RequestType_GetApiName,
+	
 
 	RequestType_Create, // 创建
 	RequestType_Release, // 销毁
 	RequestType_Register, // 注册接收队列回调
-	// RequestType_Config,		// 配置参数
 
 	RequestType_Connect, // 开始/连接
 	RequestType_Disconnect, // 停止/断开
+	RequestType_GetStatus,
 
 	RequestType_Clear, // 清理
 	RequestType_Process, // 处理

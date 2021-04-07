@@ -112,12 +112,6 @@ namespace XAPI.Callback
                 case ResponseType.OnRspQryHistoricalBars:
                     _OnRspQryHistoricalBars(ptr1, size1, ptr2, size2, double1);
                     break;
-                //case ResponseType.OnFilterSubscribe:
-                //    if (_OnFilterSubscribe(double1, size1, size2, size3, ptr1))
-                //    {
-                //        return new IntPtr(1);
-                //    }
-                //    return IntPtr.Zero;
                 default:
                     base.OnResponse(type, pApi1, pApi2, double1, double2, ptr1, size1, ptr2, size2, ptr3, size3);
                     break;

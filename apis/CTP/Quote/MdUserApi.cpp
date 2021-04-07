@@ -236,6 +236,7 @@ int CMdUserApi::_Init()
 	}
 #endif // KS_COPYFILE	
 
+	m_Status = ConnectionStatus::ConnectionStatus_Initialized;
 	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Initialized, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 
 #ifdef CreateFtdcMdApi_argc_3
@@ -255,6 +256,7 @@ int CMdUserApi::_Init()
 
 		//初始化连接
 		m_pApi->Init();
+		m_Status = ConnectionStatus::ConnectionStatus_Connecting;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Connecting, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 	}
 	else
@@ -264,6 +266,7 @@ int CMdUserApi::_Init()
 		pField->RawErrorID = 0;
 		strncpy(pField->Text, "(Api==null)", sizeof(Char256Type));
 
+		m_Status = ConnectionStatus::ConnectionStatus_Disconnected;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Disconnected, 0, pField, sizeof(RspUserLoginField), nullptr, 0, nullptr, 0);
 	}
 
@@ -291,8 +294,14 @@ void CMdUserApi::ReqUserLogin()
 
 int CMdUserApi::_ReqUserLogin(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3)
 {
+	m_Status = ConnectionStatus::ConnectionStatus_Logining;
 	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Logining, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 	return m_pApi->ReqUserLogin((CThostFtdcReqUserLoginField*)ptr1, ++m_lRequestID);
+}
+
+ConnectionStatus CMdUserApi::GetStatus()
+{
+	return m_Status;
 }
 
 void CMdUserApi::Disconnect()
@@ -333,6 +342,7 @@ void CMdUserApi::_Disconnect(bool IsInQueue)
 
 		// 全清理，只留最后一个
 		m_msgQueue->Clear();
+		m_Status = ConnectionStatus::ConnectionStatus_Disconnected;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Disconnected, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 		// 主动触发
 		m_msgQueue->Process();
@@ -468,6 +478,7 @@ void CMdUserApi::Unsubscribe(const string& szInstrumentIDs, const string& szExch
 
 void CMdUserApi::OnFrontConnected()
 {
+	m_Status = ConnectionStatus::ConnectionStatus_Connected;
 	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Connected, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 
 	//连接成功后自动请求登录
@@ -481,6 +492,7 @@ void CMdUserApi::OnFrontDisconnected(int nReason)
 	pField->RawErrorID = nReason;
 	GetOnFrontDisconnectedMsg(nReason, pField->Text);
 
+	m_Status = ConnectionStatus::ConnectionStatus_Disconnected;
 	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Disconnected, 0, pField, sizeof(RspUserLoginField), nullptr, 0, nullptr, 0);
 
 	// 断开连接
@@ -524,8 +536,11 @@ void CMdUserApi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CTho
 
 		sprintf(pField->SessionID, "%d:%d", pRspUserLogin->FrontID, pRspUserLogin->SessionID);
 
+		m_Status = ConnectionStatus::ConnectionStatus_Logined;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Logined, 0, pField, sizeof(RspUserLoginField), nullptr, 0, nullptr, 0);
+		m_Status = ConnectionStatus::ConnectionStatus_Done;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Done, 0, nullptr, 0, nullptr, 0, nullptr, 0);
+		
 
 		{
 			set<string> exchanges = m_pSubscribeManager->GetExchanges();
@@ -553,6 +568,7 @@ void CMdUserApi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CTho
 		pField->RawErrorID = pRspInfo->ErrorID;
 		strncpy(pField->Text, pRspInfo->ErrorMsg, sizeof(Char256Type));
 
+		m_Status = ConnectionStatus::ConnectionStatus_Disconnected;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Disconnected, 0, pField, sizeof(RspUserLoginField), nullptr, 0, nullptr, 0);
 
 		// 断开连接

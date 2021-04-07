@@ -18,6 +18,7 @@ namespace XAPI
 
         Connect, // 开始/连接
         Disconnect, // 停止/断开
+        GetStatus, 
 
         Clear, // 清理
         Process, // 处理

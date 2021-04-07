@@ -42,6 +42,7 @@ public:
 		const char* szUserPath,
 		const char* szPath);
 	void Disconnect();
+	ConnectionStatus GetStatus();
 
 	void Subscribe(const string& szInstrumentIDs, const string& szExchangeID);
 	void Unsubscribe(const string& szInstrumentIDs, const string& szExchangeID);
@@ -118,5 +119,7 @@ private:
 	CSyntheticConfig* m_pSyntheticConfig;
 	CSyntheticManager* m_pSyntheticManager;
 	CSyntheticCalculateFactory* m_pCalculateFactory;
+
+	ConnectionStatus m_Status;
 };
 

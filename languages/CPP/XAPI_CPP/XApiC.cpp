@@ -5,7 +5,7 @@
 #include "../../../include/XApiC.h"
 #include "../../../include/QueueEnum.h"
 
-#if defined WINDOWS || WIN32
+#if defined WINDOWS || _WIN32
 //#include <libloaderapi.h>
 #else
 #include <dlfcn.h>
@@ -18,7 +18,7 @@ void* X_LoadLib(const char* libPath)
 	if (libPath == nullptr)
 		return nullptr;
 
-#if defined WINDOWS || WIN32
+#if defined WINDOWS || _WIN32
 	return LoadLibraryExA(libPath, nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
 #else
     return dlopen(libPath, RTLD_NOW);
@@ -27,7 +27,7 @@ void* X_LoadLib(const char* libPath)
 
 const char* X_GetLastError()
 {
-#if defined WINDOWS || WIN32
+#if defined WINDOWS || _WIN32
     char szBuf[256] = {0};
 	LPVOID lpMsgBuf;
 	DWORD dw = GetLastError();
@@ -50,7 +50,7 @@ void* X_GetFunction(void* lib, const char* ProcName)
 {
 	if (lib == nullptr)
 		return nullptr;
-#if defined WINDOWS || WIN32
+#if defined WINDOWS || _WIN32
 	return GetProcAddress((HMODULE)lib, ProcName);
 #else
 	return (dlsym(lib, ProcName));
@@ -62,7 +62,7 @@ void X_FreeLib(void* lib)
 	if (lib == nullptr)
 		return;
 
-#if defined WINDOWS || WIN32
+#if defined WINDOWS || _WIN32
 	FreeLibrary((HMODULE)lib);
 #else
     dlclose(lib);
@@ -125,6 +125,15 @@ void X_Disconnect(void* pFun, void* pApi)
 		return;
 
 	((fnOnResponse)pFun)((char)RequestType::RequestType_Disconnect, pApi, nullptr, 0, 0, nullptr, 0, nullptr, 0, nullptr, 0);
+}
+
+ConnectionStatus X_GetStatus(void* pFun, void* pApi)
+{
+	if (pFun == nullptr || pApi == nullptr)
+		return ConnectionStatus::ConnectionStatus_Uninitialized;
+
+	void* p = ((fnOnResponse)pFun)((char)RequestType::RequestType_GetStatus, pApi, nullptr, 0, 0, nullptr, 0, nullptr, 0, nullptr, 0);
+	return (ConnectionStatus)(char)(long long)(p);
 }
 
 void X_Subscribe(void* pFun, void* pApi, const char* szInstrument, const char* szExchange)

@@ -31,6 +31,7 @@ void X_Register(void* pFun, void* pApi, fnOnResponse pCallback, void* pClass);
 
 void X_Connect(void* pFun, void* pApi, const char* szServerPath, const char* szUserPath, const char* szPath);
 void X_Disconnect(void* pFun, void* pApi);
+ConnectionStatus X_GetStatus(void* pFun, void* pApi);
 
 void X_Subscribe(void* pFun, void* pApi, const char* szInstrument, const char* szExchange);
 void X_Unsubscribe(void* pFun, void* pApi, const char* szInstrument, const char* szExchange);

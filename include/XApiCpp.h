@@ -38,8 +38,6 @@ public:
 	virtual void OnRspQryHistoricalBars(CXApi* pApi, BarField* pBars, int size1, HistoricalDataRequestField* pRequest, int size2, bool bIsLast) {};
 	virtual void OnRspQryInvestor(CXApi* pApi, InvestorField* pInvestor, int size1, bool bIsLast){};
 	virtual void OnRtnInstrumentStatus(CXApi* pApi, InstrumentStatusField* pInstrumentStatus) {};
-
-	virtual bool OnFilterSubscribe(CXApi* pApi, ExchangeType exchange, int instrument_part1, int instrument_part2, int instrument_part3, char* pInstrument){ return true; };
 };
 
 class DLL_PUBLIC CXApi
@@ -57,6 +55,7 @@ public:
 
 	virtual void Connect(const char* szServerPath, const char* szUserPath, const char* szPath) = 0;
 	virtual void Disconnect() = 0;
+	virtual ConnectionStatus GetStatus() = 0;
 
 	virtual void Subscribe(const char* szInstrument, const char* szExchange) = 0;
 	virtual void Unsubscribe(const char* szInstrument, const char* szExchange) = 0;

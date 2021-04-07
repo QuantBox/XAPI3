@@ -163,6 +163,11 @@ void CXApiImpl::Disconnect()
 	m_pSpi = nullptr;
 }
 
+ConnectionStatus CXApiImpl::GetStatus()
+{
+	return X_GetStatus(m_pFun, m_pApi);
+}
+
 void CXApiImpl::Subscribe(const char* szInstrument, const char* szExchange)
 {
 	X_Subscribe(m_pFun, m_pApi, szInstrument, szExchange);

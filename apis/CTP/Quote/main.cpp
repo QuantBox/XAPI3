@@ -43,14 +43,14 @@ void* __stdcall XRequest(char type, void* pApi1, void* pApi2, double double1, do
 	case RequestType::RequestType_Register:
 		pApi->Register(ptr1,ptr2);
 		break;
-	//case RequestType::RequestType_Config:
-	//	return (void*)pApi->Config((ConfigInfoField*)ptr1);
 	case RequestType::RequestType_Connect:
 		pApi->Connect((const char*)ptr1, (const char*)ptr2, (const char*)ptr3);
 		break;
 	case RequestType::RequestType_Disconnect:
 		pApi->Disconnect();
 		break;
+	case RequestType::RequestType_GetStatus:
+		return (void*)pApi->GetStatus();
 	case RequestType::RequestType_Subscribe:
 		pApi->Subscribe((const char*)ptr1, (const char*)ptr2);
 		break;

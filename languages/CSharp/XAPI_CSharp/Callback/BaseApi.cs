@@ -256,6 +256,18 @@ namespace XAPI.Callback
             }
         }
 
+        public ConnectionStatus GetStatus
+        {
+            get
+            {
+                if (proxy == null)
+                {
+                    proxy = new Proxy(LibPath);
+                }
+                return (ConnectionStatus)proxy.XRequest((byte)RequestType.GetStatus, IntPtr.Zero, IntPtr.Zero, 0, 0, IntPtr.Zero, 0, IntPtr.Zero, 0, IntPtr.Zero, 0);
+            }
+        }
+
         private IntPtr _OnRespone(byte type, IntPtr pApi1, IntPtr pApi2, double double1, double double2, IntPtr ptr1, int size1, IntPtr ptr2, int size2, IntPtr ptr3, int size3)
         {
             //try

@@ -277,6 +277,7 @@ int CTraderApi::_Init()
 	}
 #endif // KS_COPYFILE	
 
+	m_Status = ConnectionStatus::ConnectionStatus_Initialized;
 	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Initialized, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 
 	m_pApi = CThostFtdcTraderApi::CreateFtdcTraderApi(m_szPath.c_str());
@@ -304,6 +305,7 @@ int CTraderApi::_Init()
 
 		//初始化连接
 		m_pApi->Init();
+		m_Status = ConnectionStatus::ConnectionStatus_Connecting;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Connecting, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 	}
 	else
@@ -313,6 +315,7 @@ int CTraderApi::_Init()
 		pField->RawErrorID = 0;
 		strncpy(pField->Text, "(Api==null)", sizeof(Char256Type));
 
+		m_Status = ConnectionStatus::ConnectionStatus_Disconnected;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Disconnected, 0, pField, sizeof(RspUserLoginField), nullptr, 0, nullptr, 0);
 	}
 
@@ -328,6 +331,7 @@ int CTraderApi::_Init()
 
 void CTraderApi::OnFrontConnected()
 {
+	m_Status = ConnectionStatus::ConnectionStatus_Connected;
 	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Connected, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 
 	//连接成功后自动请求认证或登录
@@ -350,6 +354,7 @@ void CTraderApi::OnFrontDisconnected(int nReason)
 	pField->RawErrorID = nReason;
 	GetOnFrontDisconnectedMsg(nReason, pField->Text);
 
+	m_Status = ConnectionStatus::ConnectionStatus_Disconnected;
 	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Disconnected, 0, pField, sizeof(RspUserLoginField), nullptr, 0, nullptr, 0);
 
 	// 收到登录失败后并没有销毁API，飞鼠只能登录一个用户，所以导致飞鼠登录失败
@@ -376,6 +381,7 @@ void CTraderApi::ReqAuthenticate()
 
 int CTraderApi::_ReqAuthenticate(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3)
 {
+	m_Status = ConnectionStatus::ConnectionStatus_Authorizing;
 	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Authorizing, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 	return m_pApi->ReqAuthenticate((CThostFtdcReqAuthenticateField*)ptr1, ++m_lRequestID);
 }
@@ -385,6 +391,7 @@ void CTraderApi::OnRspAuthenticate(CThostFtdcRspAuthenticateField *pRspAuthentic
 	if (!IsErrorRspInfo(pRspInfo)
 		&& pRspAuthenticateField)
 	{
+		m_Status = ConnectionStatus::ConnectionStatus_Authorized;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Authorized, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 
 		ReqUserLogin();
@@ -396,6 +403,7 @@ void CTraderApi::OnRspAuthenticate(CThostFtdcRspAuthenticateField *pRspAuthentic
 		pField->RawErrorID = pRspInfo->ErrorID;
 		strncpy(pField->Text, pRspInfo->ErrorMsg, sizeof(Char256Type));
 
+		m_Status = ConnectionStatus::ConnectionStatus_Disconnected;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Disconnected, 0, pField, sizeof(RspUserLoginField), nullptr, 0, nullptr, 0);
 	}
 }
@@ -415,6 +423,7 @@ void CTraderApi::ReqUserLogin()
 
 int CTraderApi::_ReqUserLogin(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3)
 {
+	m_Status = ConnectionStatus::ConnectionStatus_Logining;
 	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Logining, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 	return m_pApi->ReqUserLogin((CThostFtdcReqUserLoginField*)ptr1, ++m_lRequestID);
 }
@@ -459,6 +468,7 @@ void CTraderApi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CTho
 
 		sprintf(pField->SessionID, "%d:%d", pRspUserLogin->FrontID, pRspUserLogin->SessionID);
 
+		m_Status = ConnectionStatus::ConnectionStatus_Logined;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Logined, 0, pField, sizeof(RspUserLoginField), nullptr, 0, nullptr, 0);
 
 		// 记下登录信息，可能会用到
@@ -471,11 +481,11 @@ void CTraderApi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CTho
 		m_nMaxOrderRef = atol(pRspUserLogin->MaxOrderRef);
 #endif
 		// 自己发单时ID从1开始，不能从0开始
-		//m_nMaxOrderRef = m_nMaxOrderRef>1 ? m_nMaxOrderRef : 1;
+		m_nMaxOrderRef = m_nMaxOrderRef>1 ? m_nMaxOrderRef : 1;
 
 		// 飞鼠接口，这个数返回的是上次退出时最大编号，所以将要使用的得+1
 		// 而其它接口是这次可以使用的报单编号，所以出于使用考虑，直接+1
-		m_nMaxOrderRef += 1;
+		// m_nMaxOrderRef += 1;
 
 		// 结算单确认，CTP必须确认才能下单
 #ifdef HAS_Settlement
@@ -521,6 +531,7 @@ void CTraderApi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CTho
 		pField->RawErrorID = pRspInfo->ErrorID;
 		strncpy(pField->Text, pRspInfo->ErrorMsg, sizeof(Char256Type));
 
+		m_Status = ConnectionStatus::ConnectionStatus_Disconnected;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Disconnected, 0, pField, sizeof(RspUserLoginField), nullptr, 0, nullptr, 0);
 
 		// 收到登录失败后并没有销毁API，飞鼠一次只能登录一个用户，所以导致飞鼠用户失败
@@ -585,6 +596,7 @@ void CTraderApi::ReqSettlementInfoConfirm()
 
 int CTraderApi::_ReqSettlementInfoConfirm(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3)
 {
+	m_Status = ConnectionStatus::ConnectionStatus_Confirming;
 	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Confirming, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 	return m_pApi->ReqSettlementInfoConfirm((CThostFtdcSettlementInfoConfirmField*)ptr1, ++m_lRequestID);
 }
@@ -594,8 +606,11 @@ void CTraderApi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField
 	if (!IsErrorRspInfo(pRspInfo)
 		&& pSettlementInfoConfirm)
 	{
+		m_Status = ConnectionStatus::ConnectionStatus_Confirmed;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Confirmed, 0, nullptr, 0, nullptr, 0, nullptr, 0);
+		m_Status = ConnectionStatus::ConnectionStatus_Done;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Done, 0, nullptr, 0, nullptr, 0, nullptr, 0);
+		
 
 		// 结算单确认完成，后查询委托与成交
 		QueryOrderTrade(false);
@@ -607,12 +622,18 @@ void CTraderApi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField
 		pField->RawErrorID = pRspInfo->ErrorID;
 		strncpy(pField->Text, pRspInfo->ErrorMsg, sizeof(Char256Type));
 
+		m_Status = ConnectionStatus::ConnectionStatus_Disconnected;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Disconnected, 0, pField, sizeof(RspUserLoginField), nullptr, 0, nullptr, 0);
 	}
 }
 
 #endif // HAS_Settlement
 
+
+ConnectionStatus CTraderApi::GetStatus()
+{
+	return m_Status;
+}
 
 void CTraderApi::Disconnect()
 {
@@ -663,6 +684,7 @@ void CTraderApi::_Disconnect(bool IsInQueue)
 
 		// 全清理，只留最后一个
 		m_msgQueue->Clear();
+		m_Status = ConnectionStatus::ConnectionStatus_Disconnected;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Disconnected, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 		// 主动触发
 		m_msgQueue->Process();

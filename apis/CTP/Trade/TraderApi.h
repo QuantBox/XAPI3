@@ -66,6 +66,7 @@ public:
 		const char* szUserPath,
 		const char* szPath);
 	void Disconnect();
+	ConnectionStatus GetStatus();
 
 	char* ReqOrderInsert(
 		OrderField* pOrder,
@@ -275,6 +276,7 @@ private:
 	CMsgQueue*					m_msgQueue;				//消息队列指针
 	CMsgQueue*					m_msgQueue_Query;
 	void*						m_pClass;
-				
+	
+	ConnectionStatus m_Status;
 };
 

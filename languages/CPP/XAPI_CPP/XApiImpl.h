@@ -20,6 +20,7 @@ public:
 
 	virtual void Connect(const char* szServerPath, const char* szUserPath, const char* szPath);
 	virtual void Disconnect();
+	virtual ConnectionStatus GetStatus();
 
 	virtual void Subscribe(const char* szInstrument, const char* szExchange);
 	virtual void Unsubscribe(const char* szInstrument, const char* szExchange);
