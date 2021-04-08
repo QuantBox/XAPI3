@@ -147,6 +147,10 @@ const char* CXApiImpl::GetLastError()
 
 void CXApiImpl::Connect(const char* szServerPath, const char* szUserPath, const char* szPath)
 {
+	strcpy(m_szServerPath, szServerPath);
+	strcpy(m_szUserPath, szUserPath);
+	strcpy(m_szPath, szPath);
+
 	m_pApi = X_Create(m_pFun);
 	X_Register(m_pFun, m_pApi, (fnOnResponse)OnResponse, this);
 	X_Connect(m_pFun, m_pApi, szServerPath, szUserPath, szPath);
@@ -160,7 +164,14 @@ void CXApiImpl::Disconnect()
 	m_pLib = nullptr;
 	m_pFun = nullptr;
 	m_pApi = nullptr;
-	m_pSpi = nullptr;
+	// m_pSpi = nullptr;
+}
+
+void CXApiImpl::Reconnect()
+{
+	Disconnect();
+	Init();
+	Connect(m_szServerPath, m_szUserPath, m_szPath);
 }
 
 ConnectionStatus CXApiImpl::GetStatus()

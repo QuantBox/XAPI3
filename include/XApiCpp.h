@@ -55,7 +55,9 @@ public:
 
 	virtual void Connect(const char* szServerPath, const char* szUserPath, const char* szPath) = 0;
 	virtual void Disconnect() = 0;
+	virtual void Reconnect() = 0;
 	virtual ConnectionStatus GetStatus() = 0;
+	
 
 	virtual void Subscribe(const char* szInstrument, const char* szExchange) = 0;
 	virtual void Unsubscribe(const char* szInstrument, const char* szExchange) = 0;

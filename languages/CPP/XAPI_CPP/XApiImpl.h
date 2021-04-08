@@ -20,6 +20,7 @@ public:
 
 	virtual void Connect(const char* szServerPath, const char* szUserPath, const char* szPath);
 	virtual void Disconnect();
+	virtual void Reconnect();
 	virtual ConnectionStatus GetStatus();
 
 	virtual void Subscribe(const char* szInstrument, const char* szExchange);
@@ -43,5 +44,9 @@ private:
 
 	CXSpi *m_pSpi;
 	char m_LibPath[1024];
+
+	char m_szServerPath[1024];
+	char m_szUserPath[1024];
+	char m_szPath[1024];
 };
 
