@@ -4,6 +4,7 @@
 #include <vector>
 #include <set>
 #include <string>
+#include <memory>
 
 #pragma warning(disable:4996)
 
