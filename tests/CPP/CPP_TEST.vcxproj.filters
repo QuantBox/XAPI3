@@ -32,9 +32,6 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\ApiProcess.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CPP_TEST.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
