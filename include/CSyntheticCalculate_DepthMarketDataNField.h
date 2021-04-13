@@ -1,5 +1,7 @@
 #pragma once
 
+#include <float.h>
+
 #include "synthetic/CSyntheticMarketData.h"
 
 class CSyntheticCalculateFactory_XAPI:public CSyntheticCalculateFactory

@@ -125,25 +125,25 @@ int main_111(int argc, char* argv[])
 {
 	CXSpiImpl* p = new CXSpiImpl();
 #if defined WINDOWS || _WIN32
-	char DLLPath1[250] = "C:\\Program Files\\SmartQuant Ltd\\OpenQuant 2014\\XAPI\\x64\\CTP\\CTP_Quote_x86.dll";
-	char DLLPath2[250] = "C:\\Program Files\\SmartQuant Ltd\\OpenQuant 2014\\XAPI\\x86\\CTP\\CTP_Trade_x86.dll";
+	char DLLPath1[250] = "CTP_SE_Quote_x86.dll";
+	char DLLPath2[250] = "CTP_SE_Trade_x86.dll";
 #else
-	char DLLPath1[250] = "libQuantBox_CTP_Quote.so";
-	char DLLPath2[250] = "libQuantBox_CTP_Trade.so";
+	char DLLPath1[250] = "libCTP_SE_Quote.so";
+	char DLLPath2[250] = "libCTP_SE_Trade.so";
 #endif
 
-	ServerInfoField				m_ServerInfo1 = { 0 };
-	ServerInfoField				m_ServerInfo2 = { 0 };
-	UserInfoField				m_UserInfo = { 0 };
+	//ServerInfoField				m_ServerInfo1 = { 0 };
+	//ServerInfoField				m_ServerInfo2 = { 0 };
+	//UserInfoField				m_UserInfo = { 0 };
 
-	strcpy(m_ServerInfo1.BrokerID, "4040");
-	strcpy(m_ServerInfo1.Address, "tcp://yhzx-front1.yhqh.com:41213;tcp://yhzx-front3.yhqh.com:41213");
+	//strcpy(m_ServerInfo1.BrokerID, "4040");
+	//strcpy(m_ServerInfo1.Address, "tcp://yhzx-front1.yhqh.com:41213;tcp://yhzx-front3.yhqh.com:41213");
 
-	strcpy(m_ServerInfo2.BrokerID, "4040");
-	strcpy(m_ServerInfo2.Address, "tcp://yhzx-front1.yhqh.com:51205;tcp://yhzx-front3.yhqh.com:52205");
+	//strcpy(m_ServerInfo2.BrokerID, "4040");
+	//strcpy(m_ServerInfo2.Address, "tcp://yhzx-front1.yhqh.com:51205;tcp://yhzx-front3.yhqh.com:52205");
 
-	strcpy(m_UserInfo.UserID, "00000025");
-	strcpy(m_UserInfo.Password, "123456");
+	//strcpy(m_UserInfo.UserID, "00000025");
+	//strcpy(m_UserInfo.Password, "123456");
 
 	CXApi* pApi1 = CXApi::CreateApi(DLLPath1);
 	CXApi* pApi2 = CXApi::CreateApi(DLLPath2);
@@ -166,13 +166,13 @@ int main_111(int argc, char* argv[])
 		pApi1->RegisterSpi(p);
 		pApi2->RegisterSpi(p);
 
-#if defined WINDOWS
-		pApi1->Connect("D:\\", &m_ServerInfo1, &m_UserInfo, 1);
-		pApi2->Connect("D:\\", &m_ServerInfo2, &m_UserInfo, 1);
-#else
-		pApi1->Connect("./", &m_ServerInfo1, &m_UserInfo, 1);
-		pApi2->Connect("./", &m_ServerInfo2, &m_UserInfo, 1);
-#endif
+//#if defined WINDOWS
+//		pApi1->Connect("D:\\", &m_ServerInfo1, &m_UserInfo, 1);
+//		pApi2->Connect("D:\\", &m_ServerInfo2, &m_UserInfo, 1);
+//#else
+//		pApi1->Connect("./", &m_ServerInfo1, &m_UserInfo, 1);
+//		pApi2->Connect("./", &m_ServerInfo2, &m_UserInfo, 1);
+//#endif
 
 		getchar();
 

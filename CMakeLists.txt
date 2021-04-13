@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6.3)
-project(XAPI2)
+project(XAPI3)
 
 # set compile parameter
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
@@ -78,7 +78,6 @@ set(common_cpp
 	${CMAKE_CURRENT_LIST_DIR}/include/inirw.cpp
 	${CMAKE_CURRENT_LIST_DIR}/include/ChinaStock.cpp
 	${CMAKE_CURRENT_LIST_DIR}/include/IDGenerator.cpp
-	${CMAKE_CURRENT_LIST_DIR}/include/ApiProcess.cpp
 )
 set(common_quote_h
 	${CMAKE_CURRENT_LIST_DIR}/include/CSubscribeManager.h
@@ -90,10 +89,8 @@ set(common_quote_cpp
 	${CMAKE_CURRENT_LIST_DIR}/include/CSubscribeManager.cpp
 	${CMAKE_CURRENT_LIST_DIR}/include/CSubscribeManager1.cpp
 	${CMAKE_CURRENT_LIST_DIR}/include/CSubscribeManager2.cpp
-	${CMAKE_CURRENT_LIST_DIR}/include/CSyntheticCalculate_DepthMarketDataNField.cpp
 )
 file(GLOB synthetic_h ${CMAKE_CURRENT_LIST_DIR}/include/synthetic/*.h)
-file(GLOB synthetic_cpp ${CMAKE_CURRENT_LIST_DIR}/include/synthetic/*.cpp)
 
 # functions
 function(move_into_filter filter files)
@@ -132,20 +129,17 @@ function(add_quote name folders)
 			${common_quote_h}
 			${common_quote_cpp}
 			${synthetic_h}
-			${synthetic_cpp}
 		)
 		move_into_filter(common "${common_h}")
 		move_into_filter(common "${common_cpp}")
 		move_into_filter(common_quote "${common_quote_h}")
 		move_into_filter(common_quote "${common_quote_cpp}")
 		move_into_filter(synthetic "${synthetic_h}")
-		move_into_filter(synthetic "${synthetic_cpp}")
 	else()
 		add_library(${name} SHARED
 			${src_files}
 			${common_cpp}
 			${common_quote_cpp}
-			${synthetic_cpp}
 		)
 	endif()
 	
@@ -183,17 +177,14 @@ function(add_trade name folders)
 			${common_h}
 			${common_cpp}
 			${synthetic_h}
-			${synthetic_cpp}
 		)
 		move_into_filter(common "${common_h}")
 		move_into_filter(common "${common_cpp}")
 		move_into_filter(synthetic "${synthetic_h}")
-		move_into_filter(synthetic "${synthetic_cpp}")
 	else()
 		add_library(${name} SHARED
 			${src_files}
 			${common_cpp}
-			${synthetic_cpp}
 		)
 	endif()
 	
@@ -224,20 +215,17 @@ function(add_apis name cpp_files h_files)
 			${common_quote_h}
 			${common_quote_cpp}
 			${synthetic_h}
-			${synthetic_cpp}
 		)
 		move_into_filter(common "${common_h}")
 		move_into_filter(common "${common_cpp}")
 		move_into_filter(common_quote "${common_quote_h}")
 		move_into_filter(common_quote "${common_quote_cpp}")
 		move_into_filter(synthetic "${synthetic_h}")
-		move_into_filter(synthetic "${synthetic_cpp}")
 	else()
 		add_library(${name} SHARED
 			${cpp_files}
 			${common_cpp}
 			${common_quote_cpp}
-			${synthetic_cpp}
 		)
 	endif()
 	
@@ -317,441 +305,407 @@ target_link_libraries(CTP_SE_Trade
 	thosttraderapi_se
 )
 
-# add XTP Quote
-set(folder "")
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/XTP)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/XTP/Quote)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/XTP_Quote)
-add_quote(XTP_Quote "${folder}")
-if (WIN32)
-	if (CMAKE_CL_64)
-		ADD_CUSTOM_COMMAND(TARGET XTP_Quote
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win64/xtpquoteapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win64/xtpquoteapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	else()
-		ADD_CUSTOM_COMMAND(TARGET XTP_Quote
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win32/xtpquoteapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win32/xtpquoteapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	endif()
-else()
-	ADD_CUSTOM_COMMAND(TARGET XTP_Quote
-		PRE_LINK
-		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/linux64/libxtpquoteapi.so ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
-	)
-endif()
-target_link_libraries(XTP_Quote
-	xtpquoteapi
-)
-target_compile_definitions(XTP_Quote
-	PRIVATE USE_CMAKE BUILDING_DLL ISLIB
-)
+## add XTP Quote
+#set(folder "")
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/XTP)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/XTP/Quote)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/XTP_Quote)
+#add_quote(XTP_Quote "${folder}")
+#if (WIN32)
+#	if (CMAKE_CL_64)
+#		ADD_CUSTOM_COMMAND(TARGET XTP_Quote
+#			PRE_LINK
+#			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win64/xtpquoteapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win64/xtpquoteapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#		)
+#	else()
+#		ADD_CUSTOM_COMMAND(TARGET XTP_Quote
+#			PRE_LINK
+#			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win32/xtpquoteapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win32/xtpquoteapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#		)
+#	endif()
+#else()
+#	ADD_CUSTOM_COMMAND(TARGET XTP_Quote
+#		PRE_LINK
+#		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/linux64/libxtpquoteapi.so ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
+#	)
+#endif()
+#target_link_libraries(XTP_Quote
+#	xtpquoteapi
+#)
+#target_compile_definitions(XTP_Quote
+#	PRIVATE USE_CMAKE BUILDING_DLL ISLIB
+#)
 
-# add XTP Trade
-set(folder "")
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/XTP)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/XTP/Trade)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/XTP_Trade)
-add_trade(XTP_Trade "${folder}")
-if (WIN32)
-	if (CMAKE_CL_64)
-		ADD_CUSTOM_COMMAND(TARGET XTP_Trade
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win64/xtptraderapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win64/xtptraderapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	else()
-		ADD_CUSTOM_COMMAND(TARGET XTP_Trade
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win32/xtptraderapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win32/xtptraderapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	endif()
-else()
-	ADD_CUSTOM_COMMAND(TARGET XTP_Trade
-		PRE_LINK
-		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/linux64/libxtptraderapi.so ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
-	)
-endif()
-target_link_libraries(XTP_Trade
-	xtptraderapi
-)
+## add XTP Trade
+#set(folder "")
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/XTP)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/XTP/Trade)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/XTP_Trade)
+#add_trade(XTP_Trade "${folder}")
+#if (WIN32)
+#	if (CMAKE_CL_64)
+#		ADD_CUSTOM_COMMAND(TARGET XTP_Trade
+#			PRE_LINK
+#			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win64/xtptraderapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win64/xtptraderapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#		)
+#	else()
+#		ADD_CUSTOM_COMMAND(TARGET XTP_Trade
+#			PRE_LINK
+#			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win32/xtptraderapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/win32/xtptraderapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#		)
+#	endif()
+#else()
+#	ADD_CUSTOM_COMMAND(TARGET XTP_Trade
+#		PRE_LINK
+#		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/XTP/linux64/libxtptraderapi.so ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
+#	)
+#endif()
+#target_link_libraries(XTP_Trade
+#	xtptraderapi
+#)
 
-if (WIN32)
+## add CTP Spot Trade
+#set(folder "")
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP/Trade)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP_SOPT_SE_Trade)
+#add_trade(CTP_SPOT_SE_Trade "${folder}")
+#target_link_libraries(CTP_SPOT_SE_Trade
+#	thosttraderapi_se
+#)
+#add_dependencies(CTP_SPOT_SE_Trade
+#	CTP_SE_Trade
+#)
+#
+## add CTPZQ Quote
+#set(folder "")
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP/Quote)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTPZQ_Quote)
+#add_quote(CTPZQ_Quote "${folder}")
+#if (WIN32)
+#	if (CMAKE_CL_64)
+#		ADD_CUSTOM_COMMAND(TARGET CTPZQ_Quote
+#			PRE_LINK
+#			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win64/zqthostmdapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win64/zqthostmdapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#		)
+#	else()
+#		ADD_CUSTOM_COMMAND(TARGET CTPZQ_Quote
+#			PRE_LINK
+#			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win32/zqthostmdapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win32/zqthostmdapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#		)
+#	endif()
+#endif()
+#target_link_libraries(CTPZQ_Quote
+#	zqthostmdapi
+#)
 
-# add CTP Spot Trade
-set(folder "")
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP/Trade)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP_SOPT_Trade)
-add_trade(CTP_SPOT_Trade "${folder}")
-target_link_libraries(CTP_SPOT_Trade
-	thosttraderapi
-)
-add_dependencies(CTP_SPOT_Trade
-	CTP_Trade
-)
+## add CTPZQ Trade
+#set(folder "")
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP/Trade)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTPZQ_Trade)
+#add_trade(CTPZQ_Trade "${folder}")
+#if (WIN32)
+#	if (CMAKE_CL_64)
+#		ADD_CUSTOM_COMMAND(TARGET CTPZQ_Trade
+#			PRE_LINK
+#			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win64/zqthosttraderapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win64/zqthosttraderapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#		)
+#	else()
+#		ADD_CUSTOM_COMMAND(TARGET CTPZQ_Trade
+#			PRE_LINK
+#			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win32/zqthosttraderapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win32/zqthosttraderapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#		)
+#	endif()
+#endif()
+#target_link_libraries(CTPZQ_Trade
+#	zqthosttraderapi
+#)
 
-# add CTPZQ Quote
-set(folder "")
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP/Quote)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTPZQ_Quote)
-add_quote(CTPZQ_Quote "${folder}")
-if (WIN32)
-	if (CMAKE_CL_64)
-		ADD_CUSTOM_COMMAND(TARGET CTPZQ_Quote
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win64/zqthostmdapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win64/zqthostmdapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	else()
-		ADD_CUSTOM_COMMAND(TARGET CTPZQ_Quote
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win32/zqthostmdapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win32/zqthostmdapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	endif()
-endif()
-target_link_libraries(CTPZQ_Quote
-	zqthostmdapi
-)
 
-# add CTPZQ Trade
-set(folder "")
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP/Trade)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTPZQ_Trade)
-add_trade(CTPZQ_Trade "${folder}")
-if (WIN32)
-	if (CMAKE_CL_64)
-		ADD_CUSTOM_COMMAND(TARGET CTPZQ_Trade
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win64/zqthosttraderapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win64/zqthosttraderapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	else()
-		ADD_CUSTOM_COMMAND(TARGET CTPZQ_Trade
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win32/zqthosttraderapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/CTPZQ/win32/zqthosttraderapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	endif()
-endif()
-target_link_libraries(CTPZQ_Trade
-	zqthosttraderapi
-)
-
-# add Kingstar Quote
-set(folder "")
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP/Quote)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/Kingstar_Quote)
-add_quote(Kingstar_Quote "${folder}")
-if (WIN32)
-	if (CMAKE_CL_64)
+## add Kingstar Quote
+#set(folder "")
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP/Quote)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/Kingstar_Quote)
+#add_quote(Kingstar_Quote "${folder}")
+#if (WIN32)
+#	if (CMAKE_CL_64)
+##		ADD_CUSTOM_COMMAND(TARGET Kingstar_Quote
+##			PRE_LINK
+##			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+##			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win64/KSMarketDataAPI.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+##			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win64/KSMarketDataAPI.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+##		)
+#	else()
 #		ADD_CUSTOM_COMMAND(TARGET Kingstar_Quote
 #			PRE_LINK
 #			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win64/KSMarketDataAPI.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win64/KSMarketDataAPI.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win32/KSMarketDataAPI.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win32/KSMarketDataAPI.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
 #		)
-	else()
-		ADD_CUSTOM_COMMAND(TARGET Kingstar_Quote
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win32/KSMarketDataAPI.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win32/KSMarketDataAPI.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	endif()
-endif()
-target_link_libraries(Kingstar_Quote
-	KSMarketDataAPI
-)
+#	endif()
+#endif()
+#target_link_libraries(Kingstar_Quote
+#	KSMarketDataAPI
+#)
 
-# add Kingstar Trade
-set(folder "")
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP/Trade)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/Kingstar_Trade)
-add_trade(Kingstar_Trade "${folder}")
-if (WIN32)
-	if (CMAKE_CL_64)
+## add Kingstar Trade
+#set(folder "")
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP/Trade)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/Kingstar_Trade)
+#add_trade(Kingstar_Trade "${folder}")
+#if (WIN32)
+#	if (CMAKE_CL_64)
+##		ADD_CUSTOM_COMMAND(TARGET Kingstar_Trade
+##			PRE_LINK
+##			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+##			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win64/KSTradeAPI.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+##			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win64/KSTradeAPI.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+##		)
+#	else()
 #		ADD_CUSTOM_COMMAND(TARGET Kingstar_Trade
 #			PRE_LINK
 #			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win64/KSTradeAPI.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win64/KSTradeAPI.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win32/KSTradeAPI.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win32/KSTradeAPI.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
 #		)
-	else()
-		ADD_CUSTOM_COMMAND(TARGET Kingstar_Trade
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win32/KSTradeAPI.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Kingstar/win32/KSTradeAPI.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	endif()
-endif()
-target_link_libraries(Kingstar_Trade
-	KSTradeAPI
-)
+#	endif()
+#endif()
+#target_link_libraries(Kingstar_Trade
+#	KSTradeAPI
+#)
 
-# add LTS Quote v2
-set(folder "")
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Quote_v2)
-add_quote(LTS_Quote_v2 "${folder}")
-if (WIN32)
-	if (CMAKE_CL_64)
+## add LTS Quote v2
+#set(folder "")
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Quote_v2)
+#add_quote(LTS_Quote_v2 "${folder}")
+#if (WIN32)
+#	if (CMAKE_CL_64)
+##		ADD_CUSTOM_COMMAND(TARGET LTS_Quote_v2
+##			PRE_LINK
+##			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+##			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win64/securitymduserapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+##			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win64/securitymduserapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+##		)
+#	else()
 #		ADD_CUSTOM_COMMAND(TARGET LTS_Quote_v2
 #			PRE_LINK
 #			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win64/securitymduserapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win64/securitymduserapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win32/securitymduserapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win32/securitymduserapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
 #		)
-	else()
-		ADD_CUSTOM_COMMAND(TARGET LTS_Quote_v2
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win32/securitymduserapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win32/securitymduserapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	endif()
-endif()
-target_link_libraries(LTS_Quote_v2
-	securitymduserapi
-)
+#	endif()
+#endif()
+#target_link_libraries(LTS_Quote_v2
+#	securitymduserapi
+#)
 
-# add LTS Query v2
-set(folder "")
-# list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Query_v2)
-file(GLOB LTS_Query_cpp ${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Query_v2/*.cpp)
-file(GLOB LTS_Query_h ${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Query_v2/*.h)
-list(APPEND LTS_Query_cpp ${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Trade_v2/TypeConvert.cpp)
-list(APPEND LTS_Query_h ${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Trade_v2/TypeConvert.h)
-add_apis(LTS_Query_v2 "${LTS_Query_cpp}" "${LTS_Query_h}")
-if (WIN32)
-	if (CMAKE_CL_64)
+## add LTS Query v2
+#set(folder "")
+## list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Query_v2)
+#file(GLOB LTS_Query_cpp ${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Query_v2/*.cpp)
+#file(GLOB LTS_Query_h ${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Query_v2/*.h)
+#list(APPEND LTS_Query_cpp ${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Trade_v2/TypeConvert.cpp)
+#list(APPEND LTS_Query_h ${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Trade_v2/TypeConvert.h)
+#add_apis(LTS_Query_v2 "${LTS_Query_cpp}" "${LTS_Query_h}")
+#if (WIN32)
+#	if (CMAKE_CL_64)
+##		ADD_CUSTOM_COMMAND(TARGET LTS_Query_v2
+##			PRE_LINK
+##			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+##			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win64/securityqueryapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+##			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win64/securityqueryapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+##		)
+#	else()
 #		ADD_CUSTOM_COMMAND(TARGET LTS_Query_v2
 #			PRE_LINK
 #			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win64/securityqueryapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win64/securityqueryapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win32/securityqueryapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win32/securityqueryapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
 #		)
-	else()
-		ADD_CUSTOM_COMMAND(TARGET LTS_Query_v2
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win32/securityqueryapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win32/securityqueryapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	endif()
-endif()
-target_link_libraries(LTS_Query_v2
-	securityqueryapi
-)
-target_include_directories(LTS_Query_v2 PRIVATE
-	${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Query_v2
-)
+#	endif()
+#endif()
+#target_link_libraries(LTS_Query_v2
+#	securityqueryapi
+#)
+#target_include_directories(LTS_Query_v2 PRIVATE
+#	${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Query_v2
+#)
 
-# add LTS Trade v2
-set(folder "")
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Trade_v2)
-add_trade(LTS_Trade_v2 "${folder}")
-if (WIN32)
-	if (CMAKE_CL_64)
+## add LTS Trade v2
+#set(folder "")
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/LTS_Trade_v2)
+#add_trade(LTS_Trade_v2 "${folder}")
+#if (WIN32)
+#	if (CMAKE_CL_64)
+##		ADD_CUSTOM_COMMAND(TARGET LTS_Trade_v2
+##			PRE_LINK
+##			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+##			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win64/securitytraderapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+##			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win64/securitytraderapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+##		)
+#	else()
 #		ADD_CUSTOM_COMMAND(TARGET LTS_Trade_v2
 #			PRE_LINK
 #			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win64/securitytraderapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win64/securitytraderapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win32/securitytraderapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win32/securitytraderapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
 #		)
-	else()
-		ADD_CUSTOM_COMMAND(TARGET LTS_Trade_v2
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win32/securitytraderapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/LTS_v2/win32/securitytraderapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	endif()
-endif()
-target_link_libraries(LTS_Trade_v2
-	securitytraderapi
-)
+#	endif()
+#endif()
+#target_link_libraries(LTS_Trade_v2
+#	securitytraderapi
+#)
 
-# add Sgit Quote
-set(folder "")
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP/Quote)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/Sgit_Quote)
-add_quote(Sgit_Quote "${folder}")
-if (WIN32)
-	if (CMAKE_CL_64)
+## add Sgit Quote
+#set(folder "")
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP/Quote)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/Sgit_Quote)
+#add_quote(Sgit_Quote "${folder}")
+#if (WIN32)
+#	if (CMAKE_CL_64)
+##		ADD_CUSTOM_COMMAND(TARGET Sgit_Quote
+##			PRE_LINK
+##			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+##			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win64/sgitquotapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+##			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win64/sgitquotapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+##		)
+#	else()
 #		ADD_CUSTOM_COMMAND(TARGET Sgit_Quote
 #			PRE_LINK
 #			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win64/sgitquotapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win64/sgitquotapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win32/sgitquotapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win32/sgitquotapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
 #		)
-	else()
-		ADD_CUSTOM_COMMAND(TARGET Sgit_Quote
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win32/sgitquotapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win32/sgitquotapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	endif()
-endif()
-target_link_libraries(Sgit_Quote
-	sgitquotapi
-)
+#	endif()
+#endif()
+#target_link_libraries(Sgit_Quote
+#	sgitquotapi
+#)
 
-# add Sgit Trade
-set(folder "")
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP/Trade)
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/Sgit_Trade)
-add_trade(Sgit_Trade "${folder}")
-if (WIN32)
-	if (CMAKE_CL_64)
+## add Sgit Trade
+#set(folder "")
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/CTP/Trade)
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/Sgit_Trade)
+#add_trade(Sgit_Trade "${folder}")
+#if (WIN32)
+#	if (CMAKE_CL_64)
+##		ADD_CUSTOM_COMMAND(TARGET Sgit_Trade
+##			PRE_LINK
+##			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+##			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win64/sgittradeapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+##			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win64/sgittradeapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+##		)
+#	else()
 #		ADD_CUSTOM_COMMAND(TARGET Sgit_Trade
 #			PRE_LINK
 #			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win64/sgittradeapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win64/sgittradeapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win32/sgittradeapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win32/sgittradeapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
 #		)
-	else()
-		ADD_CUSTOM_COMMAND(TARGET Sgit_Trade
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win32/sgittradeapi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Sgit/win32/sgittradeapi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	endif()
-endif()
-target_link_libraries(Sgit_Trade
-	sgittradeapi
-)
+#	endif()
+#endif()
+#target_link_libraries(Sgit_Trade
+#	sgittradeapi
+#)
 
-# add Tdx Trade
-set(folder "")
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/Tdx_Trade)
-add_quote(Tdx_Trade "${folder}")
-if (WIN32)
-	if (CMAKE_CL_64)
-#		ADD_CUSTOM_COMMAND(TARGET Tdx_Trade
+## add Wind Quote
+#set(folder "")
+#list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/Wind_Quote)
+#add_quote(Wind_Quote "${folder}")
+#if (WIN32)
+#	if (CMAKE_CL_64)
+#		ADD_CUSTOM_COMMAND(TARGET Wind_Quote
 #			PRE_LINK
 #			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Tdx/win64/TdxApi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Tdx/win64/TdxApi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Wind/win64/WAPIWrapperCpp.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Wind/win64/WAPIWrapperCpp.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
 #		)
-	else()
-		ADD_CUSTOM_COMMAND(TARGET Tdx_Trade
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Tdx/win32/TdxApi.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Tdx/win32/TdxApi.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	endif()
-endif()
-target_link_libraries(Tdx_Trade
-	TdxApi
-)
+#	else()
+#		ADD_CUSTOM_COMMAND(TARGET Wind_Quote
+#			PRE_LINK
+#			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Wind/win32/WAPIWrapperCpp.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
+#			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Wind/win32/WAPIWrapperCpp.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
+#		)
+#	endif()
+#endif()
+#target_link_libraries(Wind_Quote
+#	WAPIWrapperCpp
+#)
 
+## add FakeAPI
+#file(GLOB FAKE_API_H ${CMAKE_CURRENT_LIST_DIR}/tools/FakeAPI/*.h)
+#file(GLOB FAKE_API_CPP ${CMAKE_CURRENT_LIST_DIR}/tools/FakeAPI/*.cpp)
+#list(FILTER FAKE_API_CPP EXCLUDE REGEX ".*dllmain.cpp")
+#if (WIN32)
+#	add_library(FakeAPI SHARED
+#		${FAKE_API_H}
+#		${FAKE_API_CPP}
+#		${CMAKE_CURRENT_LIST_DIR}/tools/FakeAPI/export.def
+#	)
+#else()
+#	add_library(FakeAPI SHARED
+#		${FAKE_API_CPP}
+#	)
+#endif()
+#set_target_properties(FakeAPI
+#	PROPERTIES
+#	FOLDER "tools"
+#)
 
-# add Wind Quote
-set(folder "")
-list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/Wind_Quote)
-add_quote(Wind_Quote "${folder}")
-if (WIN32)
-	if (CMAKE_CL_64)
-		ADD_CUSTOM_COMMAND(TARGET Wind_Quote
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Wind/win64/WAPIWrapperCpp.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Wind/win64/WAPIWrapperCpp.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	else()
-		ADD_CUSTOM_COMMAND(TARGET Wind_Quote
-			PRE_LINK
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Wind/win32/WAPIWrapperCpp.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)/
-			COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Wind/win32/WAPIWrapperCpp.lib ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(Configuration)/
-		)
-	endif()
-endif()
-target_link_libraries(Wind_Quote
-	WAPIWrapperCpp
-)
-
-# add FakeAPI
-file(GLOB FAKE_API_H ${CMAKE_CURRENT_LIST_DIR}/tools/FakeAPI/*.h)
-file(GLOB FAKE_API_CPP ${CMAKE_CURRENT_LIST_DIR}/tools/FakeAPI/*.cpp)
-list(FILTER FAKE_API_CPP EXCLUDE REGEX ".*dllmain.cpp")
-if (WIN32)
-add_library(FakeAPI SHARED
-	${FAKE_API_H}
-	${FAKE_API_CPP}
-	${CMAKE_CURRENT_LIST_DIR}/tools/FakeAPI/export.def
-)
-else()
-add_library(FakeAPI SHARED
-	${FAKE_API_CPP}
-)
-endif()
-set_target_properties(FakeAPI
-	PROPERTIES
-	FOLDER "tools"
-)
-
-# # add Tongshi Quote
-# set(folder "")
-# list(APPEND folder ${CMAKE_CURRENT_LIST_DIR}/apis/Tongshi_Quote)
-# add_quote(Tongshi_Quote "${folder}")
-
-# add Cpp Test
-file(GLOB CPP_TEST_H ${CMAKE_CURRENT_LIST_DIR}/tests/CPP/*.h)
-file(GLOB CPP_TEST_CPP ${CMAKE_CURRENT_LIST_DIR}/tests/CPP/*.cpp)
-if (WIN32)
-add_executable(CPP_TEST
-	${CPP_TEST_H}
-	${CPP_TEST_CPP}
-)
-set_target_properties(CPP_TEST
-	PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$(OutDir)"
-)
-else()
-add_executable(CPP_TEST
-	${CPP_TEST_CPP}
-)
-endif()
-target_compile_definitions(CPP_TEST
-	PRIVATE USE_CMAKE
-)
-add_dependencies(CPP_TEST
-	XAPI_CPP
-	CTP_SE_Quote
-	CTP_SE_Trade
-)
-target_link_libraries(CPP_TEST
-	XAPI_CPP
-)
-set_target_properties(CPP_TEST
-	PROPERTIES
-	FOLDER "tests/CPP"
-)
-
-endif(WIN32)
+## add Cpp Test
+#file(GLOB CPP_TEST_H ${CMAKE_CURRENT_LIST_DIR}/tests/CPP/*.h)
+#file(GLOB CPP_TEST_CPP ${CMAKE_CURRENT_LIST_DIR}/tests/CPP/*.cpp)
+#if (WIN32)
+#	add_executable(CPP_TEST
+#		${CPP_TEST_H}
+#		${CPP_TEST_CPP}
+#	)
+#	set_target_properties(CPP_TEST
+#		PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$(OutDir)"
+#	)
+#else()
+#	add_executable(CPP_TEST
+#		${CPP_TEST_CPP}
+#	)
+#endif()
+#target_compile_definitions(CPP_TEST
+#	PRIVATE USE_CMAKE
+#)
+#add_dependencies(CPP_TEST
+#	XAPI_CPP
+#	CTP_SE_Quote
+#	CTP_SE_Trade
+#)
+#target_link_libraries(CPP_TEST
+#	XAPI_CPP
+#)
+#set_target_properties(CPP_TEST
+#	PROPERTIES
+#	FOLDER "tests/CPP"
+#)
  
 # add cpp examples
 add_executable(ExampleCTP ${CMAKE_CURRENT_LIST_DIR}/example/cpp/CTP/example_ctp.cpp)
@@ -763,16 +717,16 @@ add_dependencies(ExampleCTP
 	CTP_SE_Trade
 )
 
-add_executable(ExampleXTP ${CMAKE_CURRENT_LIST_DIR}/example/cpp/XTP/example_xtp.cpp)
-target_link_libraries(ExampleXTP XAPI_CPP)
-target_compile_definitions(ExampleXTP PRIVATE USE_CMAKE)
-add_dependencies(ExampleXTP
-	XAPI_CPP
-	XTP_Quote
-	XTP_Trade
-)
+#add_executable(ExampleXTP ${CMAKE_CURRENT_LIST_DIR}/example/cpp/XTP/example_xtp.cpp)
+#target_link_libraries(ExampleXTP XAPI_CPP)
+#target_compile_definitions(ExampleXTP PRIVATE USE_CMAKE)
+#add_dependencies(ExampleXTP
+#	XAPI_CPP
+#	XTP_Quote
+#	XTP_Trade
+#)
 
-set_target_properties(ExampleCTP ExampleXTP
+set_target_properties(ExampleCTP # ExampleXTP
 	PROPERTIES
 	FOLDER "example/CPP"
 )

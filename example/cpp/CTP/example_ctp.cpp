@@ -1,4 +1,4 @@
-﻿#if defined WINDOWS || _WIN32
+#if defined WINDOWS || _WIN32
 #include <Windows.h>
 #else
 #include <unistd.h>
@@ -37,7 +37,7 @@ public:
 		{
 			if ((pApi->GetApiTypes() & ApiType::ApiType_MarketData) == ApiType::ApiType_MarketData)
 			{
-				// 得到当前的时间
+				// �õ���ǰ��ʱ��
 				time_t rawtime;
 				struct tm * timeinfo;
 				time(&rawtime);
@@ -101,32 +101,6 @@ public:
 
 	virtual void OnRspQryHistoricalTicks(CXApi* pApi, TickField* pTicks, int size1, HistoricalDataRequestField* pRequest, int size2, bool bIsLast) {};
 	virtual void OnRspQryHistoricalBars(CXApi* pApi, BarField* pBars, int size1, HistoricalDataRequestField* pRequest, int size2, bool bIsLast) {};
-
-	virtual bool OnFilterSubscribe(CXApi* pApi, ExchangeType exchange, int instrument_part1, int instrument_part2, int instrument_part3, char* pInstrument)
-	{
-		// 当数字为0时，只判断交易所
-		// 当交易所为
-		if (instrument_part1 == 0)
-			// 只要上海与深圳，不处理三板
-			return exchange != ExchangeType::ExchangeType_NEEQ;
-
-		//type = ExchangeType::SZSE;
-		//double1 = 399300;
-
-		int prefix1 = instrument_part1 / 100000;
-		int prefix3 = instrument_part1 / 1000;
-		switch (exchange)
-		{
-		case ExchangeType::ExchangeType_SSE:
-			return (prefix1 == 6);
-		case ExchangeType::ExchangeType_SZSE:
-			return (prefix1 == 0) || (prefix3 == 300);
-		default:
-			break;
-		}
-
-		return true;
-	}
 public:
 	//CXApi* m_pApi;
 	int count;
@@ -136,48 +110,17 @@ int main(int argc, char* argv[])
 {
 	CXSpiImpl* p = new CXSpiImpl();
 #if _WIN32
-#if _WIN64
-	char DLLPath1[250] = "CTP_Quote_x64.dll";
-	char DLLPath2[250] = "CTP_Trade_x64.dll";
-#else
-	char DLLPath1[250] = "CTP_Quote_x86.dll";
-	char DLLPath2[250] = "CTP_Trade_x86.dll";
-#endif
+	#if _WIN64
+		char DLLPath1[250] = "CTP_SE_Quote_x64.dll";
+		char DLLPath2[250] = "CTP_SE_Trade_x64.dll";
+	#else
+		char DLLPath1[250] = "CTP_SE_Quote_x86.dll";
+		char DLLPath2[250] = "CTP_SE_Trade_x86.dll";
+	#endif
 #else
 	char DLLPath1[1024] = "libCTP_SE_Quote.so";
 	char DLLPath2[1024] = "libCTP_SE_Trade.so";
-//	char dir_path[512] = {0};
-//	char DLLPath1[1024] = {0};
-//	char DLLPath2[1024] = {0};
-//
-//	if (getcwd(dir_path, sizeof(dir_path)) == NULL)
-//	{
-//		return 1;
-//	}
-//	snprintf(DLLPath1, sizeof(DLLPath1), "%s/libCTP_Quote.so", dir_path);
-//	snprintf(DLLPath2, sizeof(DLLPath2), "%s/libCTP_Trade.so", dir_path);
 #endif
-
-	ServerInfoField				m_ServerInfo1 = { 0 };
-	ServerInfoField				m_ServerInfo2 = { 0 };
-	UserInfoField				m_UserInfo = { 0 };
-
-	strcpy(m_ServerInfo1.BrokerID, "9999");
-	strcpy(m_ServerInfo1.Address, "tcp://218.202.237.33:10112");
-	strcpy(m_ServerInfo1.AppID, "TD_MJ_V2.3.0");
-	strcpy(m_ServerInfo1.AuthCode, "FJFC4R1FCOOP7EGM");
-	strcpy(m_ServerInfo1.UserProductInfo, "OpenQuant");
-
-	strcpy(m_ServerInfo2.BrokerID, "9999");
-	strcpy(m_ServerInfo2.Address, "tcp://218.202.237.33:10102");
-	strcpy(m_ServerInfo2.AppID, "TD_MJ_V2.3.0");
-	strcpy(m_ServerInfo2.AuthCode, "FJFC4R1FCOOP7EGM");
-	strcpy(m_ServerInfo2.UserProductInfo, "OpenQuant");
-
-	strcpy(m_UserInfo.UserID, "654321");
-	strcpy(m_UserInfo.Password, "123456");
-
-
 
 	while (true)
 	{
@@ -199,17 +142,25 @@ int main(int argc, char* argv[])
 		}
 
 		pApi1->RegisterSpi(p);
-		pApi1->Connect("./", &m_ServerInfo1, &m_UserInfo, 1);
-		printf("已经执行完Connect\n");
+		pApi1->Connect(
+			"md.json",
+			"user.json",
+			"./"
+		);
+		printf("�Ѿ�ִ����Connect\n");
 
 		pApi2->RegisterSpi(p);
-		pApi2->Connect("./", &m_ServerInfo2, &m_UserInfo, 1);
-		printf("已经执行完Connect\n");
+		pApi2->Connect(
+			"td.json",
+			"user.json",
+			"./"
+		);
+		printf("�Ѿ�ִ����Connect\n");
 		getchar();
 
 		pApi1->Disconnect();
 		pApi2->Disconnect();
-		printf("已经执行完Disconnect");
+		printf("�Ѿ�ִ����Disconnect");
 		//getchar();
 	}
 
