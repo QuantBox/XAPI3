@@ -56,12 +56,6 @@
     <ClCompile Include="..\CTP\Trade\TraderApi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\CTP\TypeConvert.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\include\toolkit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\common\License\License.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

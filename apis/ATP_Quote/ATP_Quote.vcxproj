@@ -168,10 +168,8 @@
     <ClCompile Include="..\..\include\CSubscribeManager.cpp" />
     <ClCompile Include="..\..\include\CSubscribeManager1.cpp" />
     <ClCompile Include="..\..\include\CSubscribeManager2.cpp" />
-    <ClCompile Include="..\..\include\toolkit.cpp" />
     <ClCompile Include="..\CTP\Quote\main.cpp" />
     <ClCompile Include="..\CTP\Quote\MdUserApi.cpp" />
-    <ClCompile Include="..\CTP\TypeConvert.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

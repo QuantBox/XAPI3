@@ -89,7 +89,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;ATP_TRADE_EXPORTS;BUILDING_DLL;_CRT_SECURE_NO_WARNINGS;ENABLE_LICENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;ATP_TRADE_EXPORTS;BUILDING_DLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -161,10 +161,8 @@
   <ItemGroup>
     <ClCompile Include="..\..\common\License\License.cpp" />
     <ClCompile Include="..\..\include\inirw.cpp" />
-    <ClCompile Include="..\..\include\toolkit.cpp" />
     <ClCompile Include="..\CTP\Trade\main.cpp" />
     <ClCompile Include="..\CTP\Trade\TraderApi.cpp" />
-    <ClCompile Include="..\CTP\TypeConvert.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
