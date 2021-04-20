@@ -159,10 +159,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\include\ApiProcess.cpp" />
-    <ClCompile Include="..\..\include\toolkit.cpp" />
     <ClCompile Include="..\CTP\Trade\main.cpp" />
     <ClCompile Include="..\CTP\Trade\TraderApi.cpp" />
-    <ClCompile Include="..\CTP\TypeConvert.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

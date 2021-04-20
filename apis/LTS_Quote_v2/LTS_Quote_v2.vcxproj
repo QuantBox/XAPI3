@@ -107,7 +107,6 @@
     <ClCompile Include="..\..\include\CSubscribeManager.cpp" />
     <ClCompile Include="..\..\include\CSubscribeManager1.cpp" />
     <ClCompile Include="..\..\include\CSubscribeManager2.cpp" />
-    <ClCompile Include="..\..\include\toolkit.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MdUserApi.cpp" />

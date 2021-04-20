@@ -12,8 +12,6 @@
 
 #include "../CTP/TypeConvert.h"
 
-
-
 #include <cstring>
 #include <assert.h>
 #include <cfloat>
@@ -685,7 +683,7 @@ void CTraderApi::_Disconnect(bool IsInQueue)
 		// 全清理，只留最后一个
 		m_msgQueue->Clear();
 		m_Status = ConnectionStatus::ConnectionStatus_Disconnected;
-		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, ConnectionStatus::ConnectionStatus_Disconnected, 0, nullptr, 0, nullptr, 0, nullptr, 0);
+		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, m_Status, 0, nullptr, 0, nullptr, 0, nullptr, 0);
 		// 主动触发
 		m_msgQueue->Process();
 	}
@@ -817,7 +815,7 @@ char* CTraderApi::ReqOrderInsert(
 	case TimeInForce_FOK:
 		body.TimeCondition = THOST_FTDC_TC_IOC;
 		body.VolumeCondition = THOST_FTDC_VC_CV;
-		//body.MinVolume = body.VolumeTotalOriginal; // 这个地方必须加吗？
+		body.MinVolume = body.VolumeTotalOriginal; // 这个地方必须加吗？
 		break;
 	default:
 		body.VolumeCondition = THOST_FTDC_VC_AV;

@@ -99,7 +99,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\include\ChinaStock.cpp" />
-    <ClCompile Include="..\..\include\toolkit.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">

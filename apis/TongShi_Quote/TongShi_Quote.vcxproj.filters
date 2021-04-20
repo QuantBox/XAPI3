@@ -39,9 +39,6 @@
     <ClCompile Include="..\..\include\ChinaStock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\toolkit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\languages\CPP\XAPI_CPP\XApiC.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

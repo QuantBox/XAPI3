@@ -74,12 +74,6 @@
     <ClCompile Include="..\CTP\Quote\MdUserApi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\toolkit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CTP\TypeConvert.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\include\CSubscribeManager2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

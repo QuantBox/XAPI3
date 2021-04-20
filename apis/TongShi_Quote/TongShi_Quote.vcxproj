@@ -111,7 +111,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\include\ChinaStock.cpp" />
-    <ClCompile Include="..\..\include\toolkit.cpp" />
     <ClCompile Include="..\..\languages\CPP\XAPI_CPP\XApiC.cpp" />
     <ClCompile Include="DialogStockDrv.cpp" />
     <ClCompile Include="main.cpp" />

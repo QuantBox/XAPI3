@@ -238,7 +238,6 @@ private:
 	void QueryOrderTrade(bool bForceQuery);
 
 private:
-	//bool						m_delete;
 	atomic<int>					m_lRequestID;			//请求ID,得保持自增
 
 	CThostFtdcRspUserLoginField m_RspUserLogin;			//返回的登录成功响应，目前利用此内成员进行报单所属区分

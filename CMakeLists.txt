@@ -74,7 +74,6 @@ set(common_h
 	${CMAKE_CURRENT_LIST_DIR}/include/ApiProcess.h
 )
 set(common_cpp
-	${CMAKE_CURRENT_LIST_DIR}/include/toolkit.cpp
 	${CMAKE_CURRENT_LIST_DIR}/include/inirw.cpp
 	${CMAKE_CURRENT_LIST_DIR}/include/ChinaStock.cpp
 	${CMAKE_CURRENT_LIST_DIR}/include/IDGenerator.cpp
