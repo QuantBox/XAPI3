@@ -482,9 +482,9 @@ void CTraderApi::Clear()
 void OrderField_2_EES_EnterOrderField(UserItem* pUserItem, OrderField* pOrder, EES_EnterOrderField* pEnter)
 {
 	// TODO: Test
-	pOrder->TimeInForce = TimeInForce_IOC;
-	pOrder->Price = 7000;
-	pOrder->Qty = 2;
+	//pOrder->TimeInForce = TimeInForce_IOC;
+	//pOrder->Price = 7000;
+	//pOrder->Qty = 2;
 
 	pEnter->m_HedgeFlag = HedgeFlagType_2_EES_HedgeFlag(pOrder->HedgeFlag);
 
