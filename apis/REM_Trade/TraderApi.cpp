@@ -20,6 +20,13 @@
 #include <assert.h>
 #include <cfloat>
 
+#if defined WINDOWS || _WIN32
+//#include <libloaderapi.h>
+#else
+#include <dlfcn.h>
+#include <errno.h>
+#endif
+
 bool CTraderApi::LoadEESTrader()
 {
 #ifdef WIN32
@@ -431,7 +438,7 @@ void CTraderApi::Disconnect()
 		m_msgQueue_Query = nullptr;
 	}
 
-	Sleep(100);
+	this_thread::sleep_for(chrono::milliseconds(100));
 
 	if (m_msgQueue)
 	{
@@ -574,7 +581,7 @@ char* CTraderApi::ReqOrderAction(OrderIDType* szIds, int count, char* pzsRtn)
 
 	m_pOrderMap->insertCancel(_id, pField);
 	RESULT iRet = m_pApi->CancelOrder(&CxlOrder);
-	if (iRet == NOERROR)
+	if (iRet == NO_ERROR)
 	{
 		memset(pzsRtn, 0, sizeof(OrderIDType));
 	}

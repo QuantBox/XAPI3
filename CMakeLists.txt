@@ -3,7 +3,7 @@ project(XAPI3)
 
 # set compile parameter
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -Wall -Wextra -fpermissive -rdynamic -std=c++11")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -Wall -Wextra -fpermissive -rdynamic -std=c++11 -Wno-unused-parameter")
 elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -Wall -Wextra -Wno-missing-field-initializers")
 	set(CMAKE_CXX_STANDARD 11)
@@ -653,6 +653,21 @@ target_link_libraries(CTP_SE_Trade
 #target_link_libraries(Wind_Quote
 #	WAPIWrapperCpp
 #)
+
+# REM_Trade
+
+file(GLOB REM_TRADE_H ${CMAKE_CURRENT_LIST_DIR}/apis/REM_Trade/*.h)
+file(GLOB REM_TRADE_CPP ${CMAKE_CURRENT_LIST_DIR}/apis/REM_Trade/*.cpp)
+list(FILTER REM_TRADE_CPP EXCLUDE REGEX ".*dllmain.cpp")
+include_directories(${CMAKE_CURRENT_LIST_DIR}/include/REM/)
+add_library(REM_Trade SHARED ${REM_TRADE_H} ${REM_TRADE_CPP})
+ADD_CUSTOM_COMMAND(TARGET REM_Trade
+	PRE_LINK
+	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/REM/linux64/libEESTraderApi.so ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
+)
+target_link_libraries(REM_Trade
+	EESTraderApi
+)
 
 ## add FakeAPI
 #file(GLOB FAKE_API_H ${CMAKE_CURRENT_LIST_DIR}/tools/FakeAPI/*.h)

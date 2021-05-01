@@ -6,6 +6,7 @@
 #include <stdarg.h>
 #include <time.h>
 #include <stdarg.h>
+#include <cstring>
 
 #pragma warning(disable:4996)
 
