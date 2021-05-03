@@ -655,7 +655,6 @@ target_link_libraries(CTP_SE_Trade
 #)
 
 # REM_Trade
-
 file(GLOB REM_TRADE_H ${CMAKE_CURRENT_LIST_DIR}/apis/REM_Trade/*.h)
 file(GLOB REM_TRADE_CPP ${CMAKE_CURRENT_LIST_DIR}/apis/REM_Trade/*.cpp)
 list(FILTER REM_TRADE_CPP EXCLUDE REGEX ".*dllmain.cpp")
@@ -667,6 +666,20 @@ ADD_CUSTOM_COMMAND(TARGET REM_Trade
 )
 target_link_libraries(REM_Trade
 	EESTraderApi
+)
+
+# REM_Quote
+file(GLOB REM_QUOTE_H ${CMAKE_CURRENT_LIST_DIR}/apis/REM_Quote/*.h)
+file(GLOB REM_QUOTE_CPP ${CMAKE_CURRENT_LIST_DIR}/apis/REM_Quote/*.cpp)
+list(FILTER REM_QUOTE_CPP EXCLUDE REGEX ".*dllmain.cpp")
+include_directories(${CMAKE_CURRENT_LIST_DIR}/include/REM/)
+add_library(REM_Quote SHARED ${REM_QUOTE_H} ${REM_QUOTE_CPP})
+ADD_CUSTOM_COMMAND(TARGET REM_Quote
+	PRE_LINK
+	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/REM/linux64/libEESQuoteApi.so ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
+)
+target_link_libraries(REM_Quote
+	EESQuoteApi
 )
 
 ## add FakeAPI
