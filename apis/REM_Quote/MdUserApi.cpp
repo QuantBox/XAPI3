@@ -352,8 +352,8 @@ int CMdUserApi::_Init()
 		{
 			vector<EqsTcpInfo>	vec_info;
 			vec_info.push_back(tcpInfo);
-
-			if (m_pApi->ConnServer(vec_info, this))
+			// 好奇怪，只有直连的函数才管用
+			if (m_pApi->ConnServer(tcpInfo, this))
 			{
 				m_Status = ConnectionStatus::ConnectionStatus_Connecting;
 				m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, m_Status, 0, nullptr, 0, nullptr, 0, nullptr, 0);
