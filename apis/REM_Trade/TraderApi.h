@@ -371,5 +371,8 @@ private:
 	EESTraderApi*				m_tradeApi;				///< EES交易API接口
 	T_DLL_HANDLE				m_handle;				///< EES交易API句柄
 	funcDestroyEESTraderApi		m_distoryFun;			///< EES交易API动态库销毁函数
+
+	int							m_HHmmss;	// 由于
+	int							m_HHmmss_OnSymbolStatusReport;
 };
 

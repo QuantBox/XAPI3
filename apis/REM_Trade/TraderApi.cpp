@@ -230,6 +230,8 @@ void CTraderApi::TestInThread(char type, void* pApi1, void* pApi2, double double
 {
 	time_t _now = time(nullptr);
 
+	m_HHmmss = tm_to_HHmmss(localtime(&_now));
+
 	CheckThenHeartbeat(_now);
 }
 
@@ -641,7 +643,9 @@ void CTraderApi::OnUserLogon(EES_LogonResponse* pLogon)
 		pField->LoginTime = 0;
 
 		sprintf(pField->SessionID, "%d", pLogon->m_UserId);
-		//sprintf(pField->AccountID, "%d", pLogon->m_UserId);
+		sprintf(pField->Text, "OrderFC: %d/%d, CancelFC: %d/%d",
+			pLogon->m_OrderFCCount, pLogon->m_OrderFCInterval,
+			pLogon->m_CancelFCCount, pLogon->m_CancelFCInterval);
 
 		m_Status = ConnectionStatus::ConnectionStatus_Logined;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, m_Status, 0, pField, sizeof(RspUserLoginField), nullptr, 0, nullptr, 0);
@@ -658,7 +662,7 @@ void CTraderApi::OnUserLogon(EES_LogonResponse* pLogon)
 
 		// TEST: 登录成功后就查询交易所状态
 		// 发现查询出来的全是空，只能后期再试
-		// QuerySymbolStatus();
+		//QuerySymbolStatus();
 	}
 	else
 	{
@@ -752,6 +756,11 @@ void CTraderApi::OnCxlOrderReject(EES_CxlOrderRej* pReject)
 /// \return void 
 void CTraderApi::OnSymbolStatusReport(EES_SymbolStatus* pSymbolStatus)
 {
+	// 由于请求太多，想办法立即返回
+	if (m_HHmmss_OnSymbolStatusReport == m_HHmmss)
+		return;
+	m_HHmmss_OnSymbolStatusReport = m_HHmmss;
+	
 	if (pSymbolStatus)
 	{
 		InstrumentStatusField* pField = (InstrumentStatusField*)m_msgQueue->new_block(sizeof(InstrumentStatusField));
@@ -760,8 +769,13 @@ void CTraderApi::OnSymbolStatusReport(EES_SymbolStatus* pSymbolStatus)
 		strcpy(pField->ExchangeID, EES_ExchangeID_2_ExchangeID(pSymbolStatus->m_ExchangeID));
 		sprintf(pField->Symbol, "%s.%s", pField->InstrumentID, pField->ExchangeID);
 
+		//printf("OnSymbolStatusReport: %s, %s\n", pField->Symbol, pSymbolStatus->m_EnterTime);
+
 		pField->InstrumentStatus = EES_InstrumentStatus_2_InstrumentStatus(pSymbolStatus->m_InstrumentStatus);
-		pField->EnterTime = str_to_HHmmss(pSymbolStatus->m_EnterTime);
+		// 取定时器中的时间，这样能快一些
+		// m_EnterTime中的值为空
+		pField->EnterTime = m_HHmmss_OnSymbolStatusReport;
+
 
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnRtnInstrumentStatus, m_msgQueue, m_pClass, true, 0, pField, sizeof(InstrumentStatusField), nullptr, 0, nullptr, 0);
 	}
@@ -769,6 +783,8 @@ void CTraderApi::OnSymbolStatusReport(EES_SymbolStatus* pSymbolStatus)
 
 void CTraderApi::OnQuerySymbolStatus(EES_SymbolStatus* pSymbolStatus, bool bFinish)
 {
+	// 1. m_EnterTime的值全为空
+	// 2. 只有最近的状态
 	if (bFinish)
 		return;
 
@@ -780,8 +796,18 @@ void CTraderApi::OnQuerySymbolStatus(EES_SymbolStatus* pSymbolStatus, bool bFini
 		strcpy(pField->ExchangeID, EES_ExchangeID_2_ExchangeID(pSymbolStatus->m_ExchangeID));
 		sprintf(pField->Symbol, "%s.%s", pField->InstrumentID, pField->ExchangeID);
 
+		// m_EnterTime的值全为空，
+		// printf("OnQuerySymbolStatus: %s, %s\n", pField->Symbol, pSymbolStatus->m_EnterTime);
+
 		pField->InstrumentStatus = EES_InstrumentStatus_2_InstrumentStatus(pSymbolStatus->m_InstrumentStatus);
-		pField->EnterTime = str_to_HHmmss(pSymbolStatus->m_EnterTime);
+		if (pSymbolStatus->m_EnterTime[0] == 0)
+		{
+			pField->EnterTime = m_HHmmss;
+		}
+		else
+		{
+			pField->EnterTime = str_to_HHmmss(pSymbolStatus->m_EnterTime);
+		}
 
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnRtnInstrumentStatus, m_msgQueue, m_pClass, true, 0, pField, sizeof(InstrumentStatusField), nullptr, 0, nullptr, 0);
 	}
