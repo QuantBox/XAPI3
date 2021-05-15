@@ -338,6 +338,9 @@ int CTraderApi::_Init()
 	if (LoadEESTrader())
 	{
 		m_pApi = m_tradeApi;
+		
+		// 3版不支持期权，极致版多了此功能
+		m_pApi->SetAutoReconnect(true);
 
 		RESULT ret_err = m_pApi->ConnServer(svrInfo, this);
 		if (ret_err == NO_ERROR)

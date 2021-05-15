@@ -323,7 +323,7 @@ private:
 	/// \param	pMarketMBLData: 参见EES_MarketMBLData深度行情结构体定义
 	/// \param	bFinish: 当为true时，表示查询所有结果返回。此时pMarketMBLData内容中,仅m_RequestId有效
 	/// \return void 
-	virtual void OnQueryMarketMBLData(EES_MarketMBLData* pMarketMBLData, bool bFinish) {}
+	//virtual void OnQueryMarketMBLData(EES_MarketMBLData* pMarketMBLData, bool bFinish) {}
 private:
 	/// \brief 加载EES交易API的动态库
 	bool LoadEESTrader();
