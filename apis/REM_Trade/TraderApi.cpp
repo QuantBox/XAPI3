@@ -240,7 +240,7 @@ void CTraderApi::CheckThenHeartbeat(time_t _now)
 	if (_now > m_HeartbeatTime)
 	{
 		// 心跳超时
-		double _queryTime = 60;
+		long _queryTime = 60;
 		m_HeartbeatTime = time(nullptr) + _queryTime;
 
 		QueryUserAccount();
@@ -335,10 +335,12 @@ int CTraderApi::_Init()
 	RspUserLoginField* pField = (RspUserLoginField*)m_msgQueue->new_block(sizeof(RspUserLoginField));
 	pField->RawErrorID = 0;
 
+	// 这里一定要有，否则定时器被跳过
+	m_HeartbeatTime = time(nullptr);
+
 	if (LoadEESTrader())
 	{
 		m_pApi = m_tradeApi;
-		
 		// 3版不支持期权，极致版多了此功能
 		m_pApi->SetAutoReconnect(true);
 
@@ -763,7 +765,7 @@ void CTraderApi::OnSymbolStatusReport(EES_SymbolStatus* pSymbolStatus)
 	if (m_HHmmss_OnSymbolStatusReport == m_HHmmss)
 		return;
 	m_HHmmss_OnSymbolStatusReport = m_HHmmss;
-	
+
 	if (pSymbolStatus)
 	{
 		InstrumentStatusField* pField = (InstrumentStatusField*)m_msgQueue->new_block(sizeof(InstrumentStatusField));
@@ -823,6 +825,14 @@ void CTraderApi::OnQueryUserAccount(EES_AccountInfo* pAccoutnInfo, bool bFinish)
 
 	if (pAccoutnInfo)
 	{
+		//printf("OnQueryUserAccount:%f,%f,%f,%f,%f,%f,\n",
+		//	pAccoutnInfo->m_InitialBp,
+		//	pAccoutnInfo->m_AvailableBp,
+		//	pAccoutnInfo->m_Margin,
+		//	pAccoutnInfo->m_FrozenMargin,
+		//	pAccoutnInfo->m_CommissionFee,
+		//	pAccoutnInfo->m_FrozenCommission);
+
 		AccountField* pField = (AccountField*)m_msgQueue->new_block(sizeof(AccountField));
 		strcpy(pField->AccountID, pAccoutnInfo->m_Account);
 		pField->PreBalance = pAccoutnInfo->m_InitialBp;

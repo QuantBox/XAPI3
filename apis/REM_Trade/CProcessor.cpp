@@ -127,7 +127,7 @@ int CProcessor::OnCxlOrderReject(EES_CxlOrderRej* pReject)
 {
 	if (pReject->m_MarketOrderToken == 0)
 	{
-		printf("OnCxlOrderReject 0\n");
+		printf("OnCxlOrderReject 0 __del__\n");
 		return 0;
 	}
 	OrderField* pField = (OrderField*)m_pOrderMap->findCancelAPI(pReject->m_MarketOrderToken);
