@@ -275,6 +275,8 @@ CTraderApi::CTraderApi(void)
 
 	// 自己维护两个消息队列
 	m_msgQueue = new CMsgQueue();
+	// 这里改快一点安全吗？
+	m_msgQueue->m_bDirectOutput = true;
 	m_msgQueue_Query = new CMsgQueue();
 	m_msgQueue_Query->Register(Query);
 	m_msgQueue_Query->StartThread();

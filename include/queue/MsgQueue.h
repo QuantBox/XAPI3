@@ -272,9 +272,10 @@ public:
 		if (m_bDirectOutput)
 		{
 			Input_Output(type, pApi1, pApi2, double1, double2, ptr1, size1, ptr2, size2, ptr3, size3);
-			delete_block(ptr1);
-			delete_block(ptr2);
-			delete_block(ptr3);
+			// 没有复制，直接输出，所以也不能删除
+			//delete_block(ptr1);
+			//delete_block(ptr2);
+			//delete_block(ptr3);
 			return;
 		}
 		ResponeItem* pItem = new ResponeItem;
