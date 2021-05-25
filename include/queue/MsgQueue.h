@@ -57,6 +57,7 @@ using namespace std;
 class CMsgQueue
 {
 public:
+	// 在StartThread之前设置能省去一个线程
 	bool m_bDirectOutput;
 	FILE* m_infile;
 	FILE* m_outfile;
@@ -206,6 +207,9 @@ public:
 	//由内部启动线程，内部主动调用Process触发回调
 	void StartThread()
 	{
+		// 直连没有必要启动线程
+		if (m_bDirectOutput)
+			return;
 		if (nullptr == m_hThread)
 		{
 			m_bRunning = true;
