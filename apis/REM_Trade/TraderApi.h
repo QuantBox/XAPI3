@@ -15,9 +15,9 @@
 
 
 #ifdef _WIN64
-	#pragma comment(lib, "../../include/REM/win64/EESTraderApi.lib")
+#pragma comment(lib, "../../include/REM/win64/EESTraderApi.lib")
 #else
-	#pragma comment(lib, "../../include/REM/win32/EESTraderApi.lib")
+#pragma comment(lib, "../../include/REM/win32/EESTraderApi.lib")
 #endif
 
 #include "../../include/REM/EesTraderErr.h"
@@ -52,6 +52,7 @@ class CTraderApi :
 		E_QuerySymbolStatus,
 		E_QueryUserAccount,
 		E_CancelOrder,
+		E_QueryMarketSession,
 
 		E_Heartbeat,
 	};
@@ -60,7 +61,7 @@ public:
 	CTraderApi(void);
 	virtual ~CTraderApi(void);
 
-	void Register(void* pCallback,void* pClass);
+	void Register(void* pCallback, void* pClass);
 
 	void Connect(
 		const char* szServerPath,
@@ -75,7 +76,7 @@ public:
 		char* pszLocalIDBuf);
 
 	char* ReqOrderAction(OrderIDType* szIds, int count, char* pzsRtn);
-	void ReqQuery(QueryType type,ReqQueryField* pQuery);
+	void ReqQuery(QueryType type, ReqQueryField* pQuery);
 
 private:
 	friend void* __stdcall Query(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3);
@@ -83,14 +84,14 @@ private:
 
 	void TestInThread(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3);
 	void CheckThenHeartbeat(time_t _now);
-	
+
 	void Clear();
 
 	int _Init();
-	
+
 	void ReqUserLogin();
 	int _ReqUserLogin(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3);
-	
+
 	void QuerySymbolStatus();
 	int _QuerySymbolStatus(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3);
 
@@ -99,6 +100,10 @@ private:
 
 	void CancelOrder();
 	int _CancelOrder(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3);
+
+	void QueryMarketSession();
+	int _QueryMarketSession(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3);
+
 
 	virtual void OnConnection(ERR_NO errNo, const char* pErrStr);
 
@@ -293,7 +298,7 @@ private:
 	/// \brief	每个当前系统支持的汇报一次，当bFinish= true时，表示所有交易所的响应都已到达，但本条消息本身不包含有用的信息。
 	/// \param  pPostOrderExecution	             查询订单成交的结构
 	/// \return void 
-	virtual void OnQueryMarketSession(EES_ExchangeMarketSession* pMarketSession, bool bFinish) {}
+	virtual void OnQueryMarketSession(EES_ExchangeMarketSession* pMarketSession, bool bFinish);
 
 	///	交易所连接状态变化报告，
 
@@ -348,8 +353,8 @@ private:
 	mutex						m_csRecv;
 	unsigned int				m_nMaxOrderRef;			//报单引用，用于区分报单，保持自增
 
-	EESTraderApi*				m_pApi;					//交易API
-	
+	EESTraderApi* m_pApi;					//交易API
+
 	string						m_szPath;				//输出文件路径
 	string						m_szServerPath;			//服务器配置路径
 	string						m_szUserPath;			//账号配置路径
@@ -358,21 +363,27 @@ private:
 	UserItem					m_UserItem;
 	int							m_nSleep;
 
-	CMsgQueue*					m_msgQueue;				//消息队列指针
-	CMsgQueue*					m_msgQueue_Query;
-	void*						m_pClass;
+	CMsgQueue* m_msgQueue;				//消息队列指针
+	CMsgQueue* m_msgQueue_Query;
+	void* m_pClass;
 
 
-	COrderMap<long long>*		m_pOrderMap;			// 消息回报时正常处理
-	CProcessor*					m_pProcessor;
+	COrderMap<long long>* m_pOrderMap;			// 消息回报时正常处理
+	CProcessor* m_pProcessor;
 
 	ConnectionStatus			m_Status;
 
-	EESTraderApi*				m_tradeApi;				///< EES交易API接口
+	EESTraderApi* m_tradeApi;				///< EES交易API接口
 	T_DLL_HANDLE				m_handle;				///< EES交易API句柄
 	funcDestroyEESTraderApi		m_distoryFun;			///< EES交易API动态库销毁函数
 
-	int							m_HHmmss;	// 由于
+	// 由于回报太多，用这种方法减少数量
+	int							m_HHmmss;
 	int							m_HHmmss_OnSymbolStatusReport;
+
+	// 交易所席位
+	unsigned char				m_SessionCount = 0;
+	EES_MarketSessionId			m_SessionId[255] = { 0 };
+	unsigned char				m_curr_session = 0;
 };
 

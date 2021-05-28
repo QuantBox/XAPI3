@@ -197,6 +197,9 @@ void CTraderApi::QueryInThread(char type, void* pApi1, void* pApi2, double doubl
 		case E_CancelOrder:
 			iRet = _CancelOrder(type, pApi1, pApi2, double1, double2, ptr1, size1, ptr2, size2, ptr3, size3);
 			break;
+		case E_QueryMarketSession:
+			iRet = _QueryMarketSession(type, pApi1, pApi2, double1, double2, ptr1, size1, ptr2, size2, ptr3, size3);
+			break;
 		}
 	}
 
@@ -413,6 +416,19 @@ int CTraderApi::_QueryUserAccount(char type, void* pApi1, void* pApi2, double do
 	return m_pApi->QueryUserAccount();
 }
 
+void CTraderApi::QueryMarketSession()
+{
+	m_msgQueue_Query->Input_NoCopy(RequestType::E_QueryMarketSession, m_msgQueue_Query, this, 0, 0,
+		nullptr, 0, nullptr, 0, nullptr, 0);
+}
+
+int CTraderApi::_QueryMarketSession(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3)
+{
+	if (m_pApi == nullptr)
+		return 0;
+	return m_pApi->QueryMarketSession();
+}
+
 void CTraderApi::CancelOrder()
 {
 	m_msgQueue_Query->Input_NoCopy(RequestType::E_CancelOrder, m_msgQueue_Query, this, 0, 0,
@@ -535,6 +551,10 @@ char* CTraderApi::ReqOrderInsert(
 	OrderField* pField = (OrderField*)m_msgQueue->new_block(sizeof(OrderField));
 	memcpy(pField, pOrder, sizeof(OrderField));
 	pField->pUserData1 = pEnter;
+
+	// 循环切换席位
+	m_curr_session = (++m_curr_session) % m_SessionCount;
+	pEnter->m_MarketSessionId = m_SessionId[m_curr_session];
 
 	RESULT iRet = NO_ERROR;
 
@@ -667,9 +687,8 @@ void CTraderApi::OnUserLogon(EES_LogonResponse* pLogon)
 		// 自己发单时ID从1开始，不能从0开始
 		m_nMaxOrderRef = ++m_nMaxOrderRef;
 
-		// TEST: 登录成功后就查询交易所状态
-		// 发现查询出来的全是空，只能后期再试
-		//QuerySymbolStatus();
+		// 查询席位，报单时将循环使用席位报单
+		QueryMarketSession();
 	}
 	else
 	{
@@ -767,25 +786,25 @@ void CTraderApi::OnSymbolStatusReport(EES_SymbolStatus* pSymbolStatus)
 	if (m_HHmmss_OnSymbolStatusReport == m_HHmmss)
 		return;
 	m_HHmmss_OnSymbolStatusReport = m_HHmmss;
+	//if (pSymbolStatus == nullptr)
+	//	return;
 
-	if (pSymbolStatus)
-	{
-		InstrumentStatusField* pField = (InstrumentStatusField*)m_msgQueue->new_block(sizeof(InstrumentStatusField));
+	InstrumentStatusField* pField = (InstrumentStatusField*)m_msgQueue->new_block(sizeof(InstrumentStatusField));
 
-		strcpy(pField->InstrumentID, pSymbolStatus->m_Symbol);
-		strcpy(pField->ExchangeID, EES_ExchangeID_2_ExchangeID(pSymbolStatus->m_ExchangeID));
-		sprintf(pField->Symbol, "%s.%s", pField->InstrumentID, pField->ExchangeID);
+	strcpy(pField->InstrumentID, pSymbolStatus->m_Symbol);
+	strcpy(pField->ExchangeID, EES_ExchangeID_2_ExchangeID(pSymbolStatus->m_ExchangeID));
+	sprintf(pField->Symbol, "%s.%s", pField->InstrumentID, pField->ExchangeID);
 
-		//printf("OnSymbolStatusReport: %s, %s\n", pField->Symbol, pSymbolStatus->m_EnterTime);
+	//printf("OnSymbolStatusReport: %s, %s\n", pField->Symbol, pSymbolStatus->m_EnterTime);
 
-		pField->InstrumentStatus = EES_InstrumentStatus_2_InstrumentStatus(pSymbolStatus->m_InstrumentStatus);
-		// 取定时器中的时间，这样能快一些
-		// m_EnterTime中的值为空
-		pField->EnterTime = m_HHmmss_OnSymbolStatusReport;
+	pField->InstrumentStatus = EES_InstrumentStatus_2_InstrumentStatus(pSymbolStatus->m_InstrumentStatus);
+	// 取定时器中的时间，这样能快一些
+	// m_EnterTime中的值为空
+	pField->EnterTime = m_HHmmss_OnSymbolStatusReport;
 
 
-		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnRtnInstrumentStatus, m_msgQueue, m_pClass, true, 0, pField, sizeof(InstrumentStatusField), nullptr, 0, nullptr, 0);
-	}
+	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnRtnInstrumentStatus, m_msgQueue, m_pClass, true, 0, pField, sizeof(InstrumentStatusField), nullptr, 0, nullptr, 0);
+
 }
 
 void CTraderApi::OnQuerySymbolStatus(EES_SymbolStatus* pSymbolStatus, bool bFinish)
@@ -794,56 +813,73 @@ void CTraderApi::OnQuerySymbolStatus(EES_SymbolStatus* pSymbolStatus, bool bFini
 	// 2. 只有最近的状态
 	if (bFinish)
 		return;
+	//if (pSymbolStatus == nullptr)
+	//	return;
 
-	if (pSymbolStatus)
+	InstrumentStatusField* pField = (InstrumentStatusField*)m_msgQueue->new_block(sizeof(InstrumentStatusField));
+
+	strcpy(pField->InstrumentID, pSymbolStatus->m_Symbol);
+	strcpy(pField->ExchangeID, EES_ExchangeID_2_ExchangeID(pSymbolStatus->m_ExchangeID));
+	sprintf(pField->Symbol, "%s.%s", pField->InstrumentID, pField->ExchangeID);
+
+	// m_EnterTime的值全为空，
+	// printf("OnQuerySymbolStatus: %s, %s\n", pField->Symbol, pSymbolStatus->m_EnterTime);
+
+	pField->InstrumentStatus = EES_InstrumentStatus_2_InstrumentStatus(pSymbolStatus->m_InstrumentStatus);
+	if (pSymbolStatus->m_EnterTime[0] == 0)
 	{
-		InstrumentStatusField* pField = (InstrumentStatusField*)m_msgQueue->new_block(sizeof(InstrumentStatusField));
-
-		strcpy(pField->InstrumentID, pSymbolStatus->m_Symbol);
-		strcpy(pField->ExchangeID, EES_ExchangeID_2_ExchangeID(pSymbolStatus->m_ExchangeID));
-		sprintf(pField->Symbol, "%s.%s", pField->InstrumentID, pField->ExchangeID);
-
-		// m_EnterTime的值全为空，
-		// printf("OnQuerySymbolStatus: %s, %s\n", pField->Symbol, pSymbolStatus->m_EnterTime);
-
-		pField->InstrumentStatus = EES_InstrumentStatus_2_InstrumentStatus(pSymbolStatus->m_InstrumentStatus);
-		if (pSymbolStatus->m_EnterTime[0] == 0)
-		{
-			pField->EnterTime = m_HHmmss;
-		}
-		else
-		{
-			pField->EnterTime = str_to_HHmmss(pSymbolStatus->m_EnterTime);
-		}
-
-		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnRtnInstrumentStatus, m_msgQueue, m_pClass, true, 0, pField, sizeof(InstrumentStatusField), nullptr, 0, nullptr, 0);
+		pField->EnterTime = m_HHmmss;
 	}
+	else
+	{
+		pField->EnterTime = str_to_HHmmss(pSymbolStatus->m_EnterTime);
+	}
+
+	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnRtnInstrumentStatus, m_msgQueue, m_pClass, true, 0, pField, sizeof(InstrumentStatusField), nullptr, 0, nullptr, 0);
 }
 
 void CTraderApi::OnQueryUserAccount(EES_AccountInfo* pAccoutnInfo, bool bFinish)
 {
 	if (bFinish)
 		return;
+	//if (pAccoutnInfo == nullptr)
+	//	return;
 
-	if (pAccoutnInfo)
+	//printf("OnQueryUserAccount:%f,%f,%f,%f,%f,%f,\n",
+	//	pAccoutnInfo->m_InitialBp,
+	//	pAccoutnInfo->m_AvailableBp,
+	//	pAccoutnInfo->m_Margin,
+	//	pAccoutnInfo->m_FrozenMargin,
+	//	pAccoutnInfo->m_CommissionFee,
+	//	pAccoutnInfo->m_FrozenCommission);
+
+	AccountField* pField = (AccountField*)m_msgQueue->new_block(sizeof(AccountField));
+	strcpy(pField->AccountID, pAccoutnInfo->m_Account);
+	pField->PreBalance = pAccoutnInfo->m_InitialBp;
+	pField->Available = pAccoutnInfo->m_AvailableBp;
+	pField->CurrMargin = pAccoutnInfo->m_Margin;
+	pField->FrozenCash = pAccoutnInfo->m_FrozenMargin;
+	pField->Commission = pAccoutnInfo->m_CommissionFee;
+	pField->FrozenCommission = pAccoutnInfo->m_FrozenCommission;
+
+	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnRspQryTradingAccount, m_msgQueue, m_pClass, 0, 0, pField, sizeof(AccountField), nullptr, 0, nullptr, 0);
+}
+
+void CTraderApi::OnQueryMarketSession(EES_ExchangeMarketSession* pMarketSession, bool bFinish)
+{
+	if (bFinish)
+		return;
+	//if (pMarketSession == nullptr)
+	//	return;
+	
+	// 托管机房只接了一个交易所，所以这简化成只存一套 
+	// pMarketSession->m_ExchangeID;
+	m_SessionCount = pMarketSession->m_SessionCount;
+	memcpy(m_SessionId, pMarketSession->m_SessionId, m_SessionCount);
+	printf("OnQueryMarketSession: Count: %d SessionId: ", m_SessionCount);
+	for (int i = 0; i < m_SessionCount; ++i)
 	{
-		//printf("OnQueryUserAccount:%f,%f,%f,%f,%f,%f,\n",
-		//	pAccoutnInfo->m_InitialBp,
-		//	pAccoutnInfo->m_AvailableBp,
-		//	pAccoutnInfo->m_Margin,
-		//	pAccoutnInfo->m_FrozenMargin,
-		//	pAccoutnInfo->m_CommissionFee,
-		//	pAccoutnInfo->m_FrozenCommission);
-
-		AccountField* pField = (AccountField*)m_msgQueue->new_block(sizeof(AccountField));
-		strcpy(pField->AccountID, pAccoutnInfo->m_Account);
-		pField->PreBalance = pAccoutnInfo->m_InitialBp;
-		pField->Available = pAccoutnInfo->m_AvailableBp;
-		pField->CurrMargin = pAccoutnInfo->m_Margin;
-		pField->FrozenCash = pAccoutnInfo->m_FrozenMargin;
-		pField->Commission = pAccoutnInfo->m_CommissionFee;
-		pField->FrozenCommission = pAccoutnInfo->m_FrozenCommission;
-
-		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnRspQryTradingAccount, m_msgQueue, m_pClass, 0, 0, pField, sizeof(AccountField), nullptr, 0, nullptr, 0);
+		printf("%d ", m_SessionId[i]);
 	}
+	printf("\n");
 }

@@ -18,6 +18,10 @@ int CProcessor::OnOrderAccept(EES_OrderAcceptField* pAccept)
 	pField->LeavesQty = pField->Qty;
 	sprintf(pField->ID, "%lld", pAccept->m_MarketOrderToken);
 
+	// 检验席位切换是否可用
+	//EES_EnterOrderField* pEnter = (EES_EnterOrderField*)pField->pUserData1;
+	//sprintf(pField->Text, "MarketSessionId: %d -> %d", pEnter->m_MarketSessionId, pAccept->m_MarketSessionId);
+
 	// 换成用柜台的ID
 	m_pOrderMap->replace(pAccept->m_ClientOrderToken, pAccept->m_MarketOrderToken, pField, pField->pUserData1);
 
@@ -127,7 +131,7 @@ int CProcessor::OnCxlOrderReject(EES_CxlOrderRej* pReject)
 {
 	if (pReject->m_MarketOrderToken == 0)
 	{
-		printf("OnCxlOrderReject 0 __del__\n");
+		printf("OnCxlOrderReject: 0 __del__\n");
 		return 0;
 	}
 	OrderField* pField = (OrderField*)m_pOrderMap->findCancelAPI(pReject->m_MarketOrderToken);
