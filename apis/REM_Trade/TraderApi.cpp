@@ -568,6 +568,8 @@ char* CTraderApi::ReqOrderInsert(
 	sprintf(pField->LocalID, "%d", pEnter->m_ClientOrderToken);
 	if (iRet != NO_ERROR)
 	{
+		// 标记ID，防止ID相同去重
+		sprintf(pField->ID, "%d", pEnter->m_ClientOrderToken);
 		sprintf(pField->Text, "send order failed(%d)\n", iRet);
 		pField->Status = OrderStatus::OrderStatus_Rejected;
 
