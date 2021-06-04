@@ -570,7 +570,7 @@ char* CTraderApi::ReqOrderInsert(
 	{
 		// 标记ID，防止ID相同去重
 		sprintf(pField->ID, "%d", pEnter->m_ClientOrderToken);
-		sprintf(pField->Text, "send order failed(%d)\n", iRet);
+		sprintf(pField->Text, "send order failed(%d)", iRet);
 		pField->Status = OrderStatus::OrderStatus_Rejected;
 
 		m_msgQueue->Input_Copy(ResponseType::ResponseType_OnRtnOrder, m_msgQueue, m_pClass, true, 0, pField, sizeof(OrderField), nullptr, 0, nullptr, 0);
