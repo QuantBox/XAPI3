@@ -114,7 +114,7 @@ int CProcessor::OnOrderExecution(EES_OrderExecutionField* pExec)
 }
 int CProcessor::OnOrderCxled(EES_OrderCxled* pCxled)
 {
-	OrderField* pField = (OrderField*)m_pOrderMap->findCancelAPI(pCxled->m_MarketOrderToken);
+	OrderField* pField = (OrderField*)m_pOrderMap->findOrderXAPI(pCxled->m_MarketOrderToken);
 	if (pField == nullptr)
 		return 0;
 	pField->ExecType = ExecType::ExecType_Cancelled;
@@ -134,7 +134,7 @@ int CProcessor::OnCxlOrderReject(EES_CxlOrderRej* pReject)
 		printf("OnCxlOrderReject: 0 __del__\n");
 		return 0;
 	}
-	OrderField* pField = (OrderField*)m_pOrderMap->findCancelAPI(pReject->m_MarketOrderToken);
+	OrderField* pField = (OrderField*)m_pOrderMap->findOrderXAPI(pReject->m_MarketOrderToken);
 	if (pField == nullptr)
 		return 0;
 	pField->ExecType = ExecType::ExecType_CancelReject;
