@@ -94,6 +94,7 @@ int CProcessor::OnOrderExecution(EES_OrderExecutionField* pExec)
 	{
 		pOrder->Status = OrderStatus::OrderStatus_PartiallyFilled;
 	}
+	m_msgQueue->Input_Copy(ResponseType::ResponseType_OnRtnOrder, m_msgQueue, m_pClass, true, 0, pOrder, sizeof(OrderField), nullptr, 0, nullptr, 0);
 
 	TradeField* pField = (TradeField*)m_msgQueue->new_block(sizeof(TradeField));
 	strcpy(pField->InstrumentID, pOrder->InstrumentID);
