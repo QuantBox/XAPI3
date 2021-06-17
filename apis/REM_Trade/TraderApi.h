@@ -39,6 +39,7 @@ using namespace std;
 
 class CMsgQueue;
 class CProcessor;
+class PositionManager;
 
 class CTraderApi :
 	public EESTraderEvent
@@ -50,7 +51,6 @@ class CTraderApi :
 		E_ReqUserLoginField,
 
 		E_QuerySymbolStatus,
-		E_QueryUserAccount,
 		E_CancelOrder,
 		E_QueryMarketSession,
 
@@ -95,8 +95,9 @@ private:
 	void QuerySymbolStatus();
 	int _QuerySymbolStatus(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3);
 
-	void QueryUserAccount();
+
 	int _QueryUserAccount(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3);
+	int _QueryAccountPosition(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3);
 
 	void CancelOrder();
 	int _CancelOrder(char type, void* pApi1, void* pApi2, double double1, double double2, void* ptr1, int size1, void* ptr2, int size2, void* ptr3, int size3);
@@ -146,7 +147,7 @@ private:
 		/// \param  bFinish	                    如果没有传输完成，这个值是false，如果完成了，那个这个值为 true 
 		/// \remark 如果碰到 bFinish == true，那么是传输结束，并且 pAccountInfo值无效。
 		/// \return void 	
-	virtual void OnQueryAccountPosition(const char* pAccount, EES_AccountPosition* pAccoutnPosition, int nReqId, bool bFinish) {}
+	virtual void OnQueryAccountPosition(const char* pAccount, EES_AccountPosition* pAccoutnPosition, int nReqId, bool bFinish);
 
 	/// 查询帐户下面期权仓位信息的返回事件, 注意这个回调, 和上一个OnQueryAccountPosition, 会在一次QueryAccountPosition请求后, 分别返回, 先返回期货, 再返回期权, 即使没有期权仓位, 也会返回一条bFinish=true的记录
 	/// \param  pAccount	                帐户ID 	
@@ -370,6 +371,7 @@ private:
 
 	COrderMap<long long>* m_pOrderMap;			// 消息回报时正常处理
 	CProcessor* m_pProcessor;
+	PositionManager* m_pPositionManager;
 
 	ConnectionStatus			m_Status;
 
@@ -385,5 +387,7 @@ private:
 	unsigned char				m_SessionCount = 0;
 	EES_MarketSessionId			m_SessionId[255] = { 0 };
 	unsigned char				m_curr_session = 0;
+
+	int m_nReqId = 1;
 };
 

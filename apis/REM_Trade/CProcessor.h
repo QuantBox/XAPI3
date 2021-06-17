@@ -4,24 +4,21 @@
 
 #include "../../include/REM/EesTraderDefine.h"
 
-using namespace std;
+#include "../../include/ApiStruct.h"
 
-class CMsgQueue;
+
+using namespace std;
 
 class CProcessor
 {
 public:
-	int OnOrderAccept(EES_OrderAcceptField* pAccept);
-	int OnOrderMarketAccept(EES_OrderMarketAcceptField* pAccept);
-	int OnOrderReject(EES_OrderRejectField* pReject);
-	int OnOrderMarketReject(EES_OrderMarketRejectField* pReject);
-	int OnOrderExecution(EES_OrderExecutionField* pExec);
-	int OnOrderCxled(EES_OrderCxled* pCxled);
-	int OnCxlOrderReject(EES_CxlOrderRej* pReject);
-
-public:
-	CMsgQueue* m_msgQueue = nullptr;
-	void* m_pClass = nullptr;
+	OrderField* OnOrderAccept(EES_OrderAcceptField* pAccept, OrderField* pOrder);
+	OrderField* OnOrderMarketAccept(EES_OrderMarketAcceptField* pAccept, OrderField* pOrder);
+	OrderField* OnOrderReject(EES_OrderRejectField* pReject, OrderField* pOrder);
+	OrderField* OnOrderMarketReject(EES_OrderMarketRejectField* pReject, OrderField* pOrder);
+	TradeField* OnOrderExecution(EES_OrderExecutionField* pExec, OrderField* pOrder, TradeField* pTrade);
+	OrderField* OnOrderCxled(EES_OrderCxled* pCxled, OrderField* pOrder);
+	OrderField* OnCxlOrderReject(EES_CxlOrderRej* pReject, OrderField* pOrder);
 
 public:
 	// 外部传入，不要动它

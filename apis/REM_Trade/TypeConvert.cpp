@@ -136,6 +136,32 @@ EES_HedgeFlag HedgeFlagType_2_EES_HedgeFlag(HedgeFlagType In)
 	return EES_HedgeFlag_Speculation;
 }
 
+HedgeFlagType EES_HedgeFlag_2_HedgeFlagType(EES_HedgeFlag In)
+{
+	switch (In)
+	{
+	case EES_HedgeFlag_Speculation:
+		return HedgeFlagType_Speculation;
+	case EES_HedgeFlag_Arbitrage:
+		return HedgeFlagType_Arbitrage;
+	case EES_HedgeFlag_Hedge:
+		return HedgeFlagType_Hedge;
+	}
+	return HedgeFlagType_Speculation;
+}
+
+PositionSide EES_PosiDirection_2_PositionSide(EES_PosiDirection In)
+{
+	switch (In)
+	{
+	case EES_PosiDirection_long:
+		return PositionSide_Long;
+	case EES_PosiDirection_short:
+		return PositionSide_Short;
+	}
+	return PositionSide_Long;
+}
+
 TradingPhaseType EES_InstrumentStatus_2_InstrumentStatus(unsigned char In)
 {
 	///< 交易状态： '0':开盘前; '1':非交易; '2':连续交易; '3':集合竞价报单; '4'集合竞价价格平衡; '5':集合竞价撮合; '6': 收盘;
