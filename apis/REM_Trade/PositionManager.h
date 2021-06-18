@@ -65,6 +65,7 @@ public:
 		{
 			pField = new PositionField();
 
+			strcpy(pField->ID, positionId);
 			strcpy(pField->Symbol, pTrade->InstrumentID);
 			strcpy(pField->InstrumentID, pTrade->InstrumentID);
 			strcpy(pField->ExchangeID, pTrade->ExchangeID);
