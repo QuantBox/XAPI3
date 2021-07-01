@@ -14,8 +14,8 @@ OrderField* CProcessor::OnOrderAccept(EES_OrderAcceptField* pAccept, OrderField*
 	sprintf(pOrder->ID, "%lld", pAccept->m_MarketOrderToken);
 
 	// 检验席位切换是否可用
-	//EES_EnterOrderField* pEnter = (EES_EnterOrderField*)pField->pUserData1;
-	//sprintf(pField->Text, "MarketSessionId: %d -> %d", pEnter->m_MarketSessionId, pAccept->m_MarketSessionId);
+	EES_EnterOrderField* pEnter = (EES_EnterOrderField*)pOrder->pUserData1;
+	sprintf(pOrder->Text, "%d->%d", pEnter->m_MarketSessionId, pAccept->m_MarketSessionId);
 
 	return pOrder;
 }
@@ -36,7 +36,7 @@ OrderField* CProcessor::OnOrderReject(EES_OrderRejectField* pReject, OrderField*
 	sprintf(pOrder->ID, "%d:%d", pReject->m_ClientOrderToken, pReject->m_Userid);
 	pOrder->RawErrorID = pReject->m_ReasonCode;
 	// 前面是语法检查，后面是风险检查
-	sprintf(pOrder->Text, "%s%s", pReject->m_GrammerText, pReject->m_RiskText);
+	sprintf(pOrder->Text, "%s|%s%s", pOrder->Text, pReject->m_GrammerText, pReject->m_RiskText);
 
 	return pOrder;
 }
@@ -46,7 +46,7 @@ OrderField* CProcessor::OnOrderMarketReject(EES_OrderMarketRejectField* pReject,
 	pOrder->Status = OrderStatus::OrderStatus_Rejected;
 	sprintf(pOrder->ID, "%lld", pReject->m_MarketOrderToken);
 	pOrder->RawErrorID = pReject->m_ExchangeErrorId;
-	strcpy(pOrder->Text, pReject->m_ReasonText);
+	sprintf(pOrder->Text, "%s|%s", pOrder->Text, pReject->m_ReasonText);
 
 	return pOrder;
 }
@@ -64,7 +64,7 @@ TradeField* CProcessor::OnOrderExecution(EES_OrderExecutionField* pExec, OrderFi
 	{
 		pOrder->Status = OrderStatus::OrderStatus_PartiallyFilled;
 	}
-	
+
 	strcpy(pTrade->InstrumentID, pOrder->InstrumentID);
 	strcpy(pTrade->ExchangeID, pOrder->ExchangeID);
 	strcpy(pTrade->AccountID, pOrder->AccountID);
@@ -87,7 +87,8 @@ OrderField* CProcessor::OnOrderCxled(EES_OrderCxled* pCxled, OrderField* pOrder)
 	pOrder->Status = OrderStatus::OrderStatus_Cancelled;
 	pOrder->LeavesQty = 0;
 	pOrder->RawErrorID = pCxled->m_Reason;
-	strcpy(pOrder->Text, EES_CxlReasonCode_2_str(pCxled->m_Reason));
+
+	sprintf(pOrder->Text, "%s|%s", pOrder->Text, EES_CxlReasonCode_2_str(pCxled->m_Reason));
 
 	return pOrder;
 }
@@ -96,7 +97,7 @@ OrderField* CProcessor::OnCxlOrderReject(EES_CxlOrderRej* pReject, OrderField* p
 {
 	pOrder->ExecType = ExecType::ExecType_CancelReject;
 	pOrder->RawErrorID = pReject->m_ReasonCode;
-	strcpy(pOrder->Text, EES_CxlReasonCode_2_str(pReject->m_ReasonCode));
+	sprintf(pOrder->Text, "%s|%s", pOrder->Text, EES_CxlReasonCode_2_str(pReject->m_ReasonCode));
 
 	return pOrder;
 }
