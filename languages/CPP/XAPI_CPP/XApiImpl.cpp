@@ -164,13 +164,15 @@ void CXApiImpl::Disconnect()
 	m_pLib = nullptr;
 	m_pFun = nullptr;
 	m_pApi = nullptr;
-	// m_pSpi = nullptr;
+	m_pSpi = nullptr;
 }
 
 void CXApiImpl::Reconnect()
 {
+	auto tmp_pSpi = m_pSpi;
 	Disconnect();
 	Init();
+	m_pSpi = tmp_pSpi;
 	Connect(m_szServerPath, m_szUserPath, m_szPath);
 }
 

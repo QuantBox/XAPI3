@@ -407,6 +407,7 @@ ConnectionStatus CMdUserApi::GetStatus()
 
 void CMdUserApi::Disconnect()
 {
+	
 	if (m_msgQueue_Query)
 	{
 		m_msgQueue_Query->StopThread();
@@ -438,6 +439,7 @@ void CMdUserApi::Disconnect()
 	}
 
 	Clear();
+	m_pApi->DisConnServer();
 	UnloadEESQuote();
 	m_pApi = nullptr;
 }
@@ -506,6 +508,7 @@ void CMdUserApi::Subscribe(const set<string>& instrumentIDs, const string& szExc
 
 	for (auto it = instrumentIDs.begin(); it != instrumentIDs.end(); ++it)
 	{
+		printf("RegisterSymbol %s\n", it->c_str());
 		m_pApi->RegisterSymbol(EQS_FUTURE, it->c_str());
 	}
 }
@@ -526,6 +529,7 @@ void CMdUserApi::Unsubscribe(const set<string>& instrumentIDs, const string& szE
 
 	for (auto it = instrumentIDs.begin(); it != instrumentIDs.end(); ++it)
 	{
+		printf("UnregisterSymbol %s\n", it->c_str());
 		m_pApi->UnregisterSymbol(EQS_FUTURE, it->c_str());
 	}
 }
