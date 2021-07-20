@@ -103,13 +103,13 @@ private:
 	/// \param chInstrumentType  EES行情类型
 	/// \param pSymbol           合约名称
 	/// \param bSuccess          注册是否成功标志
-	virtual void OnSymbolRegisterResponse(EesEqsIntrumentType chInstrumentType, const char* pSymbol, bool bSuccess) {}
+	virtual void OnSymbolRegisterResponse(EesEqsIntrumentType chInstrumentType, const char* pSymbol, bool bSuccess);
 
 	/// \brief  注销symbol响应消息来时调用，组播模式不支持行情注册
 	/// \param chInstrumentType  EES行情类型
 	/// \param pSymbol           合约名称
 	/// \param bSuccess          注册是否成功标志
-	virtual void OnSymbolUnregisterResponse(EesEqsIntrumentType chInstrumentType, const char* pSymbol, bool bSuccess) {}
+	virtual void OnSymbolUnregisterResponse(EesEqsIntrumentType chInstrumentType, const char* pSymbol, bool bSuccess);
 
 	/// \brief 查询symbol列表响应消息来时调用，组播模式不支持合约列表查询
 	/// \param chInstrumentType  EES行情类型

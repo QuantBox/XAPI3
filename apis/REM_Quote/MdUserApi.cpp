@@ -376,7 +376,7 @@ int CMdUserApi::_Init()
 		m_Status = ConnectionStatus::ConnectionStatus_Disconnected;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, m_Status, 0, pField, sizeof(RspUserLoginField), nullptr, 0, nullptr, 0);
 	}
-	
+
 	return 0;
 }
 
@@ -407,7 +407,7 @@ ConnectionStatus CMdUserApi::GetStatus()
 
 void CMdUserApi::Disconnect()
 {
-	
+
 	if (m_msgQueue_Query)
 	{
 		m_msgQueue_Query->StopThread();
@@ -508,7 +508,7 @@ void CMdUserApi::Subscribe(const set<string>& instrumentIDs, const string& szExc
 
 	for (auto it = instrumentIDs.begin(); it != instrumentIDs.end(); ++it)
 	{
-		printf("RegisterSymbol %s\n", it->c_str());
+		printf("RegisterSymbol:%s\n", it->c_str());
 		m_pApi->RegisterSymbol(EQS_FUTURE, it->c_str());
 	}
 }
@@ -529,9 +529,18 @@ void CMdUserApi::Unsubscribe(const set<string>& instrumentIDs, const string& szE
 
 	for (auto it = instrumentIDs.begin(); it != instrumentIDs.end(); ++it)
 	{
-		printf("UnregisterSymbol %s\n", it->c_str());
+		printf("UnregisterSymbol:%s\n", it->c_str());
 		m_pApi->UnregisterSymbol(EQS_FUTURE, it->c_str());
 	}
+}
+
+void CMdUserApi::OnSymbolRegisterResponse(EesEqsIntrumentType chInstrumentType, const char* pSymbol, bool bSuccess)
+{
+	printf("OnSymbolRegisterResponse:%s,%d\n", pSymbol, bSuccess);
+}
+void CMdUserApi::OnSymbolUnregisterResponse(EesEqsIntrumentType chInstrumentType, const char* pSymbol, bool bSuccess)
+{
+	printf("OnSymbolUnregisterResponse:%s,%d\n", pSymbol, bSuccess);
 }
 
 void CMdUserApi::OnQuoteUpdated(EesEqsIntrumentType chInstrumentType, EESMarketDepthQuoteData* pDepthQuoteData)
