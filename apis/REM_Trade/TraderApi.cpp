@@ -918,9 +918,25 @@ void CTraderApi::OnQueryMarketSession(EES_ExchangeMarketSession* pMarketSession,
 
 	// 托管机房只接了一个交易所，所以这简化成只存一套 
 	// pMarketSession->m_ExchangeID;
-	m_SessionCount = pMarketSession->m_SessionCount;
-	memcpy(m_SessionId, pMarketSession->m_SessionId, m_SessionCount);
+	printf("OnQueryMarketSession: Count: %d SessionId: ", pMarketSession->m_SessionCount);
+	// 
+	char tmp[255] = "1111111111111111";
+	memcpy(tmp, m_ServerItem.SessionMask.c_str(), m_ServerItem.SessionMask.size());
+	int j = 0;
+	for (int i = 0; i < pMarketSession->m_SessionCount; ++i)
+	{
+		printf("%d ", pMarketSession->m_SessionId[i]);
+		if (tmp[i] == '1')
+		{
+			m_SessionId[j] = pMarketSession->m_SessionId[i];
+			++j;
+		}
+	}
+	m_SessionCount = j;
+	printf("\n");
+
 	printf("OnQueryMarketSession: Count: %d SessionId: ", m_SessionCount);
+	// 重新再打印
 	for (int i = 0; i < m_SessionCount; ++i)
 	{
 		printf("%d ", m_SessionId[i]);

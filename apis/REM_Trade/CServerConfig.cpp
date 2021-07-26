@@ -29,7 +29,11 @@ void CServerConfig::WriteTd(const char* filename, ServerItem* pItem)
 	doc.AddMember("LocalTradeIp", StringRef(pItem->LocalTradeIp.c_str()), allocator);
 	doc.AddMember("LocalTradeUDPPort", pItem->LocalTradeUDPPort, allocator);
 
+	doc.AddMember("SessionMask", StringRef(pItem->SessionMask.c_str()), allocator);
+
 	doc.EndObject(0);
+
+
 
 	ofstream ofs(filename);
 	OStreamWrapper osw(ofs);
@@ -53,6 +57,8 @@ void CServerConfig::WriteTdDefault(const char* filename)
 	item.LocalTradeIp = "183.129.220.106";
 	item.LocalTradeUDPPort = 0;
 
+	item.SessionMask = "1111111111111111";
+
 	WriteTd(filename, &item);
 }
 
@@ -69,6 +75,7 @@ ServerItem CServerConfig::ReadTd(const char* filename)
 	item.RemoteTradeIp = object["RemoteTradeIp"].GetString();
 	item.RemoteQueryIp = object["RemoteQueryIp"].GetString();
 	item.LocalTradeIp = object["LocalTradeIp"].GetString();
+	item.SessionMask = object["SessionMask"].GetString();
 
 	item.RemoteTradeTCPPort = object["RemoteTradeTCPPort"].GetInt();
 	item.RemoteTradeUDPPort = object["RemoteTradeUDPPort"].GetInt();

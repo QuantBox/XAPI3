@@ -17,6 +17,8 @@ struct ServerItem
 
 	string			LocalTradeIp;
 	unsigned short  LocalTradeUDPPort;
+
+	string			SessionMask;
 };
 
 class CServerConfig
