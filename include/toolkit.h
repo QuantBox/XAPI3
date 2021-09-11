@@ -254,7 +254,7 @@ int GetUpdateTime(const char* UpdateTime, int* _UpdateTime, int* UpdateMillisec)
 	return *_UpdateTime / 10000;
 }
 
-void GetExchangeTime(int iTradingDay, int iPreTradingDay, char* TradingDay, char* ActionDay, char* UpdateTime, int* _TradingDay, int* _ActionDay, int* _UpdateTime, int* UpdateMillisec)
+void GetExchangeTime(int iTradingDay, int iPreTradingDay, const char* TradingDay, const char* ActionDay, const char* UpdateTime, int* _TradingDay, int* _ActionDay, int* _UpdateTime, int* UpdateMillisec)
 {
 	// iTradingDay登录时获取的交易日，
 	// iPreTradingDay登录时获取的交易日的前一交易日

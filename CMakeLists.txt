@@ -682,6 +682,36 @@ target_link_libraries(REM_Quote
 	EESQuoteApi
 )
 
+# Tap_Trade
+file(GLOB TAP_TRADE_H ${CMAKE_CURRENT_LIST_DIR}/apis/Tap_Trade/*.h)
+file(GLOB TAP_TRADE_CPP ${CMAKE_CURRENT_LIST_DIR}/apis/Tap_Trade/*.cpp)
+list(FILTER TAP_TRADE_CPP EXCLUDE REGEX ".*dllmain.cpp")
+include_directories(${CMAKE_CURRENT_LIST_DIR}/include/Tap/)
+add_library(Tap_Trade SHARED ${TAP_TRADE_H} ${TAP_TRADE_CPP})
+ADD_CUSTOM_COMMAND(TARGET Tap_Trade
+	PRE_LINK
+	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Tap/linux64/libTapTradeAPI.so ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
+	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Tap/linux64/libTapDataCollectAPI.so ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
+)
+target_link_libraries(Tap_Trade
+	TapTradeAPI
+)
+
+
+# Tap_Quote
+file(GLOB TAP_QUOTE_H ${CMAKE_CURRENT_LIST_DIR}/apis/Tap_Quote/*.h)
+file(GLOB TAP_QUOTE_CPP ${CMAKE_CURRENT_LIST_DIR}/apis/Tap_Quote/*.cpp)
+list(FILTER TAP_QUOTE_CPP EXCLUDE REGEX ".*dllmain.cpp")
+include_directories(${CMAKE_CURRENT_LIST_DIR}/include/Tap/)
+add_library(Tap_Quote SHARED ${TAP_QUOTE_H} ${TAP_QUOTE_CPP})
+ADD_CUSTOM_COMMAND(TARGET Tap_Quote
+	PRE_LINK
+	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/include/Tap/linux64/libTapQuoteAPI.so ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
+)
+target_link_libraries(Tap_Quote
+	TapQuoteAPI
+)
+
 ## add FakeAPI
 #file(GLOB FAKE_API_H ${CMAKE_CURRENT_LIST_DIR}/tools/FakeAPI/*.h)
 #file(GLOB FAKE_API_CPP ${CMAKE_CURRENT_LIST_DIR}/tools/FakeAPI/*.cpp)
