@@ -39,13 +39,13 @@ public:
 		// 根据持仓合计更新内存中的持仓
 		PositionField* pField = nullptr;
 		MakeID(pPosition);
-		auto it = posiitons.find(pPosition->ID);
-		if (it == posiitons.end())
+		auto it = positions.find(pPosition->ID);
+		if (it == positions.end())
 		{
 			pField = new PositionField();
 			memcpy(pField, pPosition, sizeof(PositionField));
 
-			posiitons.insert(pair<string, PositionField*>(pField->ID, pField));
+			positions.insert(pair<string, PositionField*>(pField->ID, pField));
 		}
 		else
 		{
@@ -60,13 +60,13 @@ public:
 		// 持仓明细，需要进行汇总
 		PositionField* pField = nullptr;
 		MakeID(pPosition);
-		auto it = posiitons.find(pPosition->ID);
-		if (it == posiitons.end())
+		auto it = positions.find(pPosition->ID);
+		if (it == positions.end())
 		{
 			pField = new PositionField();
 			memcpy(pField, pPosition, sizeof(PositionField));
 
-			posiitons.insert(pair<string, PositionField*>(pField->ID, pField));
+			positions.insert(pair<string, PositionField*>(pField->ID, pField));
 		}
 		else
 		{
@@ -93,8 +93,8 @@ public:
 		sprintf(positionId, "%s:%s:%d:%d", pTrade->ExchangeID, pTrade->InstrumentID, position_side, pTrade->HedgeFlag);
 
 		PositionField* pField = nullptr;
-		auto it = posiitons.find(positionId);
-		if (it == posiitons.end())
+		auto it = positions.find(positionId);
+		if (it == positions.end())
 		{
 			pField = new PositionField();
 
@@ -106,7 +106,7 @@ public:
 			pField->Side = position_side;
 			pField->HedgeFlag = pTrade->HedgeFlag;
 
-			posiitons.insert(pair<string, PositionField*>(positionId, pField));
+			positions.insert(pair<string, PositionField*>(positionId, pField));
 		}
 		else
 		{
@@ -152,21 +152,21 @@ public:
 
 	void Clear()
 	{
-		for (auto it = posiitons.begin(); it != posiitons.end(); ++it)
+		for (auto it = positions.begin(); it != positions.end(); ++it)
 			delete it->second;
-		posiitons.clear();
+		positions.clear();
 	}
 
 	list<PositionField*> All()
 	{
 		list<PositionField*> ll;
-		for (auto it = posiitons.begin(); it != posiitons.end(); ++it)
+		for (auto it = positions.begin(); it != positions.end(); ++it)
 			ll.push_back(it->second);
 
 		return ll;
 	}
 
 private:
-	map<string, PositionField*> posiitons;
+	map<string, PositionField*> positions;
 };
 

@@ -470,11 +470,11 @@ void CTraderApi::OnRtnFill(const TapAPIFillInfo* info)
 
 	m_msgQueue->Input_Copy(ResponseType::ResponseType_OnRtnOrder, m_msgQueue, m_pClass, true, 0, pOrder, sizeof(OrderField), nullptr, 0, nullptr, 0);
 
-	//if (m_pPositionManager->CheckPosition(pPosition))
-	//{
-	//	// 返回持仓
-	//	m_msgQueue->Input_Copy(ResponseType::ResponseType_OnRspQryInvestorPosition, m_msgQueue, m_pClass, false, 0, pPosition, sizeof(PositionField), nullptr, 0, nullptr, 0);
-	//}
+	if (m_pPositionManager->CheckPosition(pPosition))
+	{
+		// 返回持仓
+		m_msgQueue->Input_Copy(ResponseType::ResponseType_OnRspQryInvestorPosition, m_msgQueue, m_pClass, false, 0, pPosition, sizeof(PositionField), nullptr, 0, nullptr, 0);
+	}
 	//else
 	//{
 	//	// 计算出错，重新查询
