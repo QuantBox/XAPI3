@@ -29,10 +29,13 @@
 using namespace std;
 
 #include "OrderMap.h"
+#include "InstrumentManager.h"
 
 class CMsgQueue;
 class CProcessor;
 class PositionManager;
+
+
 
 class CTraderApi :
 	public ITapTradeAPINotify
@@ -106,7 +109,7 @@ private:
 	virtual void TAP_CDECL OnRspQryFund(TAPIUINT32 sessionID, TAPIINT32 errorCode, TAPIYNFLAG isLast, const TapAPIFundData* info);
 	virtual void TAP_CDECL OnRtnFund(const TapAPIFundData* info);
 	virtual void TAP_CDECL OnRspQryExchange(TAPIUINT32 sessionID, TAPIINT32 errorCode, TAPIYNFLAG isLast, const TapAPIExchangeInfo* info) {}
-	virtual void TAP_CDECL OnRspQryCommodity(TAPIUINT32 sessionID, TAPIINT32 errorCode, TAPIYNFLAG isLast, const TapAPICommodityInfo* info) {}
+	virtual void TAP_CDECL OnRspQryCommodity(TAPIUINT32 sessionID, TAPIINT32 errorCode, TAPIYNFLAG isLast, const TapAPICommodityInfo* info);
 	virtual void TAP_CDECL OnRspQryContract(TAPIUINT32 sessionID, TAPIINT32 errorCode, TAPIYNFLAG isLast, const TapAPITradeContractInfo* info);
 	virtual void TAP_CDECL OnRtnContract(const TapAPITradeContractInfo* info) {}
 	virtual void TAP_CDECL OnRtnOrder(const TapAPIOrderInfoNotice* info);
@@ -158,22 +161,12 @@ private:
 	COrderMap<string>* m_pOrderMap;			// 消息回报时正常处理
 	CProcessor* m_pProcessor;
 	PositionManager* m_pPositionManager;
+	InstrumentManager<TapAPITradeContractInfo, TapAPICommodityInfo>* m_pInstrumentManager;
 
 	ConnectionStatus			m_Status;
 
 	TAPIUINT32					m_uiSessionID;
 
-	map<string, TapAPITradeContractInfo> m_Contracts;
-
-
-	// 由于回报太多，用这种方法减少数量
-	int							m_HHmmss;
-	int							m_HHmmss_OnSymbolStatusReport;
-
-	//// 交易所席位
-	//unsigned char				m_SessionCount = 0;
-	//EES_MarketSessionId			m_SessionId[255] = { 0 };
-	//unsigned char				m_curr_session = 0;
 
 	int m_nReqId = 1;
 };

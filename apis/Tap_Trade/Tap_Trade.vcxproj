@@ -159,6 +159,7 @@
     <ClInclude Include="CProcessor.h" />
     <ClInclude Include="CServerConfig.h" />
     <ClInclude Include="CUserConfig.h" />
+    <ClInclude Include="InstrumentManager.h" />
     <ClInclude Include="OrderMap.h" />
     <ClInclude Include="PositionManager.h" />
     <ClInclude Include="stdafx.h" />

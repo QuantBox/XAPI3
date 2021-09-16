@@ -17,6 +17,7 @@
 #include "TypeConvert.h"
 #include "PositionManager.h"
 
+
 #include <cstring>
 #include <assert.h>
 #include <cfloat>
@@ -103,6 +104,8 @@ void CTraderApi::Register(void* pCallback, void* pClass)
 	}
 }
 
+
+
 CTraderApi::CTraderApi(void)
 {
 	m_pApi = nullptr;
@@ -121,6 +124,7 @@ CTraderApi::CTraderApi(void)
 	m_pProcessor->m_pOrderMap = m_pOrderMap;
 
 	m_pPositionManager = new PositionManager();
+	m_pInstrumentManager = new InstrumentManager<TapAPITradeContractInfo, TapAPICommodityInfo>();
 }
 
 
@@ -248,6 +252,7 @@ void CTraderApi::OnRspLogin(TAPIINT32 errorCode, const TapAPITradeLoginRspInfo* 
 }
 void CTraderApi::OnAPIReady()
 {
+	// 查询后构造合约代码
 	TapAPICommodity req = { 0 };
 	m_uiSessionID = 0;
 	auto iret = m_pApi->QryContract(&m_uiSessionID, &req);
@@ -265,22 +270,35 @@ void CTraderApi::OnDisconnect(TAPIINT32 reasonCode)
 	m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, m_Status, 0, pField, sizeof(RspUserLoginField), nullptr, 0, nullptr, 0);
 }
 
-void CTraderApi::OnRspQryContract(TAPIUINT32 sessionID, TAPIINT32 errorCode, TAPIYNFLAG isLast, const TapAPITradeContractInfo* info)
+void CTraderApi::OnRspQryCommodity(TAPIUINT32 sessionID, TAPIINT32 errorCode, TAPIYNFLAG isLast, const TapAPICommodityInfo* info)
 {
-	// TODO: 这里只处理了期货，还有期权、跨期等没有处理
 	if (info->CommodityType == TAPI_COMMODITY_TYPE_FUTURES)
 	{
-		InstrumentIDType	InstrumentID = { 0 };
-		sprintf(InstrumentID, "%s%s", info->CommodityNo, info->ContractNo1);
-		m_Contracts[InstrumentID] = *info;
+		InstrumentField* pField = (InstrumentField*)m_msgQueue->new_block(sizeof(InstrumentField));
+		strcpy(pField->ProductID, info->CommodityNo); // 这里目前没有处理大小写
+		strcpy(pField->InstrumentName, info->CommodityName);
+		pField->VolumeMultiple = info->ContractSize;
+		pField->PriceTick = info->CommodityTickSize;
+
+		m_pInstrumentManager->OnProduct(pField->ProductID, pField, info);
+		m_msgQueue->delete_block(pField);
 	}
 
 	if (APIYNFLAG_YES == isLast)
 	{
+		m_pInstrumentManager->Merge();
+
+		auto instruments = m_pInstrumentManager->All();
+
+		for (auto it = instruments.begin(); it != instruments.end(); ++it)
+		{
+			InstrumentField* pField = *it;
+			m_msgQueue->Input_Copy(ResponseType::ResponseType_OnRspQryInstrument, m_msgQueue, m_pClass, 0, 0, pField, sizeof(InstrumentField), nullptr, 0, nullptr, 0);
+		}
+
 		// 收到合约列表后再通知成功
 		m_Status = ConnectionStatus::ConnectionStatus_Done;
 		m_msgQueue->Input_NoCopy(ResponseType::ResponseType_OnConnectionStatus, m_msgQueue, m_pClass, m_Status, 0, nullptr, 0, nullptr, 0, nullptr, 0);
-
 
 		{
 			TapAPIUpperChannelQryReq req = {};
@@ -300,6 +318,28 @@ void CTraderApi::OnRspQryContract(TAPIUINT32 sessionID, TAPIINT32 errorCode, TAP
 			ReqQueryField body = { 0 };
 			ReqQuery(QueryType::QueryType_ReqQryInvestorPosition, &body);
 		}
+	}
+}
+
+void CTraderApi::OnRspQryContract(TAPIUINT32 sessionID, TAPIINT32 errorCode, TAPIYNFLAG isLast, const TapAPITradeContractInfo* info)
+{
+	// TODO: 这里只处理了期货，还有期权、跨期等没有处理
+	if (info->CommodityType == TAPI_COMMODITY_TYPE_FUTURES)
+	{
+		InstrumentField* pField = (InstrumentField*)m_msgQueue->new_block(sizeof(InstrumentField));
+		sprintf(pField->InstrumentID, "%s%s", info->CommodityNo, info->ContractNo1);
+		strcpy(pField->ExchangeID, ExchangeNo_2_ExchangeID(info->ExchangeNo));
+		sprintf(pField->Symbol, "%s.%s", pField->InstrumentID, pField->ExchangeID);
+		strcpy(pField->ProductID, info->CommodityNo); // 这里目前没有处理大小写
+
+		m_pInstrumentManager->OnInstrument(pField->InstrumentID, pField, info);
+		m_msgQueue->delete_block(pField);
+	}
+
+	if (APIYNFLAG_YES == isLast)
+	{
+		m_uiSessionID = 0;
+		auto iret = m_pApi->QryCommodity(&m_uiSessionID);
 	}
 }
 
@@ -544,21 +584,24 @@ void CTraderApi::Clear()
 		delete m_pPositionManager;
 		m_pPositionManager = nullptr;
 	}
+	if (m_pInstrumentManager)
+	{
+		delete m_pInstrumentManager;
+		m_pInstrumentManager = nullptr;
+	}
 }
 
-void OrderField_2_TapAPINewOrder(UserItem* pUserItem, OrderField* pOrder, TapAPINewOrder* pEnter, map<string, TapAPITradeContractInfo>& contracts)
+void OrderField_2_TapAPINewOrder(UserItem* pUserItem, OrderField* pOrder, TapAPINewOrder* pEnter, InstrumentManager<TapAPITradeContractInfo, TapAPICommodityInfo>* pInstrumentManager)
 {
-	auto iter = contracts.find(pOrder->InstrumentID);
-	if (iter == contracts.end())
+	auto it = pInstrumentManager->GetT1(pOrder->InstrumentID);
+	if (nullptr == it)
 		return;
 
-	auto contract = iter->second;
-
 	strcpy(pEnter->AccountNo, pUserItem->UserNo);
-	strcpy(pEnter->ExchangeNo, contract.ExchangeNo);
-	pEnter->CommodityType = contract.CommodityType;
-	strcpy(pEnter->CommodityNo, contract.CommodityNo);
-	strcpy(pEnter->ContractNo, contract.ContractNo1);
+	strcpy(pEnter->ExchangeNo, it->ExchangeNo);
+	pEnter->CommodityType = it->CommodityType;
+	strcpy(pEnter->CommodityNo, it->CommodityNo);
+	strcpy(pEnter->ContractNo, it->ContractNo1);
 	// StrikePrice
 	pEnter->CallOrPutFlag = TAPI_CALLPUT_FLAG_NONE;
 	// ContractNo2
@@ -614,7 +657,7 @@ char* CTraderApi::ReqOrderInsert(
 		return nullptr;
 
 	TapAPINewOrder* pEnter = (TapAPINewOrder*)m_msgQueue->new_block(sizeof(TapAPINewOrder));
-	OrderField_2_TapAPINewOrder(&m_UserItem, pOrder, pEnter, m_Contracts);
+	OrderField_2_TapAPINewOrder(&m_UserItem, pOrder, pEnter, m_pInstrumentManager);
 
 	OrderField* pField = (OrderField*)m_msgQueue->new_block(sizeof(OrderField));
 	memcpy(pField, pOrder, sizeof(OrderField));
