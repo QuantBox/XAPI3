@@ -388,6 +388,9 @@ private:
 	EES_MarketSessionId			m_SessionId[255] = { 0 };
 	unsigned char				m_curr_session = 0;
 
+	long m_session_a = 0;
+	long m_session_b = 0;
+
 	int m_nReqId = 1;
 };
 

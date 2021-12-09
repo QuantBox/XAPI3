@@ -563,8 +563,19 @@ char* CTraderApi::ReqOrderInsert(
 	memcpy(pField, pOrder, sizeof(OrderField));
 	pField->pUserData1 = pEnter;
 
+	// 老版本>>>>>>>>>>>>>>
 	// 循环切换席位
 	m_curr_session = (++m_curr_session) % m_SessionCount;
+	// 老版本<<<<<<<<<<<<<<
+
+	// 新版本>>>>>>>>>>>>>>
+	// 012 012 012 老顺序
+	// 012 120 201 新顺序
+	m_curr_session = (m_session_a + (long)(m_session_b / m_SessionCount)) % m_SessionCount;
+	++m_session_a;
+	++m_session_b;
+	// 新版本<<<<<<<<<<<<<<
+
 	pEnter->m_MarketSessionId = m_SessionId[m_curr_session];
 
 	RESULT iRet = NO_ERROR;

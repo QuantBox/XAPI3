@@ -36,7 +36,7 @@ OrderField* CProcessor::OnOrderReject(const TapAPIOrderInfoNotice* pReject, Orde
 	pOrder->Status = OrderStatus::OrderStatus_Rejected;
 	pOrder->LeavesQty = 0;
 	//sprintf(pOrder->ID, "%d:%d", pReject->m_ClientOrderToken, pReject->m_Userid);
-	pOrder->RawErrorID = pReject->ErrorCode;
+	pOrder->RawErrorID = pReject->OrderInfo->ErrorCode;
 	//strcpy(pOrder->Text, pReject->OrderInfo->ErrorText);
 	sprintf(pOrder->Text, "%s|%s", pOrder->Text, pReject->OrderInfo->ErrorText);
 
